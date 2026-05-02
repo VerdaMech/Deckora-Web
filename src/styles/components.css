@@ -1,1 +1,240 @@
-/* Overrides de Bootstrap y clases utility de componentes. Se irá llenando conforme se implementen componentes UI. */
+/* Overrides de Bootstrap y clases utility de componentes. */
+
+/* ============================================================
+   SPINNER
+   ============================================================ */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+/* ============================================================
+   BUTTON
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, box-shadow 0.18s, transform 0.1s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+/* Sizes */
+.btn--sm {
+  padding: var(--space-1) var(--space-3);
+  font-size: 0.72rem;
+}
+
+.btn--md {
+  padding: var(--space-2) var(--space-4);
+  font-size: 0.8rem;
+}
+
+.btn--lg {
+  padding: var(--space-3) var(--space-6);
+  font-size: 0.9rem;
+}
+
+/* Variant: primary */
+.btn--primary {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+  color: var(--text-on-gold);
+  border-color: var(--gold);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+  box-shadow: var(--glow-gold);
+}
+
+/* Variant: primary-clip */
+.btn--primary-clip {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+  color: var(--text-on-gold);
+  border-color: var(--gold);
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+
+.btn--primary-clip:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+  box-shadow: var(--glow-gold-strong);
+}
+
+/* Variant: ghost */
+.btn--ghost {
+  background: transparent;
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background: rgba(201, 168, 76, 0.08);
+  box-shadow: var(--glow-gold);
+}
+
+/* Variant: secondary */
+.btn--secondary {
+  background: var(--bg-panel);
+  color: var(--text-default);
+  border-color: var(--border-subtle);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background: var(--bg-panel-2);
+  border-color: var(--border-default);
+}
+
+/* Variant: danger */
+.btn--danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: var(--danger);
+  color: var(--text-primary);
+  box-shadow: var(--glow-crimson);
+}
+
+/* ============================================================
+   CARD
+   ============================================================ */
+.card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
+.card--default {
+  background: var(--bg-panel);
+  border-color: var(--border-subtle);
+}
+
+.card--elevated {
+  background: var(--bg-panel-2);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-subtle);
+}
+
+.card--interactive {
+  background: var(--bg-panel);
+  border-color: var(--border-subtle);
+  cursor: pointer;
+  transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+}
+
+.card--interactive:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-md);
+}
+
+.card--feature {
+  background: var(--bg-panel);
+  border-color: var(--border-subtle);
+  border-top: 2px solid var(--gold);
+}
+
+/* ============================================================
+   FORM FIELDS (Input, Select, Textarea)
+   ============================================================ */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+}
+
+.form-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.form-required {
+  color: var(--gold);
+  margin-left: 2px;
+}
+
+.form-input {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-default);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 1rem;
+  padding: var(--space-2) var(--space-3);
+  transition: border-color 0.18s, box-shadow 0.18s;
+  width: 100%;
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: var(--border-strong);
+  box-shadow: var(--glow-gold);
+}
+
+.form-input--error {
+  border-color: var(--danger) !important;
+}
+
+.form-input--error:focus {
+  box-shadow: 0 0 12px rgba(192, 57, 43, 0.3);
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a6a58' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  padding-right: var(--space-7);
+  cursor: pointer;
+}
+
+.form-select option {
+  background: var(--bg-panel-2);
+  color: var(--text-default);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-helper {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.form-helper--error {
+  color: var(--danger);
+}

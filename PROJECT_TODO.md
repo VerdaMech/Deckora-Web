@@ -43,16 +43,16 @@ Objetivo: dejar la app corriendo con layout, rutas placeholder, design system y 
   - [x] src/utils/constants.js (todos los enums)
   - [x] App.jsx con verificación visual de tokens
 
-- [ ] **Commit 3** · `feat(ui): add core ui components (button, card, input, select, textarea, spinner)`
-  - [ ] Button (5 variantes, 3 tamaños, loading)
-  - [ ] Card (4 variantes)
-  - [ ] Input (con label, helper, error, required)
-  - [ ] Select
-  - [ ] Textarea
-  - [ ] Spinner
-  - [ ] Clases CSS en components.css
-  - [ ] index.js con re-exports
-  - [ ] Sandbox en App.jsx
+- [x] **Commit 3** · `feat(ui): add core ui components (button, card, input, select, textarea, spinner)`
+  - [x] Button (5 variantes, 3 tamaños, loading)
+  - [x] Card (4 variantes)
+  - [x] Input (con label, helper, error, required)
+  - [x] Select
+  - [x] Textarea
+  - [x] Spinner
+  - [x] Clases CSS en components.css
+  - [x] index.js con re-exports
+  - [x] Sandbox en App.jsx
 
 ### Persona B (próxima sesión, después del PR de A)
 

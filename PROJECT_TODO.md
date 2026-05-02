@@ -24,24 +24,24 @@ Objetivo: dejar la app corriendo con layout, rutas placeholder, design system y 
 
 ### Persona A (esta sesión)
 
-- [ ] **Commit 1** · `chore: initialize project structure with vite, eslint and project todo`
-  - [ ] Vite + React + dependencias instaladas
-  - [ ] Estructura de carpetas según spec sección 13
-  - [ ] vite.config.js con aliases @/
-  - [ ] jsconfig.json
-  - [ ] ESLint + Prettier configurados
-  - [ ] .env.example
-  - [ ] README.md
-  - [ ] PROJECT_TODO.md (este archivo)
+- [x] **Commit 1** · `chore: initialize project structure with vite, eslint and project todo`
+  - [x] Vite + React + dependencias instaladas
+  - [x] Estructura de carpetas según spec sección 13
+  - [x] vite.config.js con aliases @/
+  - [x] jsconfig.json
+  - [x] ESLint + Prettier configurados
+  - [x] .env.example
+  - [x] README.md
+  - [x] PROJECT_TODO.md (este archivo)
 
-- [ ] **Commit 2** · `feat(styles): add design tokens, typography, base styles and enums`
-  - [ ] src/styles/tokens.css (todas las variables)
-  - [ ] src/styles/base.css (reset + grain overlay)
-  - [ ] src/styles/typography.css (Google Fonts + escala)
-  - [ ] src/styles/components.css (vacío inicial)
-  - [ ] src/styles/index.css (entry point)
-  - [ ] src/utils/constants.js (todos los enums)
-  - [ ] App.jsx con verificación visual de tokens
+- [x] **Commit 2** · `feat(styles): add design tokens, typography, base styles and enums`
+  - [x] src/styles/tokens.css (todas las variables)
+  - [x] src/styles/base.css (reset + grain overlay)
+  - [x] src/styles/typography.css (Google Fonts + escala)
+  - [x] src/styles/components.css (vacío inicial)
+  - [x] src/styles/index.css (entry point)
+  - [x] src/utils/constants.js (todos los enums)
+  - [x] App.jsx con verificación visual de tokens
 
 - [ ] **Commit 3** · `feat(ui): add core ui components (button, card, input, select, textarea, spinner)`
   - [ ] Button (5 variantes, 3 tamaños, loading)

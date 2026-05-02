@@ -1,0 +1,138 @@
+# Deckora — Project TODO
+
+Estado vivo del proyecto frontend. Cada item se marca `[x]` cuando se completa.
+Este documento es para que cualquier persona (humana o IA) que entre al proyecto sepa exactamente dónde estamos parados.
+
+Última actualización: 2026-05-02
+
+---
+
+## Estado general
+
+- [ ] **Fase 1 — Fundamentos** (Sprint 0)
+- [ ] **Fase 2 — Identidad** (auth + perfiles)
+- [ ] **Fase 3 — Mazos y Colecciones**
+- [ ] **Fase 4 — Torneos**
+- [ ] **Fase 5 — Mapa y Dashboards**
+- [ ] **Fase 6 — Pulido final**
+
+---
+
+## Fase 1 — Fundamentos
+
+Objetivo: dejar la app corriendo con layout, rutas placeholder, design system y todos los componentes UI base.
+
+### Persona A (esta sesión)
+
+- [ ] **Commit 1** · `chore: initialize project structure with vite, eslint and project todo`
+  - [ ] Vite + React + dependencias instaladas
+  - [ ] Estructura de carpetas según spec sección 13
+  - [ ] vite.config.js con aliases @/
+  - [ ] jsconfig.json
+  - [ ] ESLint + Prettier configurados
+  - [ ] .env.example
+  - [ ] README.md
+  - [ ] PROJECT_TODO.md (este archivo)
+
+- [ ] **Commit 2** · `feat(styles): add design tokens, typography, base styles and enums`
+  - [ ] src/styles/tokens.css (todas las variables)
+  - [ ] src/styles/base.css (reset + grain overlay)
+  - [ ] src/styles/typography.css (Google Fonts + escala)
+  - [ ] src/styles/components.css (vacío inicial)
+  - [ ] src/styles/index.css (entry point)
+  - [ ] src/utils/constants.js (todos los enums)
+  - [ ] App.jsx con verificación visual de tokens
+
+- [ ] **Commit 3** · `feat(ui): add core ui components (button, card, input, select, textarea, spinner)`
+  - [ ] Button (5 variantes, 3 tamaños, loading)
+  - [ ] Card (4 variantes)
+  - [ ] Input (con label, helper, error, required)
+  - [ ] Select
+  - [ ] Textarea
+  - [ ] Spinner
+  - [ ] Clases CSS en components.css
+  - [ ] index.js con re-exports
+  - [ ] Sandbox en App.jsx
+
+### Persona B (próxima sesión, después del PR de A)
+
+- [ ] **Commit 4** · `feat(ui): add remaining ui components (modal, badge, empty-state, tabs, alert, tooltip, skeleton)`
+- [ ] **Commit 5** · `feat(auth): add supabase client, auth context, api helper and protected route`
+- [ ] **Commit 6** · `feat(layout): add navbar, sidebar, footer, app layout and routes skeleton`
+
+---
+
+## Fase 2 — Identidad
+
+Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
+
+- [ ] Login (`/login`)
+- [ ] Registro con selector de rol (`/registro`)
+- [ ] Recuperar contraseña (`/recuperar`)
+- [ ] Perfil de jugador (minimalista, sin formato preferido ni inscripciones próximas; con stats básicas)
+- [ ] Perfil de organizador (sin badge verificado)
+- [ ] Perfil de tienda
+- [ ] Configuración de cuenta (tabs: cuenta, configuración tienda si rol tienda)
+
+## Fase 3 — Mazos y Colecciones
+
+- [ ] Mis colecciones (lista)
+- [ ] Detalle de colección con barra de agregar cartas integrada
+- [ ] Mis mazos (lista)
+- [ ] Crear mazo (modal)
+- [ ] Detalle de mazo (modo lectura + modo edición = deck builder + asistente IA mockeado)
+- [ ] Componentes dominio: MTGCard, ManaCost, DeckList, DeckStats, DeckBuilder, ColeccionEditor
+
+## Fase 4 — Torneos
+
+- [ ] Cartelera (`/torneos`)
+- [ ] Detalle torneo + inscripción
+- [ ] Crear / editar torneo
+- [ ] Gestión torneo en vivo
+- [ ] Tabs en perfiles: Mis inscripciones (jugador), Mis torneos (organizador/tienda)
+- [ ] Componentes dominio: TournamentCard, PodTable, RoundView
+
+## Fase 5 — Mapa y Dashboards
+
+- [ ] `<MapaTiendas>` integrado en Landing
+- [ ] Landing finalizado (componentizar HTML del landing.html)
+- [ ] Dashboard jugador
+- [ ] Dashboard organizador
+- [ ] Dashboard tienda
+- [ ] "Mis estadísticas" como sección del perfil del jugador
+- [ ] Configuración de tienda (Módulo 1) terminada
+
+## Fase 6 — Pulido final
+
+- [ ] QA cruzado de todas las pantallas
+- [ ] Responsive en breakpoints clave (375, 768, 1280, 1920)
+- [ ] Lazy loading de imágenes de cartas
+- [ ] Code splitting por módulo
+- [ ] Empty states y error states completos
+- [ ] Deploy a Vercel
+- [ ] CORS de producción configurado en backend
+
+---
+
+## Pendientes transversales (sin fase fija)
+
+- [ ] Endpoint del asistente IA (backend) — actualmente mockeado
+- [ ] Endpoints de "mis inscripciones" y "mis torneos" — confirmar si existen
+- [ ] Sistema de pairings de Commander — definir lógica
+- [ ] Sistema de puntaje por mesa — definir reglas
+- [ ] Embeddings de cartas con OpenAI (backend) — pendiente OPENAI_API_KEY
+- [ ] Logo gráfico definitivo
+- [ ] Notificaciones in-app
+
+---
+
+## Convenciones del repo
+
+- **Commits**: Conventional Commits (`feat`, `fix`, `chore`, etc. + scope opcional).
+- **Branches**:
+  - `main` — estado estable / producción.
+  - `dev` — rama de integración. Las features mergean acá vía PR.
+  - `feature/<descripcion-fase>` — ramas de trabajo, una por fase. Ambas personas trabajan sobre la misma rama de la fase, secuencialmente. Parten de `dev` y vuelven a `dev` con un único PR al cerrar la fase.
+- **PRs**: review del compañero antes de mergear `feature/...` a `dev`. `dev` se mergea a `main` cuando hay un release listo.
+- **Estilo de código**: ESLint + Prettier (corren con `npm run lint` y `npm run format`).
+- **Specs**: `DECKORA_FRONTEND.md` es la fuente de verdad de diseño y módulos.

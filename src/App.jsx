@@ -1,16 +1,73 @@
 import { useState } from 'react';
 import { Plus, Search, Inbox } from 'lucide-react';
 
+import { AuthProvider, useAuth } from '@/context/AuthContext';
 import {
   Button, Card, Input, Select, Spinner, Textarea,
   Modal, Badge, EmptyState, Tabs, Alert, Tooltip, Skeleton,
 } from '@/components/ui';
 
-export default function App() {
+function AuthPanel() {
+  const { user, rol, loading, error, login, logout } = useAuth();
+  const [busy, setBusy] = useState(false);
+  const [authError, setAuthError] = useState(null);
+
+  async function handleLogin() {
+    setBusy(true);
+    setAuthError(null);
+    try {
+      await login('jugador@deckora.test', 'deckora123');
+    } catch (err) {
+      setAuthError(err.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleLogout() {
+    setBusy(true);
+    await logout();
+    setBusy(false);
+  }
+
+  return (
+    <Card variant="feature" style={{ marginBottom: 'var(--space-6)' }}>
+      <h2 className="font-h4" style={{ color: 'var(--gold)', marginBottom: 'var(--space-3)' }}>
+        Panel de Auth (temporal — se elimina en Commit 6)
+      </h2>
+      {loading ? (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+          <Spinner size="sm" />
+          <span className="font-small" style={{ color: 'var(--text-muted)' }}>Verificando sesión...</span>
+        </div>
+      ) : user ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+          <Alert variant="success">
+            Logueado como <strong>{user.email ?? user.nombre_usuario}</strong> (rol: {rol ?? 'cargando...'})
+          </Alert>
+          <Button variant="ghost" onClick={handleLogout} loading={busy}>Cerrar sesión</Button>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+          <p className="font-small" style={{ color: 'var(--text-muted)' }}>Sin sesión activa.</p>
+          {authError && <Alert variant="danger">{authError}</Alert>}
+          {error && <Alert variant="warning">Error al obtener perfil: {error}</Alert>}
+          <Button variant="primary" onClick={handleLogin} loading={busy}>
+            Login (jugador@deckora.test)
+          </Button>
+        </div>
+      )}
+    </Card>
+  );
+}
+
+function SandboxContent() {
   const [showModal, setShowModal] = useState(false);
 
   return (
     <main style={{ padding: 'var(--space-7)', maxWidth: 900, margin: '0 auto' }}>
+      <AuthPanel />
+
       {/* ─── Set 1 ─── */}
       <h1 className="font-h1" style={{ color: 'var(--gold)', marginBottom: 'var(--space-6)' }}>
         UI Components — Set 1
@@ -80,7 +137,6 @@ export default function App() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
 
-        {/* Modal */}
         <section>
           <h2 className="font-h3" style={{ marginBottom: 'var(--space-3)' }}>Modal</h2>
           <Button variant="primary" onClick={() => setShowModal(true)}>Abrir modal</Button>
@@ -99,7 +155,6 @@ export default function App() {
           </Modal>
         </section>
 
-        {/* Badges */}
         <section>
           <h2 className="font-h3" style={{ marginBottom: 'var(--space-3)' }}>Badges</h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', alignItems: 'center' }}>
@@ -119,7 +174,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* EmptyState */}
         <Card>
           <h2 className="font-h3" style={{ marginBottom: 'var(--space-3)' }}>Empty State</h2>
           <EmptyState
@@ -130,7 +184,6 @@ export default function App() {
           />
         </Card>
 
-        {/* Tabs */}
         <Card>
           <h2 className="font-h3" style={{ marginBottom: 'var(--space-3)' }}>Tabs</h2>
           <Tabs>
@@ -146,7 +199,6 @@ export default function App() {
           </Tabs>
         </Card>
 
-        {/* Alerts */}
         <section>
           <h2 className="font-h3" style={{ marginBottom: 'var(--space-3)' }}>Alerts</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
@@ -157,7 +209,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* Tooltip */}
         <section>
           <h2 className="font-h3" style={{ marginBottom: 'var(--space-3)' }}>Tooltip</h2>
           <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap', alignItems: 'center' }}>
@@ -172,7 +223,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* Skeleton */}
         <section>
           <h2 className="font-h3" style={{ marginBottom: 'var(--space-3)' }}>Skeletons</h2>
           <Card>
@@ -192,5 +242,13 @@ export default function App() {
 
       </div>
     </main>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <SandboxContent />
+    </AuthProvider>
   );
 }

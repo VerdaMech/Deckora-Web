@@ -67,7 +67,13 @@ Objetivo: dejar la app corriendo con layout, rutas placeholder, design system y 
   - [x] CSS en components.css (también Navbar, Sidebar, Footer, AppLayout CSS agregado)
   - [x] index.js actualizado con los 7 nuevos exports
   - [x] App.jsx extendido con sandbox Set 2
-- [ ] **Commit 5** · `feat(auth): add supabase client, auth context, api helper and protected route`
+- [x] **Commit 5** · `feat(auth): agregar cliente supabase, contexto de auth, helper api y ruta protegida`
+  - [x] src/services/supabase.js
+  - [x] src/services/api.js (apiFetch + apiGet/Post/Patch/Put/Delete)
+  - [x] src/context/AuthContext.jsx (AuthProvider + useAuth)
+  - [x] src/hooks/useAuth.js (re-export)
+  - [x] src/routes/ProtectedRoute.jsx
+  - [x] App.jsx con panel de auth temporal (se elimina en Commit 6)
 - [ ] **Commit 6** · `feat(layout): add navbar, sidebar, footer, app layout and routes skeleton`
 
 ---

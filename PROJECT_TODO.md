@@ -56,7 +56,17 @@ Objetivo: dejar la app corriendo con layout, rutas placeholder, design system y 
 
 ### Persona B (próxima sesión, después del PR de A)
 
-- [ ] **Commit 4** · `feat(ui): add remaining ui components (modal, badge, empty-state, tabs, alert, tooltip, skeleton)`
+- [x] **Commit 4** · `feat(ui): add remaining ui components (modal, badge, empty-state, tabs, alert, tooltip, skeleton)`
+  - [x] Modal.jsx (wrapper react-bootstrap con override visual completo)
+  - [x] Badge.jsx (variantes: format, estado, rol, resultado, default)
+  - [x] EmptyState.jsx (icon + title + description + action)
+  - [x] Tabs.jsx (compuesto Tabs + Tabs.Tab, estilo underline)
+  - [x] Alert.jsx (variantes: success, warning, danger, info)
+  - [x] Tooltip.jsx (wrapper OverlayTrigger con override CSS)
+  - [x] Skeleton.jsx (shimmer animation)
+  - [x] CSS en components.css (también Navbar, Sidebar, Footer, AppLayout CSS agregado)
+  - [x] index.js actualizado con los 7 nuevos exports
+  - [x] App.jsx extendido con sandbox Set 2
 - [ ] **Commit 5** · `feat(auth): add supabase client, auth context, api helper and protected route`
 - [ ] **Commit 6** · `feat(layout): add navbar, sidebar, footer, app layout and routes skeleton`
 

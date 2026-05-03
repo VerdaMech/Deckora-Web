@@ -9,7 +9,7 @@ Este documento es para que cualquier persona (humana o IA) que entre al proyecto
 
 ## Estado general
 
-- [ ] **Fase 1 — Fundamentos** (Sprint 0)
+- [x] **Fase 1 — Fundamentos** (Sprint 0)
 - [ ] **Fase 2 — Identidad** (auth + perfiles)
 - [ ] **Fase 3 — Mazos y Colecciones**
 - [ ] **Fase 4 — Torneos**
@@ -74,7 +74,20 @@ Objetivo: dejar la app corriendo con layout, rutas placeholder, design system y 
   - [x] src/hooks/useAuth.js (re-export)
   - [x] src/routes/ProtectedRoute.jsx
   - [x] App.jsx con panel de auth temporal (se elimina en Commit 6)
-- [ ] **Commit 6** · `feat(layout): add navbar, sidebar, footer, app layout and routes skeleton`
+- [x] **Commit 6** · `feat(layout): agregar navbar, sidebar, footer, app layout y skeleton de rutas`
+  - [x] Navbar.jsx (logo, links, avatar+dropdown, hamburguesa+offcanvas mobile)
+  - [x] Sidebar.jsx (items por rol, colapso a 64px, active por ruta)
+  - [x] Footer.jsx
+  - [x] AppLayout.jsx (Navbar + Sidebar condicional + Outlet + Footer)
+  - [x] components/layout/index.js
+  - [x] PlaceholderPage.jsx
+  - [x] NotFound.jsx (estilo inmersivo)
+  - [x] Forbidden.jsx (estilo inmersivo)
+  - [x] Placeholders de todos los módulos (identidad, mazos, torneos, dashboards)
+  - [x] routes.jsx por módulo
+  - [x] AppRoutes.jsx (con sidebar vs sin sidebar)
+  - [x] App.jsx limpio con AuthProvider + BrowserRouter + AppRoutes
+  - [x] CSS dropdown y offcanvas en components.css
 
 ---
 

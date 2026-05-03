@@ -788,3 +788,67 @@
     display: none;
   }
 }
+
+/* ============================================================
+   DROPDOWN (Navbar)
+   ============================================================ */
+.dropdown-menu-deckora {
+  background: var(--bg-panel-2) !important;
+  border: 1px solid var(--border-default) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-md) !important;
+  padding: var(--space-2) 0 !important;
+  min-width: 180px;
+}
+
+.dropdown-item-deckora {
+  display: flex !important;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4) !important;
+  font-family: 'Cinzel', serif !important;
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: var(--text-muted) !important;
+  text-decoration: none !important;
+  transition: background 0.18s, color 0.18s !important;
+  background: transparent !important;
+}
+
+.dropdown-item-deckora:hover {
+  background: rgba(201, 168, 76, 0.08) !important;
+  color: var(--text-primary) !important;
+}
+
+.dropdown-item-deckora--danger {
+  color: var(--danger) !important;
+}
+
+.dropdown-item-deckora--danger:hover {
+  background: var(--danger-bg) !important;
+  color: var(--danger) !important;
+}
+
+.dropdown-divider-deckora {
+  border-color: var(--border-subtle) !important;
+  margin: var(--space-1) 0 !important;
+}
+
+/* ============================================================
+   OFFCANVAS (Navbar mobile)
+   ============================================================ */
+.offcanvas-deckora {
+  background: var(--bg-elevated) !important;
+  border-left: 1px solid var(--border-subtle) !important;
+}
+
+.offcanvas-header-deckora {
+  border-bottom: 1px solid var(--border-subtle) !important;
+  padding: var(--space-4) var(--space-5) !important;
+}
+
+.offcanvas-header-deckora .btn-close {
+  filter: invert(1) opacity(0.5) !important;
+}

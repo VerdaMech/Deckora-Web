@@ -107,8 +107,8 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
   - [x] src/modules/identidad/components/SelectorRol.jsx
   - [x] src/modules/identidad/pages/Registro.jsx
 
-- [ ] **Commit 3** · `feat(identidad): agregar página de recuperación de contraseña`
-  - [ ] src/modules/identidad/pages/RecuperarPassword.jsx
+- [x] **Commit 3** · `feat(identidad): agregar página de recuperación de contraseña`
+  - [x] src/modules/identidad/pages/RecuperarPassword.jsx
 
 ### Persona B (próxima sesión)
 

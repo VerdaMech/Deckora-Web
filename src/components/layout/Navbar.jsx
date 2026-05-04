@@ -34,16 +34,14 @@ export default function Navbar() {
     <nav className="navbar-deckora">
       <Link to="/" className="navbar-logo">DECKORA</Link>
 
-      {/* Links centrales (solo desktop) */}
       <ul className="navbar-links">
         {user ? authLinks : publicLinks}
       </ul>
 
-      {/* Acciones derecha */}
       <div className="navbar-actions">
         {user ? (
           <Dropdown align="end">
-            <Dropdown.Toggle as="div" bsPrefix="none" style={{ cursor: 'pointer' }}>
+            <Dropdown.Toggle as="div" bsPrefix="none">
               <div className="navbar-avatar">{getInitials(user)}</div>
             </Dropdown.Toggle>
             <Dropdown.Menu className="dropdown-menu-deckora">
@@ -66,28 +64,25 @@ export default function Navbar() {
           </>
         )}
 
-        {/* Hamburger mobile */}
         <button
           className="navbar-hamburger d-lg-none"
           onClick={() => setShowOffcanvas(true)}
           aria-label="Menú"
-          style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 'var(--space-2)' }}
         >
           <Menu size={22} />
         </button>
       </div>
 
-      {/* Offcanvas mobile */}
       <Offcanvas show={showOffcanvas} onHide={() => setShowOffcanvas(false)} placement="end" className="offcanvas-deckora">
         <Offcanvas.Header closeButton className="offcanvas-header-deckora">
           <Offcanvas.Title className="navbar-logo">DECKORA</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+          <ul className="offcanvas-nav">
             {user ? authLinks : publicLinks}
           </ul>
           {!user && (
-            <div style={{ marginTop: 'var(--space-5)', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+            <div className="offcanvas-nav-actions">
               <Button variant="ghost" as={Link} to="/login" onClick={() => setShowOffcanvas(false)}>Iniciar sesión</Button>
               <Button variant="primary" as={Link} to="/registro" onClick={() => setShowOffcanvas(false)}>Crear cuenta</Button>
             </div>

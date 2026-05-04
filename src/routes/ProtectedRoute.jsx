@@ -13,7 +13,7 @@ export default function ProtectedRoute({ requireRol, children }) {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+      <div className="loading-center">
         <Spinner size="lg" />
       </div>
     );

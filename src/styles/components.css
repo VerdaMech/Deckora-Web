@@ -10,6 +10,7 @@
 .spinner {
   animation: spin 1s linear infinite;
   display: inline-block;
+  flex-shrink: 0;
 }
 
 /* ============================================================
@@ -851,4 +852,144 @@
 
 .offcanvas-header-deckora .btn-close {
   filter: invert(1) opacity(0.5) !important;
+}
+
+/* ============================================================
+   NAVBAR — hamburger y offcanvas nav
+   ============================================================ */
+.navbar-hamburger {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: var(--space-2);
+  display: flex;
+  align-items: center;
+}
+
+.offcanvas-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.offcanvas-nav-actions {
+  margin-top: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ============================================================
+   SIDEBAR — icono inline
+   ============================================================ */
+.sidebar-nav-item svg {
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   LOADING CENTER (ProtectedRoute)
+   ============================================================ */
+.loading-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+/* ============================================================
+   ERROR PAGES (NotFound, Forbidden)
+   ============================================================ */
+.error-page {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--space-4);
+  padding: var(--space-7);
+}
+
+.error-page__code {
+  font-family: 'Cinzel Decorative', serif;
+  font-weight: 900;
+  line-height: 1;
+  margin: 0;
+}
+
+.error-page__code--404 {
+  font-size: 6rem;
+  color: var(--gold);
+}
+
+.error-page__code--403 {
+  font-size: 5rem;
+  color: var(--crimson);
+}
+
+.error-page__desc {
+  color: var(--text-muted);
+  max-width: 40ch;
+}
+
+/* ============================================================
+   PLACEHOLDER PAGE
+   ============================================================ */
+.placeholder-page__title {
+  color: var(--gold);
+}
+
+.placeholder-page__meta {
+  margin-top: var(--space-3);
+  color: var(--text-muted);
+}
+
+.placeholder-page__note {
+  margin-top: var(--space-2);
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   LANDING (placeholder Fase 1)
+   ============================================================ */
+.landing-placeholder {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--space-5);
+  padding: var(--space-7);
+}
+
+.landing-placeholder__title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 4rem;
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1.1;
+  margin: 0;
+}
+
+.landing-placeholder__desc {
+  color: var(--text-muted);
+  max-width: 48ch;
+}
+
+.landing-placeholder__actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.landing-placeholder__note {
+  color: var(--text-muted);
+  margin-top: var(--space-4);
+  opacity: 0.6;
 }

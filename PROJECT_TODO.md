@@ -10,7 +10,7 @@ Este documento es para que cualquier persona (humana o IA) que entre al proyecto
 ## Estado general
 
 - [x] **Fase 1 — Fundamentos** (Sprint 0)
-- [ ] **Fase 2 — Identidad** (auth + perfiles)
+- [x] **Fase 2 — Identidad** (auth + perfiles)
 - [ ] **Fase 3 — Mazos y Colecciones**
 - [ ] **Fase 4 — Torneos**
 - [ ] **Fase 5 — Mapa y Dashboards**
@@ -126,11 +126,11 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
   - [x] src/modules/identidad/pages/PerfilTienda.jsx (info + mini-mapa + torneos)
   - [x] PerfilRouter.jsx actualizado con organizador y tienda
   - [x] leaflet CSS importado en main.jsx
-- [ ] **Commit 6** · `feat(identidad): agregar configuración de cuenta con tabs cuenta y tienda`
-  - [ ] src/services/tiendas.service.js
-  - [ ] src/modules/identidad/components/CuentaTab.jsx
-  - [ ] src/modules/identidad/components/ConfiguracionTiendaTab.jsx
-  - [ ] src/modules/identidad/pages/Configuracion.jsx completo
+- [x] **Commit 6** · `feat(identidad): agregar configuración de cuenta con tabs cuenta y tienda`
+  - [x] src/services/tiendas.service.js
+  - [x] src/modules/identidad/components/CuentaTab.jsx (cambio email/pass + eliminar cuenta con modal)
+  - [x] src/modules/identidad/components/ConfiguracionTiendaTab.jsx (mapa interactivo + coords)
+  - [x] src/modules/identidad/pages/Configuracion.jsx (tabs por rol, soporte ?tab=tienda)
 
 ## Fase 3 — Mazos y Colecciones
 

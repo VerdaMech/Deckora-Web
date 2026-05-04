@@ -1,0 +1,83 @@
+:root {
+  /* === Brand === */
+  --gold:           #c9a84c;
+  --gold-light:     #e8c96a;
+  --gold-dim:       #7a5e25;
+  --crimson:        #8b1a1a;
+  --crimson-bright: #c0392b;
+
+  /* === Backgrounds === */
+  --bg-app:         #0a0608;
+  --bg-elevated:    #100c10;
+  --bg-panel:       #160e16;
+  --bg-panel-2:     #1e1420;
+  --bg-overlay:     rgba(10, 6, 8, 0.85);
+
+  /* === Bordes === */
+  --border-subtle:  rgba(201, 168, 76, 0.12);
+  --border-default: rgba(201, 168, 76, 0.25);
+  --border-strong:  rgba(201, 168, 76, 0.55);
+
+  /* === Texto === */
+  --text-primary:   #f0e8d8;
+  --text-default:   #d4c5b0;
+  --text-muted:     #7a6a58;
+  --text-on-gold:   #0a0608;
+
+  /* === Estado / semántico === */
+  --success:        #4a8c5e;
+  --success-bg:     rgba(74, 140, 94, 0.12);
+  --warning:        #c98c2c;
+  --warning-bg:     rgba(201, 140, 44, 0.12);
+  --danger:         #c0392b;
+  --danger-bg:      rgba(192, 57, 43, 0.12);
+  --info:           #5a7fa0;
+  --info-bg:        rgba(90, 127, 160, 0.12);
+
+  /* === Roles === */
+  --role-jugador:    var(--gold);
+  --role-organizador:#a06fc4;
+  --role-tienda:     #c08a4a;
+
+  /* === MTG colores de maná === */
+  --mana-w: #f8f6d8;
+  --mana-u: #aae0fa;
+  --mana-b: #2c2622;
+  --mana-r: #f9aa8f;
+  --mana-g: #9bd3ae;
+  --mana-c: #ccc2c0;
+
+  /* === Espaciado (múltiplos de 4px) === */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  /* === Radii === */
+  --radius-sm:   2px;
+  --radius-md:   4px;
+  --radius-lg:   8px;
+  --radius-pill: 999px;
+
+  /* === Sombras y brillos === */
+  --shadow-sm:  0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md:  0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-lg:  0 20px 60px rgba(0, 0, 0, 0.7);
+  --glow-gold:  0 0 18px rgba(201, 168, 76, 0.25);
+  --glow-gold-strong: 0 0 28px rgba(201, 168, 76, 0.5);
+  --glow-crimson: 0 0 20px rgba(139, 26, 26, 0.4);
+
+  /* === Z-index === */
+  --z-base:    1;
+  --z-sticky:  50;
+  --z-navbar:  100;
+  --z-sidebar: 90;
+  --z-dropdown:200;
+  --z-modal:   1000;
+  --z-toast:   1100;
+  --z-tooltip: 1200;
+}

@@ -1,0 +1,31 @@
+import { Navigate, useLocation } from 'react-router-dom';
+
+import { useAuth } from '@/hooks/useAuth';
+import { Spinner } from '@/components/ui';
+
+/**
+ * @param {{ requireRol?: string, children: React.ReactNode }} props
+ * requireRol = 'any' — solo requiere auth. requireRol = 'jugador' — requiere ese rol exacto.
+ */
+export default function ProtectedRoute({ requireRol, children }) {
+  const { user, rol, loading } = useAuth();
+  const location = useLocation();
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  }
+
+  if (requireRol && requireRol !== 'any' && rol !== requireRol) {
+    return <Navigate to="/forbidden" replace />;
+  }
+
+  return children;
+}

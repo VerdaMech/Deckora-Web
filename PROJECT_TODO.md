@@ -95,9 +95,27 @@ Objetivo: dejar la app corriendo con layout, rutas placeholder, design system y 
 
 Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
 
-- [ ] Login (`/login`)
-- [ ] Registro con selector de rol (`/registro`)
-- [ ] Recuperar contraseña (`/recuperar`)
+### Persona A (sesión actual)
+
+- [x] **Commit 1** · `feat(identidad): agregar página de login con integración al flujo de auth`
+  - [x] src/services/auth.service.js (signup, login, logout, getMe, recuperarPassword)
+  - [x] src/context/AuthContext.jsx refactorizado para delegar al service
+  - [x] src/modules/identidad/pages/Login.jsx (form completo, validación, redirect por rol)
+  - [x] CSS auth en src/styles/components.css (.auth-page, .auth-card, .auth-form, etc.)
+
+- [ ] **Commit 2** · `feat(identidad): agregar página de registro con selector de rol`
+  - [ ] src/modules/identidad/components/SelectorRol.jsx
+  - [ ] src/modules/identidad/pages/Registro.jsx
+
+- [ ] **Commit 3** · `feat(identidad): agregar página de recuperación de contraseña`
+  - [ ] src/modules/identidad/pages/RecuperarPassword.jsx
+
+### Persona B (próxima sesión)
+
+- [ ] Perfil de jugador (minimalista, sin formato preferido ni inscripciones próximas; con stats básicas)
+- [ ] Perfil de organizador (sin badge verificado)
+- [ ] Perfil de tienda
+- [ ] Configuración de cuenta (tabs: cuenta, configuración tienda si rol tienda)
 - [ ] Perfil de jugador (minimalista, sin formato preferido ni inscripciones próximas; con stats básicas)
 - [ ] Perfil de organizador (sin badge verificado)
 - [ ] Perfil de tienda

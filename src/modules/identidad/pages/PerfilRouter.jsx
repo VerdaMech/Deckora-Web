@@ -5,8 +5,8 @@ import { Spinner } from '@/components/ui';
 import { obtenerPerfilPublico } from '@/services/usuarios.service';
 import NotFound from '@/pages/NotFound';
 import PerfilJugador from './PerfilJugador';
-// import PerfilOrganizador from './PerfilOrganizador';   // commit 5
-// import PerfilTienda from './PerfilTienda';             // commit 5
+import PerfilOrganizador from './PerfilOrganizador';
+import PerfilTienda from './PerfilTienda';
 
 export default function PerfilRouter() {
   const { username } = useParams();
@@ -31,7 +31,7 @@ export default function PerfilRouter() {
   if (error || !perfil) return <NotFound />;
 
   if (perfil.rol === 'jugador') return <PerfilJugador perfil={perfil} />;
-  // if (perfil.rol === 'organizador') return <PerfilOrganizador perfil={perfil} />;
-  // if (perfil.rol === 'tienda') return <PerfilTienda perfil={perfil} />;
+  if (perfil.rol === 'organizador') return <PerfilOrganizador perfil={perfil} />;
+  if (perfil.rol === 'tienda') return <PerfilTienda perfil={perfil} />;
   return <NotFound />;
 }

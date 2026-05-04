@@ -120,12 +120,12 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
   - [x] src/modules/identidad/pages/PerfilRouter.jsx (despacha según perfil.rol)
   - [x] src/modules/identidad/routes.jsx actualizado a PerfilRouter
   - [x] CSS en components.css (.profile-*, .estadisticas-jugador*)
-- [ ] **Commit 5** · `feat(identidad): agregar perfiles de organizador y tienda`
-  - [ ] src/components/domain/MiniMapaTienda.jsx
-  - [ ] src/modules/identidad/pages/PerfilOrganizador.jsx
-  - [ ] src/modules/identidad/pages/PerfilTienda.jsx
-  - [ ] PerfilRouter.jsx actualizado con organizador y tienda
-  - [ ] leaflet CSS importado en main.jsx
+- [x] **Commit 5** · `feat(identidad): agregar perfiles de organizador y tienda`
+  - [x] src/components/domain/MiniMapaTienda.jsx (react-leaflet, tiles dark, pin custom)
+  - [x] src/modules/identidad/pages/PerfilOrganizador.jsx
+  - [x] src/modules/identidad/pages/PerfilTienda.jsx (info + mini-mapa + torneos)
+  - [x] PerfilRouter.jsx actualizado con organizador y tienda
+  - [x] leaflet CSS importado en main.jsx
 - [ ] **Commit 6** · `feat(identidad): agregar configuración de cuenta con tabs cuenta y tienda`
   - [ ] src/services/tiendas.service.js
   - [ ] src/modules/identidad/components/CuentaTab.jsx

@@ -1347,3 +1347,104 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ============================================================
+   PROFILE — organizador y tienda
+   ============================================================ */
+.profile-info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.profile-info-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--text-default);
+  font-family: 'Crimson Pro', Georgia, serif;
+}
+
+.profile-info-list li svg {
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.profile-descripcion {
+  font-family: 'Crimson Pro', Georgia, serif;
+  color: var(--text-default);
+  line-height: 1.6;
+  margin-bottom: var(--space-3);
+}
+
+.profile-sitio-web {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--gold);
+  text-decoration: none;
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 0.9rem;
+}
+
+.profile-sitio-web:hover {
+  color: var(--gold-light);
+}
+
+.profile-torneos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-4);
+}
+
+.profile-mis-torneos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.profile-edit-banner {
+  background: var(--bg-panel-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Crimson Pro', Georgia, serif;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   MINI MAPA TIENDA
+   ============================================================ */
+.mini-mapa-tienda {
+  height: 300px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  margin-bottom: var(--space-5);
+}
+
+.mini-mapa-tienda__map {
+  height: 100%;
+  width: 100%;
+}
+
+.mini-mapa-pin {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--crimson);
+  box-shadow: 0 0 6px rgba(201, 168, 76, 0.5);
+}
+
+@media (max-width: 768px) {
+  .mini-mapa-tienda {
+    height: 200px;
+  }
+}

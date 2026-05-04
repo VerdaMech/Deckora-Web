@@ -10,7 +10,7 @@ Este documento es para que cualquier persona (humana o IA) que entre al proyecto
 ## Estado general
 
 - [x] **Fase 1 — Fundamentos** (Sprint 0)
-- [ ] **Fase 2 — Identidad** (auth + perfiles)
+- [x] **Fase 2 — Identidad** (auth + perfiles)
 - [ ] **Fase 3 — Mazos y Colecciones**
 - [ ] **Fase 4 — Torneos**
 - [ ] **Fase 5 — Mapa y Dashboards**
@@ -95,13 +95,42 @@ Objetivo: dejar la app corriendo con layout, rutas placeholder, design system y 
 
 Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
 
-- [ ] Login (`/login`)
-- [ ] Registro con selector de rol (`/registro`)
-- [ ] Recuperar contraseña (`/recuperar`)
-- [ ] Perfil de jugador (minimalista, sin formato preferido ni inscripciones próximas; con stats básicas)
-- [ ] Perfil de organizador (sin badge verificado)
-- [ ] Perfil de tienda
-- [ ] Configuración de cuenta (tabs: cuenta, configuración tienda si rol tienda)
+### Persona A (sesión actual)
+
+- [x] **Commit 1** · `feat(identidad): agregar página de login con integración al flujo de auth`
+  - [x] src/services/auth.service.js (signup, login, logout, getMe, recuperarPassword)
+  - [x] src/context/AuthContext.jsx refactorizado para delegar al service
+  - [x] src/modules/identidad/pages/Login.jsx (form completo, validación, redirect por rol)
+  - [x] CSS auth en src/styles/components.css (.auth-page, .auth-card, .auth-form, etc.)
+
+- [x] **Commit 2** · `feat(identidad): agregar página de registro con selector de rol`
+  - [x] src/modules/identidad/components/SelectorRol.jsx
+  - [x] src/modules/identidad/pages/Registro.jsx
+
+- [x] **Commit 3** · `feat(identidad): agregar página de recuperación de contraseña`
+  - [x] src/modules/identidad/pages/RecuperarPassword.jsx
+
+### Persona B (sesión actual)
+
+- [x] **Commit 4** · `feat(identidad): agregar perfil de jugador con estadísticas`
+  - [x] src/services/usuarios.service.js (obtenerPerfilPublico, obtenerEstadisticas, obtenerMisInscripciones, obtenerTorneosDeUsuario, actualizarMiPerfil)
+  - [x] src/components/domain/RoleBadge.jsx
+  - [x] src/components/domain/EstadisticasJugador.jsx (con Skeleton y EmptyState)
+  - [x] src/modules/identidad/pages/PerfilJugador.jsx (avatar, stats, mazos mock, tabs si es dueño)
+  - [x] src/modules/identidad/pages/PerfilRouter.jsx (despacha según perfil.rol)
+  - [x] src/modules/identidad/routes.jsx actualizado a PerfilRouter
+  - [x] CSS en components.css (.profile-*, .estadisticas-jugador*)
+- [x] **Commit 5** · `feat(identidad): agregar perfiles de organizador y tienda`
+  - [x] src/components/domain/MiniMapaTienda.jsx (react-leaflet, tiles dark, pin custom)
+  - [x] src/modules/identidad/pages/PerfilOrganizador.jsx
+  - [x] src/modules/identidad/pages/PerfilTienda.jsx (info + mini-mapa + torneos)
+  - [x] PerfilRouter.jsx actualizado con organizador y tienda
+  - [x] leaflet CSS importado en main.jsx
+- [x] **Commit 6** · `feat(identidad): agregar configuración de cuenta con tabs cuenta y tienda`
+  - [x] src/services/tiendas.service.js
+  - [x] src/modules/identidad/components/CuentaTab.jsx (cambio email/pass + eliminar cuenta con modal)
+  - [x] src/modules/identidad/components/ConfiguracionTiendaTab.jsx (mapa interactivo + coords)
+  - [x] src/modules/identidad/pages/Configuracion.jsx (tabs por rol, soporte ?tab=tienda)
 
 ## Fase 3 — Mazos y Colecciones
 

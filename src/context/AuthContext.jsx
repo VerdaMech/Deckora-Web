@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
 import { supabase } from '@/services/supabase';
-import { apiGet, apiPost } from '@/services/api';
+import * as authService from '@/services/auth.service';
 
 const AuthContext = createContext(null);
 
@@ -10,31 +10,27 @@ export function AuthProvider({ children }) {
   const [rol, setRol] = useState(null);
   const [perfil, setPerfil] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   async function fetchMe() {
     try {
-      const data = await apiGet('/auth/me');
+      const data = await authService.getMe();
       setUser(data.user ?? data);
       setRol(data.rol ?? data.user?.rol ?? null);
       setPerfil(data.perfil ?? null);
-    } catch (err) {
+    } catch {
       setUser(null);
       setRol(null);
       setPerfil(null);
-      setError(err.message);
     }
   }
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
-      if (session) {
-        await fetchMe();
-      }
+      if (session) await fetchMe();
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session) {
         await fetchMe();
       } else {
@@ -48,27 +44,30 @@ export function AuthProvider({ children }) {
   }, []);
 
   async function login(email, password) {
-    setError(null);
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
-    if (authError) throw authError;
-    await fetchMe();
+    const data = await authService.login(email, password);
+    setUser(data.user ?? data);
+    setRol(data.rol ?? data.user?.rol ?? null);
+    setPerfil(data.perfil ?? null);
+    return data;
   }
 
-  async function signup({ email, password, nombre_usuario, rol: rolElegido }) {
-    setError(null);
-    const data = await apiPost('/auth/signup', { email, password, nombre_usuario, rol: rolElegido });
+  async function signup(params) {
+    const data = await authService.signup(params);
+    if (data?.session) {
+      await fetchMe();
+    }
     return data;
   }
 
   async function logout() {
-    await supabase.auth.signOut();
+    await authService.logout();
     setUser(null);
     setRol(null);
     setPerfil(null);
   }
 
   return (
-    <AuthContext.Provider value={{ user, rol, perfil, loading, error, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, rol, perfil, loading, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   );

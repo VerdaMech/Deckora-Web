@@ -58,7 +58,7 @@ export default function Sidebar() {
               }
               title={collapsed ? item.label : undefined}
             >
-              <item.icon size={18} style={{ flexShrink: 0 }} />
+              <item.icon size={18} />
               {!collapsed && <span>{item.label}</span>}
             </NavLink>
           </li>

@@ -16,7 +16,6 @@ export default function Spinner({ size = 'md', className = '' }) {
       className={`spinner ${className}`}
       aria-label="Cargando"
       role="status"
-      style={{ flexShrink: 0 }}
     >
       <circle
         cx={px / 2}

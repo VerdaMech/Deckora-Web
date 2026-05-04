@@ -103,9 +103,9 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
   - [x] src/modules/identidad/pages/Login.jsx (form completo, validación, redirect por rol)
   - [x] CSS auth en src/styles/components.css (.auth-page, .auth-card, .auth-form, etc.)
 
-- [ ] **Commit 2** · `feat(identidad): agregar página de registro con selector de rol`
-  - [ ] src/modules/identidad/components/SelectorRol.jsx
-  - [ ] src/modules/identidad/pages/Registro.jsx
+- [x] **Commit 2** · `feat(identidad): agregar página de registro con selector de rol`
+  - [x] src/modules/identidad/components/SelectorRol.jsx
+  - [x] src/modules/identidad/pages/Registro.jsx
 
 - [ ] **Commit 3** · `feat(identidad): agregar página de recuperación de contraseña`
   - [ ] src/modules/identidad/pages/RecuperarPassword.jsx

@@ -110,16 +110,27 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
 - [x] **Commit 3** · `feat(identidad): agregar página de recuperación de contraseña`
   - [x] src/modules/identidad/pages/RecuperarPassword.jsx
 
-### Persona B (próxima sesión)
+### Persona B (sesión actual)
 
-- [ ] Perfil de jugador (minimalista, sin formato preferido ni inscripciones próximas; con stats básicas)
-- [ ] Perfil de organizador (sin badge verificado)
-- [ ] Perfil de tienda
-- [ ] Configuración de cuenta (tabs: cuenta, configuración tienda si rol tienda)
-- [ ] Perfil de jugador (minimalista, sin formato preferido ni inscripciones próximas; con stats básicas)
-- [ ] Perfil de organizador (sin badge verificado)
-- [ ] Perfil de tienda
-- [ ] Configuración de cuenta (tabs: cuenta, configuración tienda si rol tienda)
+- [x] **Commit 4** · `feat(identidad): agregar perfil de jugador con estadísticas`
+  - [x] src/services/usuarios.service.js (obtenerPerfilPublico, obtenerEstadisticas, obtenerMisInscripciones, obtenerTorneosDeUsuario, actualizarMiPerfil)
+  - [x] src/components/domain/RoleBadge.jsx
+  - [x] src/components/domain/EstadisticasJugador.jsx (con Skeleton y EmptyState)
+  - [x] src/modules/identidad/pages/PerfilJugador.jsx (avatar, stats, mazos mock, tabs si es dueño)
+  - [x] src/modules/identidad/pages/PerfilRouter.jsx (despacha según perfil.rol)
+  - [x] src/modules/identidad/routes.jsx actualizado a PerfilRouter
+  - [x] CSS en components.css (.profile-*, .estadisticas-jugador*)
+- [ ] **Commit 5** · `feat(identidad): agregar perfiles de organizador y tienda`
+  - [ ] src/components/domain/MiniMapaTienda.jsx
+  - [ ] src/modules/identidad/pages/PerfilOrganizador.jsx
+  - [ ] src/modules/identidad/pages/PerfilTienda.jsx
+  - [ ] PerfilRouter.jsx actualizado con organizador y tienda
+  - [ ] leaflet CSS importado en main.jsx
+- [ ] **Commit 6** · `feat(identidad): agregar configuración de cuenta con tabs cuenta y tienda`
+  - [ ] src/services/tiendas.service.js
+  - [ ] src/modules/identidad/components/CuentaTab.jsx
+  - [ ] src/modules/identidad/components/ConfiguracionTiendaTab.jsx
+  - [ ] src/modules/identidad/pages/Configuracion.jsx completo
 
 ## Fase 3 — Mazos y Colecciones
 

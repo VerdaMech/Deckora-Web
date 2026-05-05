@@ -1,10 +1,11 @@
 import { supabase } from './supabase';
 import { apiGet, apiPost } from './api';
 
-export async function signup({ email, password, nombre_usuario, rol, nombre_tienda }) {
-  const payload = { email, password, nombre_usuario, rol };
-  if (nombre_tienda) payload.nombre_tienda = nombre_tienda;
-  return apiPost('/auth/signup', payload);
+export async function signup({ email, password, nombre_usuario, rol }) {
+  await apiPost('/auth/signup', { correo: email, password, nombre_usuario, rol });
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) throw error;
+  return getMe();
 }
 
 export async function login(email, password) {

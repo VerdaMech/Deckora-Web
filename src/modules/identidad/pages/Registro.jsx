@@ -50,7 +50,7 @@ export default function Registro() {
     if (!correo) errs.correo = 'El correo es obligatorio.';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) errs.correo = 'Ingresá un correo válido.';
     if (!password) errs.password = 'La contraseña es obligatoria.';
-    else if (password.length < 6) errs.password = 'La contraseña debe tener al menos 6 caracteres.';
+    else if (password.length < 8) errs.password = 'La contraseña debe tener al menos 8 caracteres.';
     if (!confirmacion) errs.confirmacion = 'Confirmá tu contraseña.';
     else if (password !== confirmacion) errs.confirmacion = 'Las contraseñas no coinciden.';
     if (rol === 'tienda' && !nombreTienda) errs.nombreTienda = 'El nombre de la tienda es obligatorio.';
@@ -72,7 +72,6 @@ export default function Registro() {
         password,
         nombre_usuario: nombreUsuario,
         rol,
-        nombre_tienda: rol === 'tienda' ? nombreTienda : undefined,
       });
       const rolObtenido = data?.rol ?? data?.user?.rol ?? rol;
       navigate(rolADestino(rolObtenido), { replace: true });

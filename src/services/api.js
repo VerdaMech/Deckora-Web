@@ -2,9 +2,18 @@ import { supabase } from './supabase';
 
 const API_URL = import.meta.env.VITE_API_URL ?? '';
 
+async function getAccessToken() {
+  try {
+    const timeout = new Promise((resolve) => setTimeout(() => resolve(null), 3000));
+    const session = supabase.auth.getSession().then(({ data }) => data?.session?.access_token ?? null);
+    return await Promise.race([session, timeout]);
+  } catch {
+    return null;
+  }
+}
+
 async function apiFetch(path, options = {}) {
-  const { data: sessionData } = await supabase.auth.getSession();
-  const token = sessionData?.session?.access_token;
+  const token = await getAccessToken();
 
   const headers = { ...options.headers };
   if (token) headers['Authorization'] = `Bearer ${token}`;

@@ -1,5 +1,6 @@
 import { BarraAgregarCarta } from '@/modules/mazos/components/BarraAgregarCarta';
 import { PanelValidacion } from '@/modules/mazos/components/PanelValidacion';
+import { AsistenteIA } from '@/modules/mazos/components/AsistenteIA';
 import { DeckList } from './DeckList';
 import { DeckStats } from './DeckStats';
 import './DeckBuilder.css';
@@ -14,7 +15,7 @@ export function DeckBuilder({
   onCantidadChange,
   onEliminar,
   onMarcarComandante,
-  slotAsistenteIA,
+  onAplicarSugerencia,
 }) {
   return (
     <div className="deck-builder">
@@ -54,11 +55,9 @@ export function DeckBuilder({
           />
         </div>
 
-        {slotAsistenteIA && (
-          <div className="deck-builder__asistente">
-            {slotAsistenteIA}
-          </div>
-        )}
+        <div className="deck-builder__asistente">
+          <AsistenteIA mazo={mazo} onAplicarSugerencia={onAplicarSugerencia} />
+        </div>
       </div>
     </div>
   );

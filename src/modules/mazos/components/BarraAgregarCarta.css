@@ -98,3 +98,7 @@
   text-align: center;
   margin: 0;
 }
+
+.barra-agregar__sin-resultados--error {
+  color: var(--danger);
+}

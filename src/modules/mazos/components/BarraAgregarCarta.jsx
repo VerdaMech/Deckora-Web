@@ -12,6 +12,7 @@ export function BarraAgregarCarta({ onAgregar }) {
   const [resultados, setResultados] = useState([]);
   const [cargando, setCargando] = useState(false);
   const [abierto, setAbierto] = useState(false);
+  const [errorBusqueda, setErrorBusqueda] = useState(false);
   const debouncedQuery = useDebounce(query, 300);
   const wrapperRef = useRef(null);
 
@@ -19,11 +20,13 @@ export function BarraAgregarCarta({ onAgregar }) {
     if (!debouncedQuery.trim()) {
       setResultados([]);
       setAbierto(false);
+      setErrorBusqueda(false);
       return;
     }
 
     let activo = true;
     setCargando(true);
+    setErrorBusqueda(false);
 
     buscarCartas(debouncedQuery)
       .then((data) => {
@@ -35,6 +38,8 @@ export function BarraAgregarCarta({ onAgregar }) {
       .catch(() => {
         if (!activo) return;
         setResultados([]);
+        setErrorBusqueda(true);
+        setAbierto(true);
       })
       .finally(() => {
         if (activo) setCargando(false);
@@ -90,7 +95,11 @@ export function BarraAgregarCarta({ onAgregar }) {
 
       {abierto && (
         <div className="barra-agregar__dropdown" role="listbox">
-          {resultados.length === 0 ? (
+          {errorBusqueda ? (
+            <p className="barra-agregar__sin-resultados barra-agregar__sin-resultados--error">
+              No pudimos buscar cartas. Reintentá.
+            </p>
+          ) : resultados.length === 0 ? (
             <p className="barra-agregar__sin-resultados">
               Sin resultados para &ldquo;{debouncedQuery}&rdquo;
             </p>

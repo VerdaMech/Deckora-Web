@@ -29,7 +29,7 @@ function Toast({ mensaje, variant = 'danger', onClose }) {
   );
 }
 
-export function ModoEdicionMazo({ mazo, onSalir, slotAsistenteIA }) {
+export function ModoEdicionMazo({ mazo, onSalir }) {
   const [cartas, setCartas] = useState(mazo?.cartas ?? []);
   const [comandanteId, setComandanteId] = useState(mazo?.comandanteId ?? mazo?.comandante_id ?? null);
   const [validacion, setValidacion] = useState(null);
@@ -199,7 +199,7 @@ export function ModoEdicionMazo({ mazo, onSalir, slotAsistenteIA }) {
         onCantidadChange={handleCantidadChange}
         onEliminar={handleEliminar}
         onMarcarComandante={handleMarcarComandante}
-        slotAsistenteIA={slotAsistenteIA}
+        onAplicarSugerencia={(s) => console.info('[AsistenteIA] sugerencia aplicada (mock):', s)}
       />
 
       <Modal

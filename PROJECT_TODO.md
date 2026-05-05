@@ -11,7 +11,7 @@ Este documento es para que cualquier persona (humana o IA) que entre al proyecto
 
 - [x] **Fase 1 — Fundamentos** (Sprint 0)
 - [x] **Fase 2 — Identidad** (auth + perfiles)
-- [ ] **Fase 3 — Mazos y Colecciones**
+- [x] **Fase 3 — Mazos y Colecciones**
 - [ ] **Fase 4 — Torneos**
 - [ ] **Fase 5 — Mapa y Dashboards**
 - [ ] **Fase 6 — Pulido final**
@@ -177,7 +177,7 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
 
 - [x] DeckStats.jsx + reemplazar placeholder en DetalleMazo
 - [x] Modo edición (deck builder) + activar botón "Editar"
-- [ ] Asistente IA mockeado, pulido responsive y empty/error states
+- [x] Asistente IA mockeado, pulido responsive y empty/error states
 
 ## Fase 4 — Torneos
 

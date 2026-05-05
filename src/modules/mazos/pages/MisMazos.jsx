@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Layers, Plus, Calendar } from 'lucide-react';
 
 import { Spinner, Alert, EmptyState } from '@/components/ui';
@@ -53,6 +54,7 @@ function MazoCard({ mazo, onClick }) {
 }
 
 export default function MisMazos() {
+  const navigate = useNavigate();
   const [mazos, setMazos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -133,7 +135,7 @@ export default function MisMazos() {
             <MazoCard
               key={mazo.id}
               mazo={mazo}
-              onClick={() => window.location.assign(`/mazos/${mazo.id}`)}
+              onClick={() => navigate(`/mazos/${mazo.id}`)}
             />
           ))}
         </div>

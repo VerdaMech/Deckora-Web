@@ -1,4 +1,4 @@
-import { Minus, Plus, Trash2 } from 'lucide-react';
+import { Minus, Plus, Trash2, Crown } from 'lucide-react';
 
 import { agruparPorTipo } from '@/utils/deck-helpers';
 import { MTGCard } from './MTGCard';
@@ -48,10 +48,15 @@ function EntradaCarta({
   onCantidadChange,
   onEliminar,
   onMarcarComandante,
+  formato,
 }) {
   const carta = entrada.carta ?? entrada;
   const nombre = carta?.name ?? carta?.nombre ?? '—';
   const manaCost = carta?.mana_cost ?? carta?.manaCost ?? '';
+  const typeLine = (carta?.type_line ?? carta?.typeLine ?? '').toLowerCase();
+  const esLegendaria = typeLine.includes('legendary') && typeLine.includes('creature');
+  const esCommander = formato?.toUpperCase() === 'COMMANDER';
+  const puedeSerComandante = esCommander && esLegendaria && !esComandante;
 
   return (
     <div className={`deck-list__entrada${esComandante ? ' deck-list__entrada--commander' : ''}`}>
@@ -78,14 +83,15 @@ function EntradaCarta({
 
       {editable ? (
         <div className="deck-list__controles">
-          {!esComandante && onMarcarComandante && (
+          {puedeSerComandante && onMarcarComandante && (
             <button
               className="deck-list__btn-cmdr"
               onClick={() => onMarcarComandante(entrada)}
               title="Marcar como comandante"
               type="button"
+              aria-label="Marcar como comandante"
             >
-              ★
+              <Crown size={13} />
             </button>
           )}
           <div className="deck-list__stepper">
@@ -127,6 +133,7 @@ function EntradaCarta({
 export function DeckList({
   cartas = [],
   comandanteId,
+  formato,
   onCartaClick,
   editable = false,
   onCantidadChange,
@@ -168,6 +175,7 @@ export function DeckList({
                     esComandante={!!esComandante}
                     onCartaClick={onCartaClick}
                     editable={editable}
+                    formato={formato}
                     onCantidadChange={onCantidadChange}
                     onEliminar={onEliminar}
                     onMarcarComandante={onMarcarComandante}

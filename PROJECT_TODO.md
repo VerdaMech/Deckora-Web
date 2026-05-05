@@ -165,11 +165,13 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
 
 ### Persona A — Commit 3 (Mazos modo lectura)
 
-- [ ] **Páginas**
-  - [ ] MisMazos.jsx + .css (ruta /mazos)
-  - [ ] CrearMazoModal.jsx + .css
-  - [ ] DetalleMazo.jsx + .css (ruta /mazos/:id, modo lectura, botón Editar deshabilitado)
-- [ ] Rutas /mazos y /mazos/:id reales (sin placeholder)
+- [x] **Páginas**
+  - [x] MisMazos.jsx + .css (ruta /mazos, grid responsive, botón Crear abre modal)
+  - [x] CrearMazoModal.jsx + .css (form con nombre, formato, descripción, público; validación cliente)
+  - [x] DetalleMazo.jsx + .css (ruta /mazos/:id, DeckList modo lectura, placeholder stats, botón Editar deshabilitado con Tooltip)
+- [x] Rutas /mazos y /mazos/:id reales; ruta /mazos/nuevo eliminada (modal vive en /mazos)
+
+**Nota:** Modo edición y DeckStats pendientes para Persona B (commits 4-5).
 
 ### Persona B — Commits 4–6 (pendientes)
 

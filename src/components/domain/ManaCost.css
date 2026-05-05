@@ -1,0 +1,11 @@
+.mana-cost {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.mana-cost .ms {
+  font-size: 1rem;
+  line-height: 1;
+}

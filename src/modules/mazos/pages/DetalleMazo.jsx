@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Pencil, BarChart3, Calendar } from 'lucide-react';
+import { ArrowLeft, Pencil, Calendar } from 'lucide-react';
 
-import { Spinner, Alert, EmptyState, Tooltip } from '@/components/ui';
-import { FormatBadge, DeckList } from '@/components/domain';
+import { Spinner, Alert, Tooltip } from '@/components/ui';
+import { FormatBadge, DeckList, DeckStats } from '@/components/domain';
 import { obtenerMazo } from '@/services/mazos.service';
 import { relativeDate } from '@/utils/formatters';
 
@@ -112,13 +112,11 @@ export default function DetalleMazo() {
           </div>
 
           <aside className="detalle-mazo__col-stats">
-            <div className="detalle-mazo__stats-placeholder">
-              <EmptyState
-                icon={BarChart3}
-                title="Estadísticas próximamente"
-                description="Curva de maná, distribución de colores y más."
-              />
-            </div>
+            <DeckStats
+              cartas={mazo.cartas ?? []}
+              formato={mazo.formato}
+              comandanteId={mazo.comandanteId ?? mazo.comandante_id}
+            />
           </aside>
         </div>
       )}

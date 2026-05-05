@@ -173,12 +173,11 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
 
 **Nota:** Modo edición y DeckStats pendientes para Persona B (commits 4-5).
 
-### Persona B — Commits 4–6 (pendientes)
+### Persona B — Commits 4–6
 
-- [ ] DeckStats.jsx + reemplazar placeholder en DetalleMazo
+- [x] DeckStats.jsx + reemplazar placeholder en DetalleMazo
 - [ ] Modo edición (deck builder) + activar botón "Editar"
 - [ ] Asistente IA mockeado, pulido responsive y empty/error states
-- [ ] PR a dev
 
 ## Fase 4 — Torneos
 

@@ -155,13 +155,13 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
 
 ### Persona A — Commit 2 (Módulo de colecciones)
 
-- [ ] **Páginas**
-  - [ ] MisColecciones.jsx + .css (ruta /colecciones)
-  - [ ] DetalleColeccion.jsx + .css (ruta /colecciones/:id)
-- [ ] **Componentes del módulo**
-  - [ ] BarraAgregarCarta.jsx + .css
-  - [ ] ColeccionEditor.jsx + .css
-- [ ] Rutas /colecciones y /colecciones/:id reales (sin placeholder)
+- [x] **Páginas**
+  - [x] MisColecciones.jsx + .css (ruta /colecciones)
+  - [x] DetalleColeccion.jsx + .css (ruta /colecciones/:id)
+- [x] **Componentes del módulo**
+  - [x] BarraAgregarCarta.jsx + .css (búsqueda con debounce, dropdown, cierra con Escape/click fuera)
+  - [x] ColeccionEditor.jsx + .css (cantidad stepper, toggle foil, eliminar con confirmación)
+- [x] Rutas /colecciones y /colecciones/:id reales (ya estaban correctas en routes.jsx)
 
 ### Persona A — Commit 3 (Mazos modo lectura)
 

@@ -1,0 +1,51 @@
+.placeholder-page__title {
+  color: var(--gold);
+}
+
+.placeholder-page__meta {
+  margin-top: var(--space-3);
+  color: var(--text-muted);
+}
+
+.placeholder-page__note {
+  margin-top: var(--space-2);
+  color: var(--text-muted);
+}
+
+.landing-placeholder {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--space-5);
+  padding: var(--space-7);
+}
+
+.landing-placeholder__title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 4rem;
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1.1;
+  margin: 0;
+}
+
+.landing-placeholder__desc {
+  color: var(--text-muted);
+  max-width: 48ch;
+}
+
+.landing-placeholder__actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.landing-placeholder__note {
+  color: var(--text-muted);
+  margin-top: var(--space-4);
+  opacity: 0.6;
+}

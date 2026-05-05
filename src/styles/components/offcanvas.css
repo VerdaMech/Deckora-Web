@@ -1,0 +1,29 @@
+.offcanvas-deckora {
+  background: var(--bg-elevated) !important;
+  border-left: 1px solid var(--border-subtle) !important;
+}
+
+.offcanvas-header-deckora {
+  border-bottom: 1px solid var(--border-subtle) !important;
+  padding: var(--space-4) var(--space-5) !important;
+}
+
+.offcanvas-header-deckora .btn-close {
+  filter: invert(1) opacity(0.5) !important;
+}
+
+.offcanvas-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.offcanvas-nav-actions {
+  margin-top: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}

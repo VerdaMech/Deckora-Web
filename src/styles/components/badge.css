@@ -1,0 +1,86 @@
+.badge-deckora {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-sm);
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1;
+}
+
+/* format */
+.badge--format {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+}
+
+/* estado */
+.badge--estado--pendiente {
+  background: var(--warning-bg);
+  color: var(--warning);
+  border: none;
+}
+.badge--estado--en-curso {
+  background: var(--info-bg);
+  color: var(--info);
+  border: none;
+}
+.badge--estado--finalizado {
+  background: var(--success-bg);
+  color: var(--success);
+  border: none;
+}
+.badge--estado--cancelado {
+  background: var(--bg-panel-2);
+  color: var(--text-muted);
+  border: none;
+}
+
+/* rol */
+.badge--rol--jugador {
+  background: rgba(201, 168, 76, 0.15);
+  color: var(--role-jugador);
+  border: none;
+}
+.badge--rol--organizador {
+  background: rgba(160, 111, 196, 0.15);
+  color: var(--role-organizador);
+  border: none;
+}
+.badge--rol--tienda {
+  background: rgba(192, 138, 74, 0.15);
+  color: var(--role-tienda);
+  border: none;
+}
+
+/* resultado */
+.badge--resultado--ganador {
+  background: var(--success-bg);
+  color: var(--success);
+  border: none;
+}
+.badge--resultado--perdedor {
+  background: var(--bg-panel-2);
+  color: var(--text-muted);
+  border: none;
+}
+.badge--resultado--empate {
+  background: var(--warning-bg);
+  color: var(--warning);
+  border: none;
+}
+.badge--resultado--pendiente {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+}
+
+/* default */
+.badge--default {
+  background: var(--bg-panel-2);
+  color: var(--text-muted);
+  border: none;
+}

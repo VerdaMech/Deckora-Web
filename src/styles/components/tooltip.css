@@ -1,0 +1,14 @@
+.tooltip-deckora .tooltip-inner {
+  background: var(--bg-panel-2);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-default);
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.8rem;
+  font-family: 'Crimson Pro', Georgia, serif;
+  border-radius: var(--radius-md);
+  text-align: left;
+}
+
+.tooltip-deckora .tooltip-arrow::before {
+  border-top-color: var(--border-subtle);
+}

@@ -1,0 +1,27 @@
+.mini-mapa-tienda {
+  height: 300px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  margin-bottom: var(--space-5);
+}
+
+.mini-mapa-tienda__map {
+  height: 100%;
+  width: 100%;
+}
+
+.mini-mapa-pin {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--crimson);
+  box-shadow: 0 0 6px rgba(201, 168, 76, 0.5);
+}
+
+@media (max-width: 768px) {
+  .mini-mapa-tienda {
+    height: 200px;
+  }
+}

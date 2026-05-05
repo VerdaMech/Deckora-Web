@@ -1,0 +1,41 @@
+.tabs-deckora {
+  display: flex;
+  flex-direction: column;
+}
+
+.tabs-nav {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border-subtle);
+  overflow-x: auto;
+}
+
+.tabs-nav__btn {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: var(--space-3) var(--space-5);
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.18s, border-color 0.18s;
+  white-space: nowrap;
+  margin-bottom: -1px;
+}
+
+.tabs-nav__btn:hover {
+  color: var(--text-default);
+}
+
+.tabs-nav__btn--active {
+  color: var(--text-primary);
+  border-bottom-color: var(--gold);
+}
+
+.tabs-content {
+  padding-top: var(--space-4);
+}

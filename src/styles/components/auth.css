@@ -1,0 +1,71 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5) var(--space-4);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+}
+
+.auth-card__logo {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--gold);
+  text-align: center;
+  margin-bottom: var(--space-5);
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 30px rgba(201, 168, 76, 0.3);
+}
+
+.auth-card__title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: var(--space-5);
+  color: var(--text-primary);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.auth-form__forgot {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: right;
+  display: block;
+  margin-top: calc(var(--space-2) * -1);
+  text-decoration: none;
+}
+.auth-form__forgot:hover { color: var(--gold-light); }
+
+.auth-form__submit { width: 100%; margin-top: var(--space-3); }
+
+.auth-form__footer {
+  text-align: center;
+  margin-top: var(--space-5);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+.auth-form__footer a {
+  color: var(--gold);
+  text-decoration: none;
+}
+.auth-form__footer a:hover { color: var(--gold-light); }
+
+.auth-form__lead {
+  font-family: 'Crimson Pro', serif;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: var(--space-4);
+  line-height: 1.5;
+}

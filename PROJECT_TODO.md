@@ -240,13 +240,45 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
 
 ## Fase 6 — Pulido final
 
-- [ ] QA cruzado de todas las pantallas
-- [ ] Responsive en breakpoints clave (375, 768, 1280, 1920)
-- [ ] Lazy loading de imágenes de cartas
-- [ ] Code splitting por módulo
-- [ ] Empty states y error states completos
-- [ ] Deploy a Vercel
-- [ ] CORS de producción configurado en backend
+Rama de trabajo: `feature/pulido-final`
+
+### Persona A — Commits completados
+
+- [x] **Commit A0** (pre-trabajo) · `fix(services): agregar listarTorneosProximos y listarMisTorneos` _(incluido en Commit 1)_
+  - Fix de build: `torneos.service.js` carecía de estos exports requeridos por Fase 5 B1
+
+- [x] **Commit A1** · `feat(ui): agregar sistema de toasts y traducción de errores`
+  - `src/utils/errors.js`: `traducirError()` (mapeo HTTP + Supabase → español neutro), `esColdStart()`
+  - `src/components/ui/Toast.jsx` + `Toast.css`: toast con variantes exito/error/info/advertencia, aria-live, pause-on-hover, animaciones slide/fade
+  - `src/context/ToastContext.jsx`: provider con máx 4 toasts, container fixed top-right (top-center mobile), hooks `mostrarExito/Error/Info/Advertencia`
+  - `App.jsx`: monta `ToastProvider`
+  - Integración toasts en: Login, Registro, RecuperarPassword, CuentaTab, ConfiguracionTiendaTab, CrearMazoModal, CrearTorneo, EditarTorneo, PanelInscripcion
+
+- [x] **Commit A2** · `feat(ui): agregar ConfirmDialog destructivo y mensaje de cold start`
+  - `src/components/ui/ConfirmDialog.jsx` + `ConfirmDialog.css`: modal de confirmación con variantes, requiereTexto, foco en Cancelar, aria
+  - `src/hooks/useConfirmDialog.jsx`: hook con estado y async onConfirmar
+  - `src/hooks/useApiCall.js`: hook para llamadas async con detección de cold start
+  - `Spinner.jsx`: prop `mostrarColdStart` muestra mensaje "El servidor está despertando…"
+  - `CuentaTab.jsx`: reemplaza modal manual por `useConfirmDialog` con `requiereTexto="ELIMINAR"`
+  - `MisMazos.jsx`: timer 3s activa cold start en carga inicial
+
+- [x] **Commit A3** · `feat(ui): agregar ErrorBoundary global, rediseño 404/403 y validación inline`
+  - `src/components/ui/ErrorBoundary.jsx` + css: captura crashes de render, fallback temático, detalle en dev
+  - `main.jsx`: monta ErrorBoundary sobre toda la app
+  - `src/pages/NotFound.jsx` + css: SVG carta, "404 — Esta carta no está en el grimorio"
+  - `src/pages/Forbidden.jsx` + css: SVG candado, "403 — No puedes cruzar este umbral"
+  - `src/utils/validators.js`: funciones puras de validación
+  - `src/hooks/useFormValidation.js`: hook con touched/errors, on-blur, validar() al submit
+  - `Input.jsx`: aria-invalid + aria-describedby
+  - `Login.jsx`: validación on-blur
+
+### Pendiente
+
+- [ ] `perf(ui)`: lazy loading de imágenes de cartas + code splitting por módulo con `React.lazy` + `<Suspense>` en rutas. Verificar partición de bundle (actualmente ~1.2 MB → debería quedar <500 KB por chunk).
+
+- [ ] `feat(a11y)`: WCAG A completo — alt en imágenes, htmlFor en labels, aria-label en botones-icono, foco visible global `:focus-visible`, contraste verificado, tooltips en términos MTG (win rate, foil, comandante, Commander, FormatBadge).
+
+- [ ] `chore(deploy)`: empty states completos en listas (mazos, colecciones, torneos, inscripciones), `vercel.json` con rewrites SPA, README con sección de deploy, build sin warnings de chunk size, limpiar console.logs e imports no usados, marcar PROJECT_TODO completo.
 
 ---
 

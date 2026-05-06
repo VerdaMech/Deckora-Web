@@ -74,11 +74,11 @@ export default function MisTorneosTab() {
     return (
       <EmptyState
         icon={Swords}
-        title="Aún no creaste ningún torneo"
-        description="Publicá tu primer torneo y empezá a organizar."
+        title="No has creado torneos todavía"
+        description="Publica tu primer torneo y empieza a organizar partidas de Magic."
         action={
           <Button variant="primary" onClick={() => navigate('/organizador/torneos/nuevo')}>
-            Crear torneo nuevo
+            Crear torneo
           </Button>
         }
       />
@@ -148,7 +148,7 @@ export default function MisTorneosTab() {
           }
         >
           <p className="mis-torneos__modal-texto">
-            ¿Estás seguro de que querés cancelar <strong>{confirmar.nombre}</strong>? Esta acción
+            ¿Estás seguro de que deseas cancelar <strong>{confirmar.nombre}</strong>? Esta acción
             notificará a los inscritos.
           </p>
         </Modal>

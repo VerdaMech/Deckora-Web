@@ -29,7 +29,7 @@ export default function MisColecciones() {
       <div className="mis-colecciones__header">
         <h1 className="mis-colecciones__titulo font-h2">Mis colecciones</h1>
         <p className="mis-colecciones__descripcion font-body">
-          Administrá tus cartas: cantidad, foil y organización.
+          Administra tus cartas: cantidad, foil y organización.
         </p>
       </div>
 
@@ -56,15 +56,15 @@ export default function MisColecciones() {
         coleccion.totalCartas === 0 || (Array.isArray(coleccion.cartas) && coleccion.cartas.length === 0) ? (
           <EmptyState
             icon={FolderClosed}
-            title="Aún no agregaste cartas a tu colección"
-            description="Empezá a construir tu colección agregando tus primeras cartas."
+            title="Tu colección está vacía"
+            description="Crea una colección para organizar tus cartas y hacer seguimiento de tu inventario."
             action={
               <button
                 className="btn btn--primary btn--md"
                 type="button"
                 onClick={() => navigate(`/colecciones/${coleccion.id}`)}
               >
-                Agregar primera carta
+                Agregar cartas
               </button>
             }
           />

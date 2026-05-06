@@ -84,8 +84,8 @@ export default function MisInscripcionesTab() {
   if (items.length === 0) {
     return (
       <EmptyState
-        title="Aún no te inscribiste a ningún torneo"
-        description="Explorá la cartelera y encontrá tu próximo torneo de Magic."
+        title="No estás inscrito en torneos próximos"
+        description="Explora la cartelera y encuentra tu próximo torneo de Magic."
         action={
           <Button variant="primary" onClick={() => navigate('/torneos')}>
             Ver cartelera

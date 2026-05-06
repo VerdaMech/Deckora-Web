@@ -36,7 +36,6 @@ export async function actualizarTorneo(id, datos) {
     return await apiPut(`/torneos/${id}`, datos);
   } catch {
     // TODO: reemplazar por endpoint real cuando exista
-    console.info('[actualizarTorneo] Endpoint no disponible, simulando respuesta');
     return Promise.resolve({ ...datos, id });
   }
 }
@@ -46,7 +45,6 @@ export async function cambiarEstadoTorneo(id, nuevoEstado) {
     return await apiPatch(`/torneos/${id}/estado`, { estado: nuevoEstado });
   } catch {
     // TODO: reemplazar por endpoint real cuando exista
-    console.info('[cambiarEstadoTorneo] Endpoint no disponible, simulando respuesta');
     return Promise.resolve({ id, estado: nuevoEstado });
   }
 }

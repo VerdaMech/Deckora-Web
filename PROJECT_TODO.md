@@ -7,14 +7,30 @@ Este documento es para que cualquier persona (humana o IA) que entre al proyecto
 
 ---
 
-## Estado general
+## Estado general — PROYECTO COMPLETO
 
 - [x] **Fase 1 — Fundamentos** (Sprint 0)
 - [x] **Fase 2 — Identidad** (auth + perfiles)
 - [x] **Fase 3 — Mazos y Colecciones**
 - [x] **Fase 4 — Torneos**
 - [x] **Fase 5 — Mapa y Dashboards**
-- [ ] **Fase 6 — Pulido final**
+- [x] **Fase 6 — Pulido final**
+
+### Pendientes futuros (fuera de alcance del proyecto académico)
+
+- [ ] Asistente IA: integración real con endpoint backend (hoy mockeado).
+- [ ] Endpoints "Mis inscripciones" y "Mis torneos": verificar implementación backend.
+- [ ] Endpoint `/usuarios/:id/estadisticas`: hoy mockeado en frontend.
+- [ ] Endpoint "Asistentes totales" del DashboardTienda: hoy mockeado.
+- [ ] Vista pública de mazo compartible.
+- [ ] Notificaciones in-app o por email.
+- [ ] Internacionalización (hoy solo español).
+- [ ] WCAG AA (hoy cumplimos A).
+- [ ] Tests automatizados (Vitest + React Testing Library).
+- [ ] Atajos de teclado avanzados.
+- [ ] Foco visible accesible en mapa Leaflet (alternativa textual documentada).
+
+Última actualización: 2026-05-06 — Fase 6 cerrada por Persona B.
 
 ---
 
@@ -298,7 +314,14 @@ Rama de trabajo: `feature/pulido-final`
   - `Modal.jsx`: ya tiene `aria-label="Cerrar"` en botón close. Bootstrap maneja focus trap. (WCAG 2.1.1)
   - Deuda documentada: foco visible en Leaflet map (mapa), WCAG AA (ratio 4.5:1), tests automáticos de a11y.
 
-- [ ] `chore(deploy)`: empty states completos en listas (mazos, colecciones, torneos, inscripciones), `vercel.json` con rewrites SPA, README con sección de deploy, build sin warnings de chunk size, limpiar console.logs e imports no usados, marcar PROJECT_TODO completo.
+- [x] **Commit B3** · `chore(deploy): completar empty states, configurar Vercel y documentar deploy`
+  - Empty states revisados y copy corregido a español neutro (sin voseo): MisMazos, MisColecciones, MisTorneosTab, MisInscripcionesTab, Cartelera, ListaInscritos, DetalleMazo.
+  - `DetalleMazo.jsx`: empty state con CTA "Editar mazo" cuando el mazo no tiene cartas.
+  - `vercel.json`: creado — rewrites SPA, Cache-Control inmutable en /assets.
+  - `.env.example`: actualizado con variables actuales.
+  - `README.md`: sección "Deploy" con guía Vercel, variables de entorno, notas de cold start y build local.
+  - Limpieza: eliminados `console.info` de mocks en torneos.service.js, AsistenteIA.jsx, ModoEdicionMazo.jsx.
+  - Build limpio: sin warnings de chunk size. Bundle index 380 kB, chunks por módulo separados.
 
 ---
 

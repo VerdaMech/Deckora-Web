@@ -120,15 +120,15 @@ export default function MisMazos() {
       {!cargando && !error && mazos.length === 0 && (
         <EmptyState
           icon={Layers}
-          title="Aún no tenés mazos"
-          description="Creá tu primer mazo y empezá a armar tu estrategia."
+          title="Aún no tienes mazos"
+          description="Crea tu primer mazo Commander para empezar a armar tu estrategia."
           action={
             <button
               className="btn btn--primary btn--md"
               type="button"
               onClick={() => setModalAbierto(true)}
             >
-              Crear tu primer mazo
+              Crear mazo
             </button>
           }
         />

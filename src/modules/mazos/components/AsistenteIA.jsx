@@ -67,7 +67,6 @@ export function AsistenteIA({ mazo, onAplicarSugerencia }) {
   }
 
   function aplicar(sugerencia) {
-    console.info('[AsistenteIA] sugerencia aplicada (mock):', sugerencia);
     if (onAplicarSugerencia) onAplicarSugerencia(sugerencia);
     mostrarToastIA('Sugerencia aplicada (mock)');
   }

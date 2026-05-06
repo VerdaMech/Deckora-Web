@@ -130,8 +130,8 @@ export default function Cartelera() {
           <h3 className="cartelera-empty__title">No hay torneos disponibles</h3>
           <p className="cartelera-empty__desc">
             {hayFiltros
-              ? 'Ningún torneo coincide con los filtros aplicados.'
-              : 'Pronto habrá nuevos torneos. Revisá más tarde.'}
+              ? 'No hay torneos que coincidan con tus filtros.'
+              : 'Pronto habrá nuevos torneos. Vuelve a revisar más tarde.'}
           </p>
           {hayFiltros && (
             <Button variant="ghost" onClick={limpiarFiltros}>

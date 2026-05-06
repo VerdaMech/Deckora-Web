@@ -1,44 +1,53 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
-import { obtenerTorneo } from '@/services/torneos.service';
-import { listarInscripciones } from '@/services/torneos.service';
+import { obtenerTorneo, listarInscripciones } from '@/services/torneos.service';
 import { EstadoBadge } from '@/components/domain/EstadoBadge';
 import { FormatBadge } from '@/components/domain/FormatBadge';
 import ListaInscritos from '../components/ListaInscritos';
+import PanelInscripcion from '../components/PanelInscripcion';
 import { Button, Alert, Skeleton } from '@/components/ui';
+import { useAuth } from '@/hooks/useAuth';
 import { formatFecha, formatHora, formatCupo } from '@/utils/formatters';
 import './DetalleTorneo.css';
 
 export default function DetalleTorneo() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [torneo, setTorneo] = useState(null);
   const [inscripciones, setInscripciones] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    async function cargar() {
-      setCargando(true);
-      setError(null);
-      try {
-        const [t, ins] = await Promise.all([
-          obtenerTorneo(id),
-          listarInscripciones(id).catch(() => []),
-        ]);
-        setTorneo(t?.torneo ?? t);
-        setInscripciones(Array.isArray(ins) ? ins : ins?.inscripciones ?? ins?.data ?? []);
-      } catch (e) {
-        setError(e.message ?? 'Error al cargar el torneo');
-      } finally {
-        setCargando(false);
-      }
+  const cargarDatos = useCallback(async () => {
+    setCargando(true);
+    setError(null);
+    try {
+      const [t, ins] = await Promise.all([
+        obtenerTorneo(id),
+        listarInscripciones(id).catch(() => []),
+      ]);
+      setTorneo(t?.torneo ?? t);
+      setInscripciones(Array.isArray(ins) ? ins : ins?.inscripciones ?? ins?.data ?? []);
+    } catch (e) {
+      setError(e.message ?? 'Error al cargar el torneo');
+    } finally {
+      setCargando(false);
     }
-    cargar();
   }, [id]);
+
+  useEffect(() => {
+    cargarDatos();
+  }, [cargarDatos]);
+
+  const inscripcionPropia = user
+    ? inscripciones.find(
+        (i) => i.usuario_id === user.id || i.jugador_id === user.id
+      )
+    : null;
 
   if (cargando) {
     return (
@@ -88,7 +97,7 @@ export default function DetalleTorneo() {
             {torneo.fecha_inicio && (
               <span className="detalle-torneo__meta-item">
                 {formatFecha(torneo.fecha_inicio)}
-                {torneo.fecha_inicio && ` · ${formatHora(torneo.fecha_inicio)}`}
+                {' · '}{formatHora(torneo.fecha_inicio)}
               </span>
             )}
             {torneo.ubicacion && (
@@ -121,12 +130,16 @@ export default function DetalleTorneo() {
           </section>
         )}
 
-        {/* Inscripción — placeholder reservado (reemplazado en Commit 3) */}
-        <section className="detalle-torneo__section detalle-torneo__section--inscripcion" id="inscripcion">
+        {/* Inscripción */}
+        <section className="detalle-torneo__section" id="inscripcion">
           <h2 className="detalle-torneo__section-title">Inscripción</h2>
-          <div className="detalle-torneo__inscripcion-placeholder">
-            <p className="detalle-torneo__placeholder-text">Próximamente: inscripción en línea</p>
-          </div>
+          <PanelInscripcion
+            torneo={torneo}
+            usuario={user}
+            inscripcionPropia={inscripcionPropia}
+            onInscribirse={cargarDatos}
+            onCancelar={cargarDatos}
+          />
         </section>
 
         {/* Inscritos */}
@@ -134,7 +147,11 @@ export default function DetalleTorneo() {
           <h2 className="detalle-torneo__section-title">
             Inscritos ({inscripciones.length})
           </h2>
-          <ListaInscritos inscripciones={inscripciones} editable={false} />
+          <ListaInscritos
+            inscripciones={inscripciones}
+            editable
+            onCancelar={cargarDatos}
+          />
         </section>
 
         {/* Rondas — placeholder reservado para Persona B */}

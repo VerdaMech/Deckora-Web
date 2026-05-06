@@ -4,6 +4,16 @@ export async function listarMisMazos() {
   return apiGet('/mazos');
 }
 
+// El backend no soporta ?limit ni ?orden, se filtra client-side
+export async function listarMazosRecientes(limit = 3) {
+  const mazos = await apiGet('/mazos');
+  const lista = Array.isArray(mazos) ? mazos : (mazos?.data ?? []);
+  return lista
+    .slice()
+    .sort((a, b) => new Date(b.updated_at ?? b.createdAt ?? 0) - new Date(a.updated_at ?? a.createdAt ?? 0))
+    .slice(0, limit);
+}
+
 export async function crearMazo({ nombre, formato, descripcion, publico }) {
   return apiPost('/mazos', { nombre, formato, descripcion, publico });
 }

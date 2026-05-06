@@ -13,3 +13,5 @@ export { RoundView } from './RoundView';
 export { default as RoleBadge } from './RoleBadge';
 export { default as EstadisticasJugador } from './EstadisticasJugador';
 export { default as MiniMapaTienda } from './MiniMapaTienda';
+export { default as MapaTiendas } from './MapaTiendas';
+export { crearStorePinIcon } from './StorePin';

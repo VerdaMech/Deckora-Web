@@ -3,7 +3,7 @@
 Estado vivo del proyecto frontend. Cada item se marca `[x]` cuando se completa.
 Este documento es para que cualquier persona (humana o IA) que entre al proyecto sepa exactamente dónde estamos parados.
 
-Última actualización: 2026-05-05
+Última actualización: 2026-05-06
 
 ---
 
@@ -13,7 +13,7 @@ Este documento es para que cualquier persona (humana o IA) que entre al proyecto
 - [x] **Fase 2 — Identidad** (auth + perfiles)
 - [x] **Fase 3 — Mazos y Colecciones**
 - [x] **Fase 4 — Torneos**
-- [ ] **Fase 5 — Mapa y Dashboards**
+- [x] **Fase 5 — Mapa y Dashboards**
 - [ ] **Fase 6 — Pulido final**
 
 ---
@@ -191,13 +191,52 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
 
 ## Fase 5 — Mapa y Dashboards
 
-- [ ] `<MapaTiendas>` integrado en Landing
-- [ ] Landing finalizado (componentizar HTML del landing.html)
-- [ ] Dashboard jugador
-- [ ] Dashboard organizador
-- [ ] Dashboard tienda
-- [ ] "Mis estadísticas" como sección del perfil del jugador
-- [ ] Configuración de tienda (Módulo 1) terminada
+### Persona A — Commits completados (rama: `feature/mapa-y-dashboards`)
+
+- [x] **Commit A1** · `feat(mapa): agregar componente MapaTiendas con pines y geolocalización`
+  - [x] `src/hooks/useGeolocation.js` — hook de geolocalización del navegador
+  - [x] `src/services/tiendas.service.js` — extendido con listarTiendas, listarTiendasCercanas, obtenerTienda, listarTorneosDeTienda
+  - [x] `src/components/domain/StorePin.jsx` — divIcon custom con SVG inline (gota crimson + borde gold)
+  - [x] `src/components/domain/MapaTiendas.jsx` — mapa react-leaflet con tiles CartoDB Dark, zoom custom, botón geo
+  - [x] `src/pages/DemoMapa.jsx` — demo dev en `/demo/mapa` (eliminar en Commit B3)
+  - [x] CSS co-localizado en `src/styles/components/`
+  - [x] `src/components/domain/index.js` actualizado
+
+- [x] **Commit A2** · `feat(dashboards): componentizar landing en secciones reutilizables`
+  - [x] `HeroLanding.jsx` — wordmark Cinzel Decorative, tagline, CTAs adaptados según auth/rol
+  - [x] `FeaturesLanding.jsx` — grid de 4 features con íconos Lucide
+  - [x] `ProfilesLanding.jsx` — 3 cards de roles con bullets y borde por rol
+  - [x] `CTALanding.jsx` — CTA clip-path, oculto si autenticado
+  - [x] `Landing.jsx` refactorizado como composición limpia
+  - [x] TODO en Landing para Commit B3: `<SeccionMapaTiendas />`
+
+- [x] **Commit A3** · `feat(identidad): agregar EstadisticasJugador con recharts y tab Mis estadísticas en perfil`
+  - [x] `obtenerEstadisticasJugador` mockeado en `usuarios.service.js` (mock con historial, winRate, etc.)
+  - [x] `EstadisticasJugador.jsx` mejorado: variante="completo"|"compacto", chart recharts, detalles mazo/comandante/torneos
+  - [x] `MisEstadisticasTab.jsx` — tab wrapper visible solo para el dueño del perfil
+  - [x] `PerfilJugador.jsx` actualizado con `MisEstadisticasTab` en tab "Mis estadísticas"
+  - [x] `AppRoutes.jsx` corregido para usar `PerfilRouter` (fix de bug preexistente en dev)
+
+### Persona B — Commits completados (rama: `feature/mapa-y-dashboards`)
+
+- [x] **Commit B1** · `feat(dashboards): agregar dashboard del jugador con bloques de resumen`
+  - `src/modules/dashboards/components/BloqueResumen.jsx` + `.css` — card reutilizable con header, CTA y cuerpo
+  - `src/modules/dashboards/components/StatsRapidas.jsx` + `.css` — fila de stat cards genéricas
+  - `src/services/torneos.service.js` — creado con `listarTorneos`, `listarTorneosProximos`, `listarMisTorneos`
+  - `src/services/mazos.service.js` — extendido con `listarMazosRecientes` (client-side sort+slice)
+  - `src/modules/dashboards/pages/DashboardJugador.jsx` + `.css` — dashboard completo con saludo, StatsRapidas, EstadisticasJugador compacto y 3 BloqueResumen
+
+- [x] **Commit B2** · `feat(dashboards): agregar dashboards de organizador y tienda`
+  - `src/modules/dashboards/pages/DashboardOrganizador.jsx` + `.css` — stats torneos + lista recientes + acciones rápidas
+  - `src/modules/dashboards/pages/DashboardTienda.jsx` + `.css` — stats tienda + próximos eventos + acciones rápidas
+
+- [x] **Commit B3** · `feat(mapa): integrar SeccionMapaTiendas en landing y eliminar demo`
+  - `src/modules/mapa/components/SeccionMapaTiendas.jsx` + `.css` — wrapper con fetch, loading, error y footer con conteo
+  - `Landing.jsx` — integrada `<SeccionMapaTiendas />` entre ProfilesLanding y CTALanding
+  - `src/pages/DemoMapa.jsx` eliminado; ruta `/demo/mapa` removida de AppRoutes.jsx
+  - Nota: `ConfiguracionTiendaTab.jsx` ya tenía mini-mapa con click handler implementado por Persona A — no requirió modificación
+
+**Fase 5 completa. Rama lista para PR a `dev`.**
 
 ## Fase 6 — Pulido final
 

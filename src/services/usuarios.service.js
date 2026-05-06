@@ -36,6 +36,31 @@ export async function obtenerEstadisticas(usuarioId) {
   }
 }
 
+// TODO: reemplazar por fetch real cuando el endpoint exista
+export async function obtenerEstadisticasJugador(_usuarioId) {
+  if (import.meta.env.DEV) {
+    console.warn('[DEV] obtenerEstadisticasJugador: usando datos mockeados');
+  }
+  return new Promise((resolve) =>
+    setTimeout(() => resolve({
+      partidasGanadas: 23,
+      partidasPerdidas: 14,
+      partidasEmpatadas: 3,
+      winRate: 0.575,
+      torneosParticipados: 7,
+      torneosGanados: 1,
+      mazoMasJugado: { id: 'mock-1', nombre: 'Atraxa Superfriends', formato: 'COMMANDER' },
+      comandanteFavorito: "Atraxa, Praetors' Voice",
+      historialUltimosMeses: [
+        { mes: '2025-12', ganadas: 4, perdidas: 2 },
+        { mes: '2026-01', ganadas: 6, perdidas: 3 },
+        { mes: '2026-02', ganadas: 5, perdidas: 4 },
+        { mes: '2026-03', ganadas: 8, perdidas: 5 },
+      ],
+    }), 400)
+  );
+}
+
 // TODO: endpoint real
 export async function obtenerMisInscripciones() {
   return [

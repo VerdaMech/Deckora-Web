@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Card, EmptyState, Tabs } from '@/components/ui';
 import EstadisticasJugador from '@/components/domain/EstadisticasJugador';
 import RoleBadge from '@/components/domain/RoleBadge';
+import MisEstadisticasTab from '@/modules/identidad/components/MisEstadisticasTab';
 import { useAuth } from '@/hooks/useAuth';
 import { obtenerMisInscripciones } from '@/services/usuarios.service';
 
@@ -39,7 +40,7 @@ export default function PerfilJugador({ perfil }) {
       </div>
 
       <div className="profile-body">
-        <EstadisticasJugador usuarioId={perfil.id} />
+        <EstadisticasJugador usuarioId={perfil.id} variante="compacto" />
 
         <section className="profile-section">
           <h3 className="profile-section__title">Mazos públicos</h3>
@@ -75,11 +76,7 @@ export default function PerfilJugador({ perfil }) {
                 )}
               </Tabs.Tab>
               <Tabs.Tab eventKey="estadisticas" label="Mis estadísticas">
-                <EstadisticasJugador usuarioId={perfil.id} />
-                <EmptyState
-                  title="Próximamente"
-                  description="Tu evolución a lo largo del tiempo estará disponible aquí."
-                />
+                <MisEstadisticasTab usuarioId={perfil.id} />
               </Tabs.Tab>
             </Tabs>
           </section>

@@ -32,6 +32,8 @@
 @import './components/profile.css';
 
 /* Domain */
-@import './components/estadisticas-jugador.css';
 @import './components/mini-mapa.css';
 @import './components/configuracion-cuenta.css';
+
+/* Demo dev */
+@import './components/DemoMapa.css';

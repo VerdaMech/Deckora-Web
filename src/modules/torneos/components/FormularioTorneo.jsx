@@ -140,17 +140,19 @@ export default function FormularioTorneo({
       />
 
       <div className="form-field">
-        <label className="form-label">
-          Fecha de inicio <span className="form-required">*</span>
+        <label className="form-label" htmlFor="ft-fecha-inicio">
+          Fecha de inicio <span className="form-required" aria-hidden="true">*</span>
         </label>
         <input
+          id="ft-fecha-inicio"
           type="datetime-local"
           className={`form-input${errores.fechaInicio ? ' form-input--error' : ''}`}
           value={fechaInicio}
           onChange={(e) => setFechaInicio(e.target.value)}
+          aria-required="true"
         />
         {errores.fechaInicio && (
-          <p className="form-helper form-helper--error">{errores.fechaInicio}</p>
+          <p className="form-helper form-helper--error" role="alert">{errores.fechaInicio}</p>
         )}
       </div>
 
@@ -167,23 +169,27 @@ export default function FormularioTorneo({
         <label className="form-label">Coordenadas</label>
         <div className="formulario-torneo__coords-row">
           <div className="formulario-torneo__coord">
-            <label className="formulario-torneo__coord-label">Lat</label>
+            <label className="formulario-torneo__coord-label" htmlFor="ft-lat">Lat</label>
             <input
+              id="ft-lat"
               type="number"
               className="form-input formulario-torneo__coord-input"
               value={lat}
               onChange={(e) => setLat(e.target.value)}
               step="0.000001"
+              aria-label="Latitud"
             />
           </div>
           <div className="formulario-torneo__coord">
-            <label className="formulario-torneo__coord-label">Lng</label>
+            <label className="formulario-torneo__coord-label" htmlFor="ft-lng">Lng</label>
             <input
+              id="ft-lng"
               type="number"
               className="form-input formulario-torneo__coord-input"
               value={lng}
               onChange={(e) => setLng(e.target.value)}
               step="0.000001"
+              aria-label="Longitud"
             />
           </div>
           <Button type="button" variant="ghost" size="sm" onClick={usarMiUbicacion}>

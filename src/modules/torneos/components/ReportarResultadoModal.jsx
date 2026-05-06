@@ -120,6 +120,7 @@ export default function ReportarResultadoModal({
                   onChange={(e) => actualizarFila(idx, 'puntos', e.target.value)}
                   min={0}
                   placeholder="—"
+                  aria-label={`Puntos de ${fila.nombre ?? 'jugador'}`}
                 />
               </div>
             </div>

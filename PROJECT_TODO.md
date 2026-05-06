@@ -284,7 +284,19 @@ Rama de trabajo: `feature/pulido-final`
   - Bundle: index 1.2 MB → 380 kB. Chunks por módulo: Login ~2 kB, MisMazos ~3 kB, Cartelera ~3 kB, etc.
   - Nota: `EstadisticasJugador` chunk pesa 358 kB por recharts (dependencia pesada, esperado).
 
-- [ ] `feat(a11y)`: WCAG A completo — alt en imágenes, htmlFor en labels, aria-label en botones-icono, foco visible global `:focus-visible`, contraste verificado, tooltips en términos MTG (win rate, foil, comandante, Commander, FormatBadge).
+- [x] **Commit B2** · `feat(a11y): cumplir WCAG A y agregar tooltips en términos MTG`
+  - `index.html`: `lang="es"` (corregido desde `lang="en"`). (WCAG 3.1.1)
+  - `base.css`: `*:focus-visible` con outline dorado 2px. (WCAG 2.4.7)
+  - `FormatBadge.jsx`: tooltip descriptivo por formato (Commander, Standard, Modern, Pioneer, Legacy). (H10.1)
+  - `CommanderBadge.jsx`: tooltip explicativo del comandante. (H10.1)
+  - `EstadisticasJugador.jsx`: tooltip en "Win Rate" con definición. (H10.1)
+  - `ColeccionEditor.jsx`: tooltip en "Foil" explicando el término. (H10.1)
+  - `Cartelera.jsx`: `aria-label` en inputs de búsqueda y fecha sin label visible. (WCAG 1.3.1)
+  - `FormularioTorneo.jsx`: labels asociados vía htmlFor/id en datetime-local y coords lat/lng; `aria-required` y `role="alert"` en errores. (WCAG 1.3.1, 3.3.2)
+  - `ReportarResultadoModal.jsx`: `aria-label` dinámico en input de puntos por jugador. (WCAG 1.3.1)
+  - `AppLayout.jsx`: ya usa `<main>`, `<nav>` — estructura semántica correcta. (WCAG 1.3.1)
+  - `Modal.jsx`: ya tiene `aria-label="Cerrar"` en botón close. Bootstrap maneja focus trap. (WCAG 2.1.1)
+  - Deuda documentada: foco visible en Leaflet map (mapa), WCAG AA (ratio 4.5:1), tests automáticos de a11y.
 
 - [ ] `chore(deploy)`: empty states completos en listas (mazos, colecciones, torneos, inscripciones), `vercel.json` con rewrites SPA, README con sección de deploy, build sin warnings de chunk size, limpiar console.logs e imports no usados, marcar PROJECT_TODO completo.
 

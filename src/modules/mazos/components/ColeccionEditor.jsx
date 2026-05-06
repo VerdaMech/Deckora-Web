@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Trash2, Minus, Plus } from 'lucide-react';
 
-import { Modal } from '@/components/ui';
+import { Modal, Tooltip } from '@/components/ui';
 import { MTGCard, ManaCost } from '@/components/domain';
 
 import './ColeccionEditor.css';
@@ -62,7 +62,9 @@ export function ColeccionEditor({ coleccion = [], onCantidadChange, onFoilChange
                     checked={!!entrada.foil}
                     onChange={(e) => onFoilChange?.(entrada, e.target.checked)}
                   />
-                  <span className="coleccion-editor__foil-text">Foil</span>
+                  <Tooltip content="Versión brillante y especial de la carta, generalmente más valiosa." placement="top">
+                    <span className="coleccion-editor__foil-text">Foil</span>
+                  </Tooltip>
                 </label>
 
                 <div className="coleccion-editor__stepper">

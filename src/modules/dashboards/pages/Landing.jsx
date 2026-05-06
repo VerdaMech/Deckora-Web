@@ -2,6 +2,7 @@ import HeroLanding from '../components/HeroLanding';
 import FeaturesLanding from '../components/FeaturesLanding';
 import ProfilesLanding from '../components/ProfilesLanding';
 import CTALanding from '../components/CTALanding';
+import SeccionMapaTiendas from '@/modules/mapa/components/SeccionMapaTiendas';
 import './Landing.css';
 
 export default function Landing() {
@@ -10,7 +11,7 @@ export default function Landing() {
       <HeroLanding />
       <FeaturesLanding />
       <ProfilesLanding />
-      {/* TODO Commit B3: <SeccionMapaTiendas /> aquí, antes del CTA */}
+      <SeccionMapaTiendas />
       <CTALanding />
     </div>
   );

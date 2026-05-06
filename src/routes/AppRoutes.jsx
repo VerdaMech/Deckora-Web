@@ -21,9 +21,6 @@ import MisMazos from '@/modules/mazos/pages/MisMazos';
 import CrearMazoModal from '@/modules/mazos/pages/CrearMazoModal';
 import DetalleMazo from '@/modules/mazos/pages/DetalleMazo';
 
-// Demo de desarrollo
-import DemoMapa from '@/pages/DemoMapa';
-
 // Módulo: torneos
 import Cartelera from '@/modules/torneos/pages/Cartelera';
 import DetalleTorneo from '@/modules/torneos/pages/DetalleTorneo';
@@ -72,9 +69,6 @@ export default function AppRoutes() {
         <Route path="/torneos/:id" element={<DetalleTorneo />} />
         <Route path="/organizador/torneos/nuevo" element={<ProtectedRoute requireRol="organizador"><CrearTorneo /></ProtectedRoute>} />
         <Route path="/organizador/torneos/:id/editar" element={<ProtectedRoute requireRol="organizador"><EditarTorneo /></ProtectedRoute>} />
-
-        {/* Demo (solo desarrollo) */}
-        {import.meta.env.DEV && <Route path="/demo/mapa" element={<DemoMapa />} />}
 
         {/* Globales */}
         <Route path="/forbidden" element={<Forbidden />} />

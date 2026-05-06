@@ -1,20 +1,17 @@
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui';
+import HeroLanding from '../components/HeroLanding';
+import FeaturesLanding from '../components/FeaturesLanding';
+import ProfilesLanding from '../components/ProfilesLanding';
+import CTALanding from '../components/CTALanding';
+import './Landing.css';
 
 export default function Landing() {
   return (
-    <div className="landing-placeholder">
-      <h1 className="landing-placeholder__title">DECKORA</h1>
-      <p className="font-body-lg landing-placeholder__desc">
-        La plataforma de Magic: The Gathering para la comunidad Commander. Gestiona tus mazos, participa en torneos y conecta con tiendas locales.
-      </p>
-      <div className="landing-placeholder__actions">
-        <Button variant="primary-clip" size="lg" as={Link} to="/registro">Crear cuenta</Button>
-        <Button variant="ghost" size="lg" as={Link} to="/torneos">Ver torneos</Button>
-      </div>
-      <p className="font-small landing-placeholder__note">
-        Landing — placeholder Fase 1 · Se implementa en Fase 5
-      </p>
+    <div className="landing">
+      <HeroLanding />
+      <FeaturesLanding />
+      <ProfilesLanding />
+      {/* TODO Commit B3: <SeccionMapaTiendas /> aquí, antes del CTA */}
+      <CTALanding />
     </div>
   );
 }

@@ -1,0 +1,32 @@
+.store-pin {
+  width: 32px;
+  height: 40px;
+  background: var(--crimson);
+  border: 2px solid var(--gold);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.store-pin svg {
+  transform: rotate(45deg);
+}
+
+.store-pin:hover {
+  transform: rotate(-45deg) scale(1.1);
+  box-shadow: var(--glow-gold);
+}
+
+.store-pin--activo {
+  background: var(--crimson-bright);
+  border-color: var(--gold-light);
+  box-shadow: var(--glow-gold-strong);
+}
+
+.store-pin--activo:hover {
+  transform: rotate(-45deg) scale(1.15);
+}

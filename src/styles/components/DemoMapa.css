@@ -1,0 +1,25 @@
+.demo-mapa {
+  padding-top: var(--space-7);
+  padding-bottom: var(--space-7);
+}
+
+.demo-mapa__loading {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.demo-mapa__titulo {
+  font-family: 'Cinzel', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: var(--space-2);
+}
+
+.demo-mapa__nota {
+  font-family: 'Crimson Pro', serif;
+  color: var(--text-muted);
+  margin-bottom: var(--space-5);
+}

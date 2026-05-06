@@ -3,7 +3,7 @@
 Estado vivo del proyecto frontend. Cada item se marca `[x]` cuando se completa.
 Este documento es para que cualquier persona (humana o IA) que entre al proyecto sepa exactamente dónde estamos parados.
 
-Última actualización: 2026-05-02
+Última actualización: 2026-05-06
 
 ---
 
@@ -13,7 +13,7 @@ Este documento es para que cualquier persona (humana o IA) que entre al proyecto
 - [x] **Fase 2 — Identidad** (auth + perfiles)
 - [x] **Fase 3 — Mazos y Colecciones**
 - [ ] **Fase 4 — Torneos**
-- [ ] **Fase 5 — Mapa y Dashboards**
+- [x] **Fase 5 — Mapa y Dashboards**
 - [ ] **Fase 6 — Pulido final**
 
 ---
@@ -216,23 +216,26 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
   - [x] `PerfilJugador.jsx` actualizado con `MisEstadisticasTab` en tab "Mis estadísticas"
   - [x] `AppRoutes.jsx` corregido para usar `PerfilRouter` (fix de bug preexistente en dev)
 
-### Pendiente Persona B — Fase 5
+### Persona B — Commits completados (rama: `feature/mapa-y-dashboards`)
 
-- [ ] **Commit B1** · Dashboard jugador
-  - `<BloqueResumen>` con saludo y acceso rápido
-  - `<StatsRapidas>` con 3-4 métricas clave
-  - `DashboardJugador.jsx` — consume `<EstadisticasJugador variante="compacto">` que ya existe
+- [x] **Commit B1** · `feat(dashboards): agregar dashboard del jugador con bloques de resumen`
+  - `src/modules/dashboards/components/BloqueResumen.jsx` + `.css` — card reutilizable con header, CTA y cuerpo
+  - `src/modules/dashboards/components/StatsRapidas.jsx` + `.css` — fila de stat cards genéricas
+  - `src/services/torneos.service.js` — creado con `listarTorneos`, `listarTorneosProximos`, `listarMisTorneos`
+  - `src/services/mazos.service.js` — extendido con `listarMazosRecientes` (client-side sort+slice)
+  - `src/modules/dashboards/pages/DashboardJugador.jsx` + `.css` — dashboard completo con saludo, StatsRapidas, EstadisticasJugador compacto y 3 BloqueResumen
 
-- [ ] **Commit B2** · Dashboards organizador y tienda
-  - `DashboardOrganizador.jsx` — resumen de torneos activos
-  - `DashboardTienda.jsx` — resumen de torneos + link a configuración
+- [x] **Commit B2** · `feat(dashboards): agregar dashboards de organizador y tienda`
+  - `src/modules/dashboards/pages/DashboardOrganizador.jsx` + `.css` — stats torneos + lista recientes + acciones rápidas
+  - `src/modules/dashboards/pages/DashboardTienda.jsx` + `.css` — stats tienda + próximos eventos + acciones rápidas
 
-- [ ] **Commit B3** · Integración mapa en Landing + limpieza
-  - `src/modules/mapa/components/SeccionMapaTiendas.jsx` — wrapper para el Landing
-  - Integrar `<SeccionMapaTiendas />` donde está el TODO en `Landing.jsx`
-  - Opcionalmente: `MapaTiendas` en `ConfiguracionTiendaTab` para fijar coordenadas
-  - Eliminar `/demo/mapa`, `src/pages/DemoMapa.jsx` y su CSS
-  - Abrir PR de `feature/mapa-y-dashboards` → `dev`
+- [x] **Commit B3** · `feat(mapa): integrar SeccionMapaTiendas en landing y eliminar demo`
+  - `src/modules/mapa/components/SeccionMapaTiendas.jsx` + `.css` — wrapper con fetch, loading, error y footer con conteo
+  - `Landing.jsx` — integrada `<SeccionMapaTiendas />` entre ProfilesLanding y CTALanding
+  - `src/pages/DemoMapa.jsx` eliminado; ruta `/demo/mapa` removida de AppRoutes.jsx
+  - Nota: `ConfiguracionTiendaTab.jsx` ya tenía mini-mapa con click handler implementado por Persona A — no requirió modificación
+
+**Fase 5 completa. Rama lista para PR a `dev`.**
 
 ## Fase 6 — Pulido final
 

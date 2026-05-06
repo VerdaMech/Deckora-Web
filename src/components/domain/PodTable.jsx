@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { EstadoBadge } from './EstadoBadge';
 import { RESULTADO_ENFRENTAMIENTO } from '@/utils/constants';
 import { Button } from '@/components/ui';
+import ReportarResultadoModal from '@/modules/torneos/components/ReportarResultadoModal';
 
 function getInitials(nombre) {
   return (nombre ?? '?').substring(0, 2).toUpperCase();
@@ -19,16 +21,32 @@ function ResultadoLabel({ resultado }) {
 }
 
 export function PodTable({ enfrentamiento, editable = false, onReportarResultado }) {
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const [enfrentamientoLocal, setEnfrentamientoLocal] = useState(enfrentamiento);
+
   if (!enfrentamiento) return null;
 
-  const jugadores = enfrentamiento.jugadores ?? enfrentamiento.participantes ?? [];
-  const numero = enfrentamiento.numero_mesa ?? enfrentamiento.mesa ?? enfrentamiento.numero ?? '?';
+  const jugadores = enfrentamientoLocal.jugadores ?? enfrentamientoLocal.participantes ?? [];
+  const numero = enfrentamientoLocal.numero_mesa ?? enfrentamientoLocal.mesa ?? enfrentamientoLocal.numero ?? '?';
+
+  function abrirModal() {
+    if (onReportarResultado) {
+      onReportarResultado(enfrentamientoLocal);
+    } else {
+      setModalAbierto(true);
+    }
+  }
+
+  function handleReportado() {
+    setEnfrentamientoLocal((prev) => ({ ...prev, estado: 'finalizado' }));
+    setModalAbierto(false);
+  }
 
   return (
     <div className="pod-table">
       <div className="pod-table__header">
         <span className="pod-table__titulo">Mesa {numero}</span>
-        <EstadoBadge estado={enfrentamiento.estado} />
+        <EstadoBadge estado={enfrentamientoLocal.estado} />
       </div>
 
       <table className="pod-table__tabla">
@@ -64,16 +82,21 @@ export function PodTable({ enfrentamiento, editable = false, onReportarResultado
         </tbody>
       </table>
 
-      {editable && enfrentamiento.estado !== 'finalizado' && (
+      {editable && enfrentamientoLocal.estado !== 'finalizado' && (
         <div className="pod-table__footer">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onReportarResultado?.(enfrentamiento)}
-          >
+          <Button variant="ghost" size="sm" onClick={abrirModal}>
             Reportar resultado
           </Button>
         </div>
+      )}
+
+      {modalAbierto && (
+        <ReportarResultadoModal
+          enfrentamiento={enfrentamientoLocal}
+          isOpen={modalAbierto}
+          onClose={() => setModalAbierto(false)}
+          onReportado={handleReportado}
+        />
       )}
     </div>
   );

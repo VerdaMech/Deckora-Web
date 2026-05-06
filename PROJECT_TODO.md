@@ -3,7 +3,7 @@
 Estado vivo del proyecto frontend. Cada item se marca `[x]` cuando se completa.
 Este documento es para que cualquier persona (humana o IA) que entre al proyecto sepa exactamente dónde estamos parados.
 
-Última actualización: 2026-05-02
+Última actualización: 2026-05-05
 
 ---
 
@@ -12,7 +12,7 @@ Este documento es para que cualquier persona (humana o IA) que entre al proyecto
 - [x] **Fase 1 — Fundamentos** (Sprint 0)
 - [x] **Fase 2 — Identidad** (auth + perfiles)
 - [x] **Fase 3 — Mazos y Colecciones**
-- [ ] **Fase 4 — Torneos**
+- [x] **Fase 4 — Torneos**
 - [ ] **Fase 5 — Mapa y Dashboards**
 - [ ] **Fase 6 — Pulido final**
 
@@ -187,7 +187,7 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
 - [x] Gestión torneo en vivo (GestionTorneo base, crear rondas)
 - [x] Tabs en perfiles: Mis inscripciones (jugador), Mis torneos (organizador/tienda)
 - [x] Componentes dominio: TournamentCard, EstadoBadge, PodTable, RoundView
-- [ ] ReportarResultadoModal, cambio de estados completo, pulido final
+- [x] ReportarResultadoModal, cambio de estados completo, pulido final
 
 ## Fase 5 — Mapa y Dashboards
 

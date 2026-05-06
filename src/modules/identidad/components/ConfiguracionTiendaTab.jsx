@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 
-import { Input, Button, Alert } from '@/components/ui';
+import { Input, Button } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/context/ToastContext';
+import { traducirError } from '@/utils/errors';
 import { actualizarMiTienda } from '@/services/tiendas.service';
 
 const editIcon = new L.DivIcon({
@@ -24,6 +26,7 @@ function MapClickHandler({ onMapClick }) {
 
 export default function ConfiguracionTiendaTab() {
   const { user, perfil } = useAuth();
+  const { mostrarExito, mostrarError } = useToast();
   const [nombreTienda, setNombreTienda] = useState(perfil?.nombre_tienda ?? '');
   const [direccion, setDireccion] = useState(perfil?.direccion ?? '');
   const [telefono, setTelefono] = useState(perfil?.numero_telefono ?? '');
@@ -33,8 +36,7 @@ export default function ConfiguracionTiendaTab() {
     perfil?.longitud ?? -70.6693,
   ]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [exito, setExito] = useState('');
+  const [nombreError, setNombreError] = useState('');
 
   function handleMapClick(latlng) {
     setPos([latlng.lat, latlng.lng]);
@@ -42,10 +44,9 @@ export default function ConfiguracionTiendaTab() {
 
   async function handleGuardar(e) {
     e.preventDefault();
-    setError('');
-    setExito('');
+    setNombreError('');
     if (!nombreTienda.trim()) {
-      setError('El nombre de la tienda es obligatorio.');
+      setNombreError('El nombre de la tienda es obligatorio.');
       return;
     }
     setLoading(true);
@@ -58,9 +59,9 @@ export default function ConfiguracionTiendaTab() {
         latitud: pos[0],
         longitud: pos[1],
       });
-      setExito('Datos de la tienda actualizados.');
+      mostrarExito('Tienda actualizada', 'Los datos de tu tienda se guardaron correctamente.');
     } catch (err) {
-      setError(err.message ?? 'Error al guardar los datos.');
+      mostrarError('No se pudo guardar', traducirError(err));
     } finally {
       setLoading(false);
     }
@@ -70,12 +71,11 @@ export default function ConfiguracionTiendaTab() {
     <div className="config-section">
       <h2 className="config-section__title">Configuración de tienda</h2>
       <form onSubmit={handleGuardar} className="config-form">
-        {error && <Alert variant="danger">{error}</Alert>}
-        {exito && <Alert variant="success">{exito}</Alert>}
         <Input
           label="Nombre de la tienda"
           value={nombreTienda}
           onChange={(e) => setNombreTienda(e.target.value)}
+          error={nombreError}
           required
         />
         <Input

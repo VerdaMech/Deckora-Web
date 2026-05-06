@@ -59,3 +59,24 @@ export async function cancelarInscripcion(torneoId, inscripcionId) {
     return Promise.resolve(null);
   }
 }
+
+export async function listarTorneosProximos(limit = 5) {
+  const hoy = new Date().toISOString();
+  const query = new URLSearchParams({ desde: hoy, limit: String(limit) });
+  try {
+    const data = await apiGet(`/torneos?${query.toString()}`);
+    return { data: Array.isArray(data) ? data : (data?.data ?? []) };
+  } catch {
+    return { data: [] };
+  }
+}
+
+export async function listarMisTorneos(organizadorId) {
+  if (!organizadorId) return { data: [] };
+  try {
+    const data = await apiGet(`/torneos?organizador_id=${organizadorId}`);
+    return { data: Array.isArray(data) ? data : (data?.data ?? []) };
+  } catch {
+    return { data: [] };
+  }
+}

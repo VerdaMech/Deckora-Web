@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import { obtenerTorneo, actualizarTorneo } from '@/services/torneos.service';
+import { useToast } from '@/context/ToastContext';
+import { traducirError } from '@/utils/errors';
 import FormularioTorneo from '../components/FormularioTorneo';
 import { Alert, Skeleton, Button } from '@/components/ui';
 import './EditarTorneo.css';
@@ -9,6 +11,7 @@ import './EditarTorneo.css';
 export default function EditarTorneo() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { mostrarExito, mostrarError } = useToast();
   const [torneo, setTorneo] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -33,7 +36,10 @@ export default function EditarTorneo() {
     setSubmitting(true);
     try {
       await actualizarTorneo(id, datos);
+      mostrarExito('Torneo actualizado', 'Los cambios se guardaron correctamente.');
       navigate(`/torneos/${id}`);
+    } catch (err) {
+      mostrarError('No se pudo actualizar', traducirError(err));
     } finally {
       setSubmitting(false);
     }

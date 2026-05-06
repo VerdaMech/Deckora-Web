@@ -5,8 +5,10 @@ import { listarMisMazos } from '@/services/mazos.service';
 import { inscribirseATorneo, cancelarInscripcion } from '@/services/torneos.service';
 import { Button, Alert, Spinner, Select } from '@/components/ui';
 import Modal from '@/components/ui/Modal';
+import { useToast } from '@/context/ToastContext';
+import { traducirError } from '@/utils/errors';
 import { ESTADO_TORNEO } from '@/utils/constants';
-import { puedeInscribirse, cupoDisponible } from '@/utils/torneos-helpers';
+import { cupoDisponible } from '@/utils/torneos-helpers';
 import './PanelInscripcion.css';
 
 export default function PanelInscripcion({
@@ -17,6 +19,7 @@ export default function PanelInscripcion({
   onCancelar,
 }) {
   const navigate = useNavigate();
+  const { mostrarExito, mostrarError } = useToast();
   const [mazos, setMazos] = useState([]);
   const [mazoSeleccionado, setMazoSeleccionado] = useState('');
   const [cargando, setCargando] = useState(false);
@@ -25,7 +28,6 @@ export default function PanelInscripcion({
   const [confirmarCancelar, setConfirmarCancelar] = useState(false);
 
   const esJugador = usuario?.rol === 'jugador';
-  const inscripciones = inscripcionPropia ? [inscripcionPropia] : [];
 
   useEffect(() => {
     if (!usuario || !esJugador || inscripcionPropia) return;
@@ -53,9 +55,12 @@ export default function PanelInscripcion({
     setError(null);
     try {
       await inscribirseATorneo(torneo.id, { mazoId: mazoSeleccionado });
+      mostrarExito('Inscripción confirmada', `Te inscribiste al torneo "${torneo.nombre}".`);
       onInscribirse?.();
     } catch (e) {
-      setError(e.message ?? 'Error al inscribirte. Intentá de nuevo.');
+      const msg = traducirError(e);
+      setError(msg);
+      mostrarError('No se pudo inscribir', msg);
     } finally {
       setCargando(false);
     }
@@ -67,9 +72,12 @@ export default function PanelInscripcion({
     try {
       await cancelarInscripcion(torneo.id, inscripcionPropia.id);
       setConfirmarCancelar(false);
+      mostrarExito('Inscripción cancelada', 'Tu inscripción fue cancelada.');
       onCancelar?.();
     } catch (e) {
-      setError(e.message ?? 'Error al cancelar la inscripción.');
+      const msg = traducirError(e);
+      setError(msg);
+      mostrarError('No se pudo cancelar', msg);
     } finally {
       setCargando(false);
     }

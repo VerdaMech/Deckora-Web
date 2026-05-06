@@ -1,53 +1,55 @@
 import { useState } from 'react';
 
-import { Input, Button, Modal, Alert } from '@/components/ui';
+import { Input, Button, Modal } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/context/ToastContext';
+import { traducirError } from '@/utils/errors';
 import { supabase } from '@/services/supabase';
 
 export default function CuentaTab() {
   const { user, logout } = useAuth();
+  const { mostrarExito, mostrarError } = useToast();
   const [nuevoCorreo, setNuevoCorreo] = useState('');
   const [nuevaPassword, setNuevaPassword] = useState('');
   const [confirmarPassword, setConfirmarPassword] = useState('');
-  const [error, setError] = useState('');
-  const [exito, setExito] = useState('');
+  const [localError, setLocalError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showModalEliminar, setShowModalEliminar] = useState(false);
   const [confirmUsername, setConfirmUsername] = useState('');
 
   async function handleGuardar(e) {
     e.preventDefault();
-    setError('');
-    setExito('');
+    setLocalError('');
     if (nuevaPassword && nuevaPassword !== confirmarPassword) {
-      setError('Las contraseñas no coinciden.');
+      setLocalError('Las contraseñas no coinciden.');
       return;
     }
     if (nuevaPassword && nuevaPassword.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres.');
+      setLocalError('La contraseña debe tener al menos 6 caracteres.');
       return;
     }
     const updates = {};
     if (nuevaPassword) updates.password = nuevaPassword;
     if (nuevoCorreo) updates.email = nuevoCorreo;
     if (!Object.keys(updates).length) {
-      setError('No hay cambios para guardar.');
+      setLocalError('No hay cambios para guardar.');
       return;
     }
     setLoading(true);
     try {
       const { error: supabaseError } = await supabase.auth.updateUser(updates);
       if (supabaseError) throw supabaseError;
-      setExito(
+      mostrarExito(
+        'Cambios guardados',
         nuevoCorreo
-          ? 'Cambios guardados. Revisá tu correo para confirmar el nuevo email.'
+          ? 'Revisa tu correo para confirmar el nuevo email.'
           : 'Contraseña actualizada correctamente.'
       );
       setNuevoCorreo('');
       setNuevaPassword('');
       setConfirmarPassword('');
     } catch (err) {
-      setError(err.message ?? 'Error al guardar los cambios.');
+      mostrarError('No se pudo guardar', traducirError(err));
     } finally {
       setLoading(false);
     }
@@ -66,8 +68,7 @@ export default function CuentaTab() {
       <div className="config-section">
         <h2 className="config-section__title">Cuenta</h2>
         <form onSubmit={handleGuardar} className="config-form">
-          {error && <Alert variant="danger">{error}</Alert>}
-          {exito && <Alert variant="success">{exito}</Alert>}
+          {localError && <p className="config-form__error">{localError}</p>}
           <Input label="Correo actual" value={user?.email ?? ''} readOnly />
           <Input
             label="Nuevo correo"

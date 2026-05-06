@@ -2,11 +2,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { crearTorneo } from '@/services/torneos.service';
+import { useToast } from '@/context/ToastContext';
+import { traducirError } from '@/utils/errors';
 import FormularioTorneo from '../components/FormularioTorneo';
 import './CrearTorneo.css';
 
 export default function CrearTorneo() {
   const navigate = useNavigate();
+  const { mostrarExito, mostrarError } = useToast();
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(datos) {
@@ -14,7 +17,10 @@ export default function CrearTorneo() {
     try {
       const torneo = await crearTorneo(datos);
       const id = torneo?.id ?? torneo?.torneo?.id;
+      mostrarExito('Torneo creado', 'Tu torneo fue publicado correctamente.');
       navigate(id ? `/torneos/${id}` : '/torneos');
+    } catch (err) {
+      mostrarError('No se pudo crear el torneo', traducirError(err));
     } finally {
       setSubmitting(false);
     }

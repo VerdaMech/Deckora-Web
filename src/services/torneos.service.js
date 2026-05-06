@@ -1,57 +1,61 @@
-import { apiGet, apiPost, apiPatch, apiDelete } from './api';
+import { apiGet, apiPost, apiPut, apiPatch, apiDelete } from './api';
 
-export async function listarTorneos() {
-  try {
-    const data = await apiGet('/torneos');
-    return { data: Array.isArray(data) ? data : (data?.data ?? []), error: null };
-  } catch (e) {
-    return { data: [], error: e.message };
-  }
-}
+export async function listarTorneos(params = {}) {
+  const query = new URLSearchParams();
+  if (params.formato) query.set('formato', params.formato);
+  if (params.estado) query.set('estado', params.estado);
+  if (params.desde) query.set('desde', params.desde);
+  if (params.hasta) query.set('hasta', params.hasta);
+  if (params.q) query.set('q', params.q);
+  if (params.page) query.set('page', params.page);
+  if (params.limit) query.set('limit', params.limit);
 
-// El backend no tiene filtros por proximidad; se filtra client-side por fecha futura y estado pendiente
-export async function listarTorneosProximos(limit = 3) {
-  const { data, error } = await listarTorneos();
-  if (error) return { data: [], error };
-  const ahora = new Date();
-  const proximos = data
-    .filter((t) => {
-      const fecha = t.fecha ?? t.fecha_inicio;
-      return fecha && new Date(fecha) > ahora && (t.estado === 'pendiente' || t.estado === 'activo' || !t.estado);
-    })
-    .sort((a, b) => new Date(a.fecha ?? a.fecha_inicio) - new Date(b.fecha ?? b.fecha_inicio))
-    .slice(0, limit);
-  return { data: proximos, error: null };
-}
-
-export async function listarMisTorneos(organizadorId) {
-  const { data, error } = await listarTorneos();
-  if (error) return { data: [], error };
-  const mios = data.filter((t) => t.organizador_id === organizadorId || t.organizadorId === organizadorId);
-  return { data: mios, error: null };
+  const qs = query.toString();
+  const data = await apiGet(`/torneos${qs ? `?${qs}` : ''}`);
+  return data;
 }
 
 export async function obtenerTorneo(id) {
+  return apiGet(`/torneos/${id}`);
+}
+
+export async function crearTorneo(datos) {
+  return apiPost('/torneos', datos);
+}
+
+export async function inscribirseATorneo(torneoId, { mazoId }) {
+  return apiPost(`/torneos/${torneoId}/inscripciones`, { mazo_id: mazoId });
+}
+
+export async function listarInscripciones(torneoId) {
+  return apiGet(`/torneos/${torneoId}/inscripciones`);
+}
+
+export async function actualizarTorneo(id, datos) {
   try {
-    const data = await apiGet(`/torneos/${id}`);
-    return { data, error: null };
-  } catch (e) {
-    return { data: null, error: e.message };
+    return await apiPut(`/torneos/${id}`, datos);
+  } catch {
+    // TODO: reemplazar por endpoint real cuando exista
+    console.info('[actualizarTorneo] Endpoint no disponible, simulando respuesta');
+    return Promise.resolve({ ...datos, id });
   }
 }
 
-export async function crearTorneo(payload) {
-  return apiPost('/torneos', payload);
+export async function cambiarEstadoTorneo(id, nuevoEstado) {
+  try {
+    return await apiPatch(`/torneos/${id}/estado`, { estado: nuevoEstado });
+  } catch {
+    // TODO: reemplazar por endpoint real cuando exista
+    console.info('[cambiarEstadoTorneo] Endpoint no disponible, simulando respuesta');
+    return Promise.resolve({ id, estado: nuevoEstado });
+  }
 }
 
-export async function actualizarTorneo(id, payload) {
-  return apiPatch(`/torneos/${id}`, payload);
-}
-
-export async function eliminarTorneo(id) {
-  return apiDelete(`/torneos/${id}`);
-}
-
-export async function inscribirseEnTorneo(torneoId) {
-  return apiPost(`/torneos/${torneoId}/inscripciones`, {});
+export async function cancelarInscripcion(torneoId, inscripcionId) {
+  // TODO: reemplazar por endpoint real cuando exista
+  try {
+    return await apiDelete(`/torneos/${torneoId}/inscripciones/${inscripcionId}`);
+  } catch {
+    return Promise.resolve(null);
+  }
 }

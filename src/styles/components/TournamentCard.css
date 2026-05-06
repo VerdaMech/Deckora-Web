@@ -1,0 +1,82 @@
+.tournament-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.tournament-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--glow-gold), var(--shadow-md);
+  border-color: var(--border-default);
+}
+
+.tournament-card__image {
+  position: relative;
+  height: 140px;
+  background: linear-gradient(135deg, var(--bg-panel-2) 0%, var(--bg-elevated) 100%);
+  overflow: hidden;
+}
+
+.tournament-card__gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 30%,
+    rgba(10, 6, 8, 0.7) 100%
+  );
+}
+
+.tournament-card__badges {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.tournament-card__body {
+  padding: var(--space-4);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.tournament-card__name {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.tournament-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.tournament-card__meta-item {
+  font-family: 'Crimson Pro', serif;
+  font-size: var(--font-small);
+  color: var(--text-muted);
+}
+
+.tournament-card__cupo {
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-micro);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--gold-dim);
+  margin-top: auto;
+}

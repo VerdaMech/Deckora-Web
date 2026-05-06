@@ -1,0 +1,132 @@
+.formulario-torneo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 640px;
+}
+
+.formulario-torneo__submit-error {
+  margin-bottom: var(--space-2);
+}
+
+/* Coordenadas + mapa */
+.formulario-torneo__campo-mapa {}
+
+.formulario-torneo__coords-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}
+
+.formulario-torneo__coord {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.formulario-torneo__coord-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.formulario-torneo__coord-input {
+  width: 130px;
+}
+
+.formulario-torneo__mapa-wrapper {
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.formulario-torneo__mapa {
+  height: 260px;
+  width: 100%;
+}
+
+.formulario-torneo__mapa-ayuda {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: var(--space-2);
+}
+
+.formulario-torneo__pin {
+  width: 20px;
+  height: 20px;
+  background: var(--gold);
+  border: 2px solid var(--bg-app);
+  border-radius: 50%;
+  box-shadow: var(--glow-gold);
+}
+
+/* Dos columnas para cupo/precio */
+.formulario-torneo__fila-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+/* Toggle público */
+.formulario-torneo__toggle-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.formulario-torneo__toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-panel-2);
+  border: 1px solid var(--border-default);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.formulario-torneo__toggle--on {
+  background: var(--gold-dim);
+  border-color: var(--gold);
+}
+
+.formulario-torneo__toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.formulario-torneo__toggle--on .formulario-torneo__toggle-thumb {
+  transform: translateX(20px);
+  background: var(--gold);
+}
+
+.formulario-torneo__toggle-desc {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.formulario-torneo__actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: var(--space-2);
+}
+
+@media (max-width: 480px) {
+  .formulario-torneo__fila-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .formulario-torneo__coords-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

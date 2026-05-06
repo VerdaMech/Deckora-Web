@@ -1,0 +1,155 @@
+.pod-table {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.pod-table__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-panel-2);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.pod-table__titulo {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pod-table__tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.pod-table__th {
+  padding: var(--space-2) var(--space-4);
+  text-align: left;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+}
+
+.pod-table__th--pts {
+  text-align: center;
+  width: 48px;
+}
+
+.pod-table__row {
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background 0.15s;
+}
+
+.pod-table__row:last-child {
+  border-bottom: none;
+}
+
+.pod-table__row:hover {
+  background: var(--bg-elevated);
+}
+
+.pod-table__td {
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.875rem;
+  color: var(--text-default);
+  vertical-align: middle;
+}
+
+.pod-table__td--jugador {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.pod-table__td--pts {
+  text-align: center;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.pod-table__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bg-panel-2);
+  border: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.pod-table__nombre {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.pod-table__td--mazo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pod-table__mazo-nombre {
+  font-size: 0.875rem;
+  color: var(--text-default);
+}
+
+.pod-table__comandante {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* Resultado badges */
+.pod-table__resultado {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.pod-table__resultado--ganador {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.pod-table__resultado--perdedor {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.pod-table__resultado--empate {
+  background: var(--info-bg);
+  color: var(--info);
+}
+
+.pod-table__resultado--pendiente {
+  color: var(--text-muted);
+}
+
+.pod-table__footer {
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 640px) {
+  .pod-table__th--mazo,
+  .pod-table__td--mazo {
+    display: none;
+  }
+}

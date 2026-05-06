@@ -1,0 +1,128 @@
+.gestion-torneo-page {
+  padding: var(--space-6) var(--space-5);
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.gestion-torneo-page--error {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.gestion-torneo-page__skeleton {
+  margin-bottom: var(--space-2);
+}
+
+/* Header */
+.gestion-torneo-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.gestion-torneo-page__titulo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-2);
+}
+
+.gestion-torneo-page__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.gestion-torneo-page__formato {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: var(--bg-panel-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  padding: 2px 10px;
+}
+
+.gestion-torneo-page__header-acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.gestion-torneo-page__link-publico {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.gestion-torneo-page__link-publico:hover {
+  color: var(--gold);
+}
+
+/* Acciones de estado */
+.gestion-torneo-page__estado-acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  padding: var(--space-4);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+/* Body / tabs */
+.gestion-torneo-page__body {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.gestion-torneo-page__ronda {
+  padding: var(--space-5);
+}
+
+/* Crear ronda */
+.gestion-torneo-page__crear-ronda {
+  padding: var(--space-5);
+  max-width: 400px;
+}
+
+.gestion-torneo-page__crear-titulo {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-4);
+}
+
+.gestion-torneo-page__crear-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.gestion-torneo-page__modal-texto {
+  color: var(--text-default);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .gestion-torneo-page {
+    padding: var(--space-4);
+  }
+
+  .gestion-torneo-page__header {
+    flex-direction: column;
+  }
+}

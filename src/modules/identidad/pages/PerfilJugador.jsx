@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react';
-
 import { Card, EmptyState, Tabs } from '@/components/ui';
 import EstadisticasJugador from '@/components/domain/EstadisticasJugador';
 import RoleBadge from '@/components/domain/RoleBadge';
 import MisEstadisticasTab from '@/modules/identidad/components/MisEstadisticasTab';
+import MisInscripcionesTab from '../components/MisInscripcionesTab';
 import { useAuth } from '@/hooks/useAuth';
-import { obtenerMisInscripciones } from '@/services/usuarios.service';
 
 const MAZOS_PUBLICOS_MOCK = [
   { id: 1, nombre: 'Atraxa Command', formato: 'COMMANDER', comandante: "Atraxa, Praetor's Voice" },
@@ -19,13 +17,6 @@ function getInitials(nombre) {
 export default function PerfilJugador({ perfil }) {
   const { user } = useAuth();
   const esDueno = user && user.id === perfil.id;
-  const [inscripciones, setInscripciones] = useState([]);
-
-  useEffect(() => {
-    if (esDueno) {
-      obtenerMisInscripciones().then(setInscripciones);
-    }
-  }, [esDueno]);
 
   return (
     <div className="profile-page">
@@ -62,18 +53,7 @@ export default function PerfilJugador({ perfil }) {
           <section className="profile-section">
             <Tabs>
               <Tabs.Tab eventKey="inscripciones" label="Mis inscripciones">
-                {inscripciones.length > 0 ? (
-                  <ul className="profile-inscripciones-list">
-                    {inscripciones.map((i) => (
-                      <li key={i.id} className="profile-inscripciones-list__item">
-                        <span>{i.torneo.nombre}</span>
-                        <span className="profile-inscripciones-list__date">{i.torneo.fecha}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <EmptyState title="Sin inscripciones" description="No estás inscrito en ningún torneo." />
-                )}
+                <MisInscripcionesTab />
               </Tabs.Tab>
               <Tabs.Tab eventKey="estadisticas" label="Mis estadísticas">
                 <MisEstadisticasTab usuarioId={perfil.id} />

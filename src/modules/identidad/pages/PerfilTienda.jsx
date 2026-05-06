@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { MapPin, Phone, Clock, Swords } from 'lucide-react';
 
-import { Card, EmptyState } from '@/components/ui';
+import { Card, EmptyState, Tabs } from '@/components/ui';
 import RoleBadge from '@/components/domain/RoleBadge';
 import MiniMapaTienda from '@/components/domain/MiniMapaTienda';
+import MisTorneosTab from '../components/MisTorneosTab';
 import { useAuth } from '@/hooks/useAuth';
 import { obtenerTorneosDeUsuario } from '@/services/usuarios.service';
 
@@ -18,7 +19,7 @@ export default function PerfilTienda({ perfil }) {
   const nombreDisplay = perfil.nombre_tienda ?? perfil.nombre_usuario;
 
   useEffect(() => {
-    obtenerTorneosDeUsuario(perfil.id, 'tienda').then(setTorneos);
+    obtenerTorneosDeUsuario(perfil.id, 'tienda').then(setTorneos).catch(() => {});
   }, [perfil.id]);
 
   return (
@@ -47,22 +48,13 @@ export default function PerfilTienda({ perfil }) {
           <h3 className="profile-section__title">Información</h3>
           <ul className="profile-info-list">
             {perfil.direccion && (
-              <li>
-                <MapPin size={16} />
-                {perfil.direccion}
-              </li>
+              <li><MapPin size={16} />{perfil.direccion}</li>
             )}
             {perfil.numero_telefono && (
-              <li>
-                <Phone size={16} />
-                {perfil.numero_telefono}
-              </li>
+              <li><Phone size={16} />{perfil.numero_telefono}</li>
             )}
             {perfil.horario_apertura && (
-              <li>
-                <Clock size={16} />
-                {perfil.horario_apertura}
-              </li>
+              <li><Clock size={16} />{perfil.horario_apertura}</li>
             )}
           </ul>
         </section>
@@ -90,6 +82,16 @@ export default function PerfilTienda({ perfil }) {
             />
           )}
         </section>
+
+        {esDueno && (
+          <section className="profile-section">
+            <Tabs>
+              <Tabs.Tab eventKey="mis-torneos" label="Mis torneos">
+                <MisTorneosTab />
+              </Tabs.Tab>
+            </Tabs>
+          </section>
+        )}
       </div>
     </div>
   );

@@ -7,12 +7,35 @@ import EditarTorneo from './pages/EditarTorneo';
 import GestionTorneo from './pages/GestionTorneo';
 import ProtectedRoute from '@/routes/ProtectedRoute';
 
+const ROLES_ORG = ['organizador', 'tienda'];
+
 export const torneosRoutes = (
   <>
     <Route path="/torneos" element={<Cartelera />} />
     <Route path="/torneos/:id" element={<DetalleTorneo />} />
-    <Route path="/organizador/torneos/nuevo" element={<ProtectedRoute requireRol="organizador"><CrearTorneo /></ProtectedRoute>} />
-    <Route path="/organizador/torneos/:id/editar" element={<ProtectedRoute requireRol="organizador"><EditarTorneo /></ProtectedRoute>} />
-    <Route path="/organizador/torneos/:id/gestion" element={<ProtectedRoute requireRol="organizador"><GestionTorneo /></ProtectedRoute>} />
+    <Route
+      path="/organizador/torneos/nuevo"
+      element={
+        <ProtectedRoute requireRol={ROLES_ORG}>
+          <CrearTorneo />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/organizador/torneos/:id/editar"
+      element={
+        <ProtectedRoute requireRol={ROLES_ORG}>
+          <EditarTorneo />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/organizador/torneos/:id/gestion"
+      element={
+        <ProtectedRoute requireRol={ROLES_ORG}>
+          <GestionTorneo />
+        </ProtectedRoute>
+      }
+    />
   </>
 );

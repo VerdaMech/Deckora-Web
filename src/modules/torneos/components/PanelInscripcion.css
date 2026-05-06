@@ -1,0 +1,58 @@
+.panel-inscripcion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.panel-inscripcion--inscrito {
+  border-color: var(--border-default);
+}
+
+.panel-inscripcion--info,
+.panel-inscripcion--cerrado,
+.panel-inscripcion--lleno {
+  align-items: center;
+  text-align: center;
+}
+
+.panel-inscripcion__mensaje {
+  font-family: 'Crimson Pro', serif;
+  font-size: var(--font-body-lg);
+  color: var(--text-default);
+  margin: 0;
+}
+
+.panel-inscripcion__mensaje--ok {
+  color: var(--success);
+}
+
+.panel-inscripcion__campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.panel-inscripcion__label {
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-micro);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.panel-inscripcion__link {
+  color: var(--gold);
+  text-decoration: underline;
+}
+
+.panel-inscripcion__modal-texto {
+  font-family: 'Crimson Pro', serif;
+  font-size: var(--font-body-lg);
+  color: var(--text-default);
+  margin: 0;
+}

@@ -3,6 +3,7 @@ import { Globe, Swords } from 'lucide-react';
 
 import { Card, EmptyState, Tabs } from '@/components/ui';
 import RoleBadge from '@/components/domain/RoleBadge';
+import MisTorneosTab from '../components/MisTorneosTab';
 import { useAuth } from '@/hooks/useAuth';
 import { obtenerTorneosDeUsuario } from '@/services/usuarios.service';
 
@@ -16,7 +17,7 @@ export default function PerfilOrganizador({ perfil }) {
   const [torneos, setTorneos] = useState([]);
 
   useEffect(() => {
-    obtenerTorneosDeUsuario(perfil.id, 'organizador').then(setTorneos);
+    obtenerTorneosDeUsuario(perfil.id, 'organizador').then(setTorneos).catch(() => {});
   }, [perfil.id]);
 
   return (
@@ -83,17 +84,7 @@ export default function PerfilOrganizador({ perfil }) {
           <section className="profile-section">
             <Tabs>
               <Tabs.Tab eventKey="mis-torneos" label="Mis torneos">
-                <div className="profile-mis-torneos">
-                  <a href="/organizador/torneos/nuevo" className="btn btn--primary btn--sm">
-                    Crear torneo
-                  </a>
-                  {torneos.map((t) => (
-                    <Card key={t.id} variant="interactive">
-                      <p className="profile-deck__name">{t.nombre}</p>
-                      <p className="profile-deck__meta">{t.formato} · {t.fecha} · {t.estado}</p>
-                    </Card>
-                  ))}
-                </div>
+                <MisTorneosTab />
               </Tabs.Tab>
             </Tabs>
           </section>

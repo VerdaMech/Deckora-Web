@@ -154,6 +154,43 @@
   gap: var(--space-2);
 }
 
+/* === Skeleton mientras carga === */
+.mtg-card__skeleton {
+  aspect-ratio: 488 / 680;
+  width: 100%;
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    90deg,
+    var(--bg-panel-2) 0%,
+    var(--bg-panel) 50%,
+    var(--bg-panel-2) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite linear;
+}
+
+.mtg-card__skeleton--inline {
+  width: 44px;
+  height: 62px;
+  aspect-ratio: unset;
+  flex-shrink: 0;
+}
+
+.mtg-card__skeleton--full {
+  width: 240px;
+  height: 336px;
+  aspect-ratio: unset;
+}
+
+.mtg-card__image--oculta {
+  display: none;
+}
+
+@keyframes skeleton-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 /* === Shared text === */
 .mtg-card__name {
   font-family: 'Crimson Pro', Georgia, serif;

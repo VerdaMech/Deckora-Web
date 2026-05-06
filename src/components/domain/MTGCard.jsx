@@ -14,7 +14,7 @@ function getImageUrls(carta) {
   };
 }
 
-function CardImage({ src, srcSet, sizes, alt, onError, className }) {
+function CardImage({ src, srcSet, sizes, alt, onError, onLoad, className, prioridad }) {
   return (
     <img
       className={className}
@@ -23,13 +23,16 @@ function CardImage({ src, srcSet, sizes, alt, onError, className }) {
       sizes={sizes}
       alt={alt}
       onError={onError}
-      loading="lazy"
+      onLoad={onLoad}
+      loading={prioridad === 'alta' ? 'eager' : 'lazy'}
+      decoding="async"
     />
   );
 }
 
-export function MTGCard({ carta, variant = 'thumbnail', onClick, esComandante }) {
+export function MTGCard({ carta, variant = 'thumbnail', onClick, esComandante, prioridad = 'auto' }) {
   const [imgError, setImgError] = useState(false);
+  const [imgCargada, setImgCargada] = useState(false);
   const { small, normal } = getImageUrls(carta);
 
   const altText = carta?.name ?? carta?.nombre ?? 'Carta MTG';
@@ -61,18 +64,23 @@ export function MTGCard({ carta, variant = 'thumbnail', onClick, esComandante })
         {imgError ? (
           <div className="mtg-card__image mtg-card__image--placeholder" aria-label={altText} />
         ) : (
-          <CardImage
-            className="mtg-card__image"
-            src={small || normal}
-            srcSet={small && normal ? `${small} 146w, ${normal} 488w` : undefined}
-            sizes="100px"
-            alt={altText}
-            onError={() => setImgError(true)}
-          />
+          <>
+            {!imgCargada && <div className="mtg-card__skeleton" aria-hidden="true" />}
+            <CardImage
+              className={`mtg-card__image${!imgCargada ? ' mtg-card__image--oculta' : ''}`}
+              src={small || normal}
+              srcSet={small && normal ? `${small} 146w, ${normal} 488w` : undefined}
+              sizes="100px"
+              alt={altText}
+              onError={() => setImgError(true)}
+              onLoad={() => setImgCargada(true)}
+              prioridad={prioridad}
+            />
+          </>
         )}
-        {normal && !imgError && (
+        {normal && !imgError && imgCargada && (
           <div className="mtg-card__preview" aria-hidden="true">
-            <img src={normal} alt="" className="mtg-card__preview-image" />
+            <img src={normal} alt="" className="mtg-card__preview-image" loading="lazy" decoding="async" />
           </div>
         )}
       </div>
@@ -91,12 +99,17 @@ export function MTGCard({ carta, variant = 'thumbnail', onClick, esComandante })
         {imgError ? (
           <div className="mtg-card__image mtg-card__image--placeholder" aria-label={altText} />
         ) : (
-          <CardImage
-            className="mtg-card__image"
-            src={small || normal}
-            alt={altText}
-            onError={() => setImgError(true)}
-          />
+          <>
+            {!imgCargada && <div className="mtg-card__skeleton mtg-card__skeleton--inline" aria-hidden="true" />}
+            <CardImage
+              className={`mtg-card__image${!imgCargada ? ' mtg-card__image--oculta' : ''}`}
+              src={small || normal}
+              alt={altText}
+              onError={() => setImgError(true)}
+              onLoad={() => setImgCargada(true)}
+              prioridad={prioridad}
+            />
+          </>
         )}
         <div className="mtg-card__info">
           <span className="mtg-card__name">{altText}</span>
@@ -116,14 +129,19 @@ export function MTGCard({ carta, variant = 'thumbnail', onClick, esComandante })
       {imgError ? (
         <div className="mtg-card__image mtg-card__image--placeholder" aria-label={altText} />
       ) : (
-        <CardImage
-          className="mtg-card__image"
-          src={normal || small}
-          srcSet={small && normal ? `${small} 146w, ${normal} 488w` : undefined}
-          sizes="(max-width: 768px) 146px, 240px"
-          alt={altText}
-          onError={() => setImgError(true)}
-        />
+        <>
+          {!imgCargada && <div className="mtg-card__skeleton mtg-card__skeleton--full" aria-hidden="true" />}
+          <CardImage
+            className={`mtg-card__image${!imgCargada ? ' mtg-card__image--oculta' : ''}`}
+            src={normal || small}
+            srcSet={small && normal ? `${small} 146w, ${normal} 488w` : undefined}
+            sizes="(max-width: 768px) 146px, 240px"
+            alt={altText}
+            onError={() => setImgError(true)}
+            onLoad={() => setImgCargada(true)}
+            prioridad={prioridad}
+          />
+        </>
       )}
       <div className="mtg-card__details">
         <div className="mtg-card__name-row">

@@ -272,9 +272,17 @@ Rama de trabajo: `feature/pulido-final`
   - `Input.jsx`: aria-invalid + aria-describedby
   - `Login.jsx`: validación on-blur
 
-### Pendiente
+### Persona B — Commits en progreso
 
-- [ ] `perf(ui)`: lazy loading de imágenes de cartas + code splitting por módulo con `React.lazy` + `<Suspense>` en rutas. Verificar partición de bundle (actualmente ~1.2 MB → debería quedar <500 KB por chunk).
+- [x] **Commit B1** · `perf(ui): agregar lazy loading de imágenes y code splitting por módulo`
+  - `MTGCard.jsx`: skeleton durante carga (`imgCargada` state), `decoding="async"`, prop `prioridad` ("auto"|"alta"), `loading="lazy"` condicional.
+  - `MTGCard.css`: `.mtg-card__skeleton` con `aspect-ratio: 488/680` y animación shimmer.
+  - `AppRoutes.jsx`: todas las páginas convertidas a `React.lazy()` + `<Suspense>` + `<ErrorBoundary fallback={<ErrorChunk />}>`. Landing queda eagerly loaded.
+  - `ErrorBoundary.jsx`: extendido con prop `fallback` opcional.
+  - `ErrorChunk.jsx` + `ErrorChunk.css`: creados — fallback de chunk con botón Reintentar.
+  - `vite.config.js`: `rolldownOptions.output.codeSplitting: true` para Rolldown (Vite 8).
+  - Bundle: index 1.2 MB → 380 kB. Chunks por módulo: Login ~2 kB, MisMazos ~3 kB, Cartelera ~3 kB, etc.
+  - Nota: `EstadisticasJugador` chunk pesa 358 kB por recharts (dependencia pesada, esperado).
 
 - [ ] `feat(a11y)`: WCAG A completo — alt en imágenes, htmlFor en labels, aria-label en botones-icono, foco visible global `:focus-visible`, contraste verificado, tooltips en términos MTG (win rate, foil, comandante, Commander, FormatBadge).
 

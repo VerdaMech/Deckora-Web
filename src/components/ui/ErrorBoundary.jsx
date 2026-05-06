@@ -19,6 +19,8 @@ export default class ErrorBoundary extends Component {
   render() {
     if (!this.state.hasError) return this.props.children;
 
+    if (this.props.fallback) return this.props.fallback;
+
     const { error } = this.state;
     const isDev = import.meta.env.DEV;
 

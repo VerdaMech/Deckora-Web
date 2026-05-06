@@ -190,13 +190,49 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
 
 ## Fase 5 — Mapa y Dashboards
 
-- [ ] `<MapaTiendas>` integrado en Landing
-- [ ] Landing finalizado (componentizar HTML del landing.html)
-- [ ] Dashboard jugador
-- [ ] Dashboard organizador
-- [ ] Dashboard tienda
-- [ ] "Mis estadísticas" como sección del perfil del jugador
-- [ ] Configuración de tienda (Módulo 1) terminada
+### Persona A — Commits completados (rama: `feature/mapa-y-dashboards`)
+
+- [x] **Commit A1** · `feat(mapa): agregar componente MapaTiendas con pines y geolocalización`
+  - [x] `src/hooks/useGeolocation.js` — hook de geolocalización del navegador
+  - [x] `src/services/tiendas.service.js` — extendido con listarTiendas, listarTiendasCercanas, obtenerTienda, listarTorneosDeTienda
+  - [x] `src/components/domain/StorePin.jsx` — divIcon custom con SVG inline (gota crimson + borde gold)
+  - [x] `src/components/domain/MapaTiendas.jsx` — mapa react-leaflet con tiles CartoDB Dark, zoom custom, botón geo
+  - [x] `src/pages/DemoMapa.jsx` — demo dev en `/demo/mapa` (eliminar en Commit B3)
+  - [x] CSS co-localizado en `src/styles/components/`
+  - [x] `src/components/domain/index.js` actualizado
+
+- [x] **Commit A2** · `feat(dashboards): componentizar landing en secciones reutilizables`
+  - [x] `HeroLanding.jsx` — wordmark Cinzel Decorative, tagline, CTAs adaptados según auth/rol
+  - [x] `FeaturesLanding.jsx` — grid de 4 features con íconos Lucide
+  - [x] `ProfilesLanding.jsx` — 3 cards de roles con bullets y borde por rol
+  - [x] `CTALanding.jsx` — CTA clip-path, oculto si autenticado
+  - [x] `Landing.jsx` refactorizado como composición limpia
+  - [x] TODO en Landing para Commit B3: `<SeccionMapaTiendas />`
+
+- [x] **Commit A3** · `feat(identidad): agregar EstadisticasJugador con recharts y tab Mis estadísticas en perfil`
+  - [x] `obtenerEstadisticasJugador` mockeado en `usuarios.service.js` (mock con historial, winRate, etc.)
+  - [x] `EstadisticasJugador.jsx` mejorado: variante="completo"|"compacto", chart recharts, detalles mazo/comandante/torneos
+  - [x] `MisEstadisticasTab.jsx` — tab wrapper visible solo para el dueño del perfil
+  - [x] `PerfilJugador.jsx` actualizado con `MisEstadisticasTab` en tab "Mis estadísticas"
+  - [x] `AppRoutes.jsx` corregido para usar `PerfilRouter` (fix de bug preexistente en dev)
+
+### Pendiente Persona B — Fase 5
+
+- [ ] **Commit B1** · Dashboard jugador
+  - `<BloqueResumen>` con saludo y acceso rápido
+  - `<StatsRapidas>` con 3-4 métricas clave
+  - `DashboardJugador.jsx` — consume `<EstadisticasJugador variante="compacto">` que ya existe
+
+- [ ] **Commit B2** · Dashboards organizador y tienda
+  - `DashboardOrganizador.jsx` — resumen de torneos activos
+  - `DashboardTienda.jsx` — resumen de torneos + link a configuración
+
+- [ ] **Commit B3** · Integración mapa en Landing + limpieza
+  - `src/modules/mapa/components/SeccionMapaTiendas.jsx` — wrapper para el Landing
+  - Integrar `<SeccionMapaTiendas />` donde está el TODO en `Landing.jsx`
+  - Opcionalmente: `MapaTiendas` en `ConfiguracionTiendaTab` para fijar coordenadas
+  - Eliminar `/demo/mapa`, `src/pages/DemoMapa.jsx` y su CSS
+  - Abrir PR de `feature/mapa-y-dashboards` → `dev`
 
 ## Fase 6 — Pulido final
 

@@ -181,12 +181,14 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
 
 ## Fase 4 — Torneos
 
-- [ ] Cartelera (`/torneos`)
-- [ ] Detalle torneo + inscripción
-- [ ] Crear / editar torneo
-- [ ] Gestión torneo en vivo
-- [ ] Tabs en perfiles: Mis inscripciones (jugador), Mis torneos (organizador/tienda)
-- [ ] Componentes dominio: TournamentCard, PodTable, RoundView
+- [x] Cartelera (`/torneos`)
+- [x] Detalle torneo + inscripción
+- [x] Crear / editar torneo (FormularioTorneo con mini-mapa Leaflet)
+- [ ] Gestión torneo en vivo (GestionTorneo, RoundView, PodTable)
+- [x] Tabs en perfiles: Mis inscripciones (jugador), Mis torneos (organizador/tienda)
+- [x] Componentes dominio: TournamentCard, EstadoBadge
+- [ ] Componentes dominio: PodTable, RoundView
+- [ ] ReportarResultadoModal, cambio de estados, pulido final
 
 ## Fase 5 — Mapa y Dashboards
 

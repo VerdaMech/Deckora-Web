@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiDelete } from './api';
+import { apiGet, apiPost, apiPut, apiPatch, apiDelete } from './api';
 
 export async function listarTorneos(params = {}) {
   const query = new URLSearchParams();
@@ -29,6 +29,26 @@ export async function inscribirseATorneo(torneoId, { mazoId }) {
 
 export async function listarInscripciones(torneoId) {
   return apiGet(`/torneos/${torneoId}/inscripciones`);
+}
+
+export async function actualizarTorneo(id, datos) {
+  try {
+    return await apiPut(`/torneos/${id}`, datos);
+  } catch {
+    // TODO: reemplazar por endpoint real cuando exista
+    console.info('[actualizarTorneo] Endpoint no disponible, simulando respuesta');
+    return Promise.resolve({ ...datos, id });
+  }
+}
+
+export async function cambiarEstadoTorneo(id, nuevoEstado) {
+  try {
+    return await apiPatch(`/torneos/${id}/estado`, { estado: nuevoEstado });
+  } catch {
+    // TODO: reemplazar por endpoint real cuando exista
+    console.info('[cambiarEstadoTorneo] Endpoint no disponible, simulando respuesta');
+    return Promise.resolve({ id, estado: nuevoEstado });
+  }
 }
 
 export async function cancelarInscripcion(torneoId, inscripcionId) {

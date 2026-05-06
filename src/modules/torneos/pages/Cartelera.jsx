@@ -4,9 +4,10 @@ import { Swords } from 'lucide-react';
 
 import { listarTorneos } from '@/services/torneos.service';
 import { TournamentCard } from '@/components/domain/TournamentCard';
-import { Button, Select, Alert, Skeleton, Tooltip } from '@/components/ui';
+import { Button, Select, Alert, Skeleton } from '@/components/ui';
 import { useDebounce } from '@/hooks/useDebounce';
-import { FORMATOS, FORMATO_LABELS, ESTADO_TORNEO, ESTADO_TORNEO_LABELS } from '@/utils/constants';
+import { useAuth } from '@/hooks/useAuth';
+import { FORMATO_LABELS, ESTADO_TORNEO_LABELS } from '@/utils/constants';
 import './Cartelera.css';
 
 const FORMATO_OPCIONES = [
@@ -21,6 +22,8 @@ const ESTADO_OPCIONES = [
 
 export default function Cartelera() {
   const navigate = useNavigate();
+  const { rol } = useAuth();
+  const puedeCrear = rol === 'organizador' || rol === 'tienda';
   const [torneos, setTorneos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -69,13 +72,11 @@ export default function Cartelera() {
           <h1 className="cartelera-header__title">Cartelera de torneos</h1>
           <p className="cartelera-header__subtitle">Explorá y encontrá tu próximo torneo de Magic.</p>
         </div>
-        <Tooltip content="Disponible próximamente">
-          <span>
-            <Button variant="primary" disabled>
-              Crear torneo
-            </Button>
-          </span>
-        </Tooltip>
+        {puedeCrear && (
+          <Button variant="primary" onClick={() => navigate('/organizador/torneos/nuevo')}>
+            Crear torneo
+          </Button>
+        )}
       </div>
 
       <div className="cartelera-filtros">

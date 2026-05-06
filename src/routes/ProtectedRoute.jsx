@@ -23,8 +23,11 @@ export default function ProtectedRoute({ requireRol, children }) {
     return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
-  if (requireRol && requireRol !== 'any' && rol !== requireRol) {
-    return <Navigate to="/forbidden" replace />;
+  if (requireRol && requireRol !== 'any') {
+    const rolesPermitidos = Array.isArray(requireRol) ? requireRol : [requireRol];
+    if (!rolesPermitidos.includes(rol)) {
+      return <Navigate to="/forbidden" replace />;
+    }
   }
 
   return children;

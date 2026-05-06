@@ -1,21 +1,21 @@
 import { useState } from 'react';
 
-import { Input, Button, Modal } from '@/components/ui';
+import { Input, Button } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/context/ToastContext';
+import { useConfirmDialog } from '@/hooks/useConfirmDialog.jsx';
 import { traducirError } from '@/utils/errors';
 import { supabase } from '@/services/supabase';
 
 export default function CuentaTab() {
   const { user, logout } = useAuth();
   const { mostrarExito, mostrarError } = useToast();
+  const { confirmar, ConfirmDialogPortal } = useConfirmDialog();
   const [nuevoCorreo, setNuevoCorreo] = useState('');
   const [nuevaPassword, setNuevaPassword] = useState('');
   const [confirmarPassword, setConfirmarPassword] = useState('');
   const [localError, setLocalError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showModalEliminar, setShowModalEliminar] = useState(false);
-  const [confirmUsername, setConfirmUsername] = useState('');
 
   async function handleGuardar(e) {
     e.preventDefault();
@@ -55,13 +55,19 @@ export default function CuentaTab() {
     }
   }
 
-  async function handleEliminarCuenta() {
-    if (confirmUsername !== (user?.nombre_usuario ?? user?.email)) return;
-    // TODO: endpoint real DELETE /usuarios/me
-    await logout();
+  function handleSolicitarEliminar() {
+    confirmar({
+      titulo: 'Eliminar cuenta',
+      mensaje: 'Esto borrará tu cuenta y todos tus datos. La acción es permanente e irreversible.',
+      textoConfirmar: 'Eliminar definitivamente',
+      variante: 'destructivo',
+      requiereTexto: 'ELIMINAR',
+      onConfirmar: async () => {
+        // TODO: endpoint real DELETE /usuarios/me
+        await logout();
+      },
+    });
   }
-
-  const usernameConfirm = user?.nombre_usuario ?? user?.email ?? '';
 
   return (
     <div>
@@ -99,41 +105,14 @@ export default function CuentaTab() {
       <div className="config-section config-section--danger">
         <h3 className="config-section__title">Eliminar cuenta</h3>
         <p className="config-section__warning">
-          Esto va a borrar tu cuenta y todos tus datos. La acción es permanente.
+          Esto borrará tu cuenta y todos tus datos. La acción es permanente.
         </p>
-        <Button variant="danger" onClick={() => setShowModalEliminar(true)}>
+        <Button variant="danger" onClick={handleSolicitarEliminar}>
           Eliminar mi cuenta
         </Button>
       </div>
 
-      <Modal
-        show={showModalEliminar}
-        onHide={() => { setShowModalEliminar(false); setConfirmUsername(''); }}
-        title="Confirmar eliminación de cuenta"
-        footer={
-          <>
-            <Button variant="secondary" onClick={() => setShowModalEliminar(false)}>
-              Cancelar
-            </Button>
-            <Button
-              variant="danger"
-              disabled={confirmUsername !== usernameConfirm}
-              onClick={handleEliminarCuenta}
-            >
-              Eliminar definitivamente
-            </Button>
-          </>
-        }
-      >
-        <p className="config-section__warning">
-          Escribí <strong>{usernameConfirm}</strong> para confirmar:
-        </p>
-        <Input
-          value={confirmUsername}
-          onChange={(e) => setConfirmUsername(e.target.value)}
-          placeholder={usernameConfirm}
-        />
-      </Modal>
+      <ConfirmDialogPortal />
     </div>
   );
 }

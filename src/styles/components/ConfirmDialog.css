@@ -1,0 +1,43 @@
+.confirm-dialog .modal-header-custom {
+  border-bottom-color: var(--border-subtle);
+}
+
+.confirm-dialog--destructivo .modal-title-custom {
+  color: var(--danger);
+}
+
+.confirm-dialog--advertencia .modal-title-custom {
+  color: var(--warning);
+}
+
+.confirm-dialog--info .modal-title-custom {
+  color: var(--gold);
+}
+
+.confirm-dialog__cuerpo {
+  font-family: 'Crimson Pro', serif;
+  font-size: 1.05rem;
+  color: var(--text-default);
+  line-height: 1.55;
+  margin-bottom: var(--space-4);
+}
+
+.confirm-dialog__texto-requerido {
+  font-family: 'Crimson Pro', serif;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.confirm-dialog__texto-requerido strong {
+  color: var(--text-primary);
+  font-family: 'Cinzel', serif;
+  font-size: 0.85em;
+  letter-spacing: 0.05em;
+}
+
+.confirm-dialog__acciones {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+}

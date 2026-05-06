@@ -1,0 +1,36 @@
+.estado-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-micro);
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.estado-badge--warning {
+  background-color: var(--warning-bg);
+  color: var(--warning);
+  border: 1px solid rgba(201, 140, 44, 0.3);
+}
+
+.estado-badge--info {
+  background-color: var(--info-bg);
+  color: var(--info);
+  border: 1px solid rgba(90, 127, 160, 0.3);
+}
+
+.estado-badge--success {
+  background-color: var(--success-bg);
+  color: var(--success);
+  border: 1px solid rgba(74, 140, 94, 0.3);
+}
+
+.estado-badge--muted {
+  background-color: rgba(122, 106, 88, 0.12);
+  color: var(--text-muted);
+  border: 1px solid rgba(122, 106, 88, 0.2);
+}

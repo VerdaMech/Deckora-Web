@@ -35,3 +35,26 @@ export function formatDate(dateString, options = {}) {
 export function formatNumber(n) {
   return new Intl.NumberFormat('es-CL').format(n);
 }
+
+export function formatFecha(date) {
+  if (!date) return '';
+  return new Date(date).toLocaleDateString('es-CL', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
+export function formatHora(date) {
+  if (!date) return '';
+  return new Date(date).toLocaleTimeString('es-CL', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
+}
+
+export function formatCupo(actuales, max) {
+  if (!max) return `${actuales ?? 0} inscrito${actuales !== 1 ? 's' : ''}`;
+  return `${actuales ?? 0} / ${max}`;
+}

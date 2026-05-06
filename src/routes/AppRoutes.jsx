@@ -11,7 +11,7 @@ import Forbidden from '@/pages/Forbidden';
 import Login from '@/modules/identidad/pages/Login';
 import Registro from '@/modules/identidad/pages/Registro';
 import RecuperarPassword from '@/modules/identidad/pages/RecuperarPassword';
-import PerfilJugador from '@/modules/identidad/pages/PerfilJugador';
+import PerfilRouter from '@/modules/identidad/pages/PerfilRouter';
 import Configuracion from '@/modules/identidad/pages/Configuracion';
 
 // Módulo: mazos
@@ -55,7 +55,7 @@ export default function AppRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/recuperar" element={<RecuperarPassword />} />
-        <Route path="/u/:username" element={<PerfilJugador />} />
+        <Route path="/u/:username" element={<PerfilRouter />} />
 
         {/* Mazos y colecciones */}
         <Route path="/colecciones" element={<ProtectedRoute requireRol="jugador"><MisColecciones /></ProtectedRoute>} />

@@ -37,3 +37,5 @@
 @import './components/configuracion-cuenta.css';
 @import './components/EstadoBadge.css';
 @import './components/TournamentCard.css';
+@import './components/PodTable.css';
+@import './components/RoundView.css';

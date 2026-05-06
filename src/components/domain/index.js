@@ -7,6 +7,8 @@ export { DeckStats } from './DeckStats';
 export { DeckBuilder } from './DeckBuilder';
 export { EstadoBadge } from './EstadoBadge';
 export { TournamentCard } from './TournamentCard';
+export { PodTable } from './PodTable';
+export { RoundView } from './RoundView';
 
 export { default as RoleBadge } from './RoleBadge';
 export { default as EstadisticasJugador } from './EstadisticasJugador';

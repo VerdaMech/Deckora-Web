@@ -184,11 +184,10 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
 - [x] Cartelera (`/torneos`)
 - [x] Detalle torneo + inscripción
 - [x] Crear / editar torneo (FormularioTorneo con mini-mapa Leaflet)
-- [ ] Gestión torneo en vivo (GestionTorneo, RoundView, PodTable)
+- [x] Gestión torneo en vivo (GestionTorneo base, crear rondas)
 - [x] Tabs en perfiles: Mis inscripciones (jugador), Mis torneos (organizador/tienda)
-- [x] Componentes dominio: TournamentCard, EstadoBadge
-- [ ] Componentes dominio: PodTable, RoundView
-- [ ] ReportarResultadoModal, cambio de estados, pulido final
+- [x] Componentes dominio: TournamentCard, EstadoBadge, PodTable, RoundView
+- [ ] ReportarResultadoModal, cambio de estados completo, pulido final
 
 ## Fase 5 — Mapa y Dashboards
 

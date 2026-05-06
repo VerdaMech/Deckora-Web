@@ -53,9 +53,9 @@ export function AuthProvider({ children }) {
 
   async function signup(params) {
     const data = await authService.signup(params);
-    if (data?.session) {
-      await fetchMe();
-    }
+    setUser(data.user ?? data);
+    setRol(data.rol ?? data.user?.rol ?? null);
+    setPerfil(data.perfil ?? null);
     return data;
   }
 

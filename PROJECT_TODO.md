@@ -11,7 +11,7 @@ Este documento es para que cualquier persona (humana o IA) que entre al proyecto
 
 - [x] **Fase 1 — Fundamentos** (Sprint 0)
 - [x] **Fase 2 — Identidad** (auth + perfiles)
-- [ ] **Fase 3 — Mazos y Colecciones**
+- [x] **Fase 3 — Mazos y Colecciones**
 - [ ] **Fase 4 — Torneos**
 - [ ] **Fase 5 — Mapa y Dashboards**
 - [ ] **Fase 6 — Pulido final**
@@ -134,12 +134,50 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
 
 ## Fase 3 — Mazos y Colecciones
 
-- [ ] Mis colecciones (lista)
-- [ ] Detalle de colección con barra de agregar cartas integrada
-- [ ] Mis mazos (lista)
-- [ ] Crear mazo (modal)
-- [ ] Detalle de mazo (modo lectura + modo edición = deck builder + asistente IA mockeado)
-- [ ] Componentes dominio: MTGCard, ManaCost, DeckList, DeckStats, DeckBuilder, ColeccionEditor
+### Persona A — Commit 1 (Servicios y primitivos de dominio MTG)
+
+- [x] **Servicios de dominio**
+  - [x] src/services/cartas.service.js (buscarCartas, obtenerCarta, listarCartas)
+  - [x] src/services/colecciones.service.js (obtenerMiColeccion, agregarCarta, actualizarCarta, eliminarCarta)
+  - [x] src/services/mazos.service.js (listarMisMazos, crearMazo, obtenerMazo, cartas CRUD, validarMazo)
+- [x] **Utilidades e infraestructura**
+  - [x] src/utils/deck-helpers.js (agruparPorTipo, calcularCurva, calcularDistribucionColor, parseManaCost, contarCartasMazo)
+  - [x] src/utils/formatters.js (relativeDate, formatDate, formatNumber)
+  - [x] src/hooks/useDebounce.js
+  - [x] Fuente Mana (Andrew Gioia) agregada via CDN en index.html
+- [x] **Componentes primitivos MTG** (src/components/domain/, cada uno con CSS co-localizado)
+  - [x] ManaCost.jsx
+  - [x] MTGCard.jsx (variantes: thumbnail, inline, full)
+  - [x] FormatBadge.jsx
+  - [x] CommanderBadge.jsx
+  - [x] DeckList.jsx (editable=false por defecto; prop y handlers listos para Persona B)
+  - [x] src/components/domain/index.js creado
+
+### Persona A — Commit 2 (Módulo de colecciones)
+
+- [x] **Páginas**
+  - [x] MisColecciones.jsx + .css (ruta /colecciones)
+  - [x] DetalleColeccion.jsx + .css (ruta /colecciones/:id)
+- [x] **Componentes del módulo**
+  - [x] BarraAgregarCarta.jsx + .css (búsqueda con debounce, dropdown, cierra con Escape/click fuera)
+  - [x] ColeccionEditor.jsx + .css (cantidad stepper, toggle foil, eliminar con confirmación)
+- [x] Rutas /colecciones y /colecciones/:id reales (ya estaban correctas en routes.jsx)
+
+### Persona A — Commit 3 (Mazos modo lectura)
+
+- [x] **Páginas**
+  - [x] MisMazos.jsx + .css (ruta /mazos, grid responsive, botón Crear abre modal)
+  - [x] CrearMazoModal.jsx + .css (form con nombre, formato, descripción, público; validación cliente)
+  - [x] DetalleMazo.jsx + .css (ruta /mazos/:id, DeckList modo lectura, placeholder stats, botón Editar deshabilitado con Tooltip)
+- [x] Rutas /mazos y /mazos/:id reales; ruta /mazos/nuevo eliminada (modal vive en /mazos)
+
+**Nota:** Modo edición y DeckStats pendientes para Persona B (commits 4-5).
+
+### Persona B — Commits 4–6
+
+- [x] DeckStats.jsx + reemplazar placeholder en DetalleMazo
+- [x] Modo edición (deck builder) + activar botón "Editar"
+- [x] Asistente IA mockeado, pulido responsive y empty/error states
 
 ## Fase 4 — Torneos
 

@@ -1,0 +1,133 @@
+.mis-mazos {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+}
+
+.mis-mazos__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.mis-mazos__titulo {
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.mis-mazos__crear-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.mis-mazos__loading {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-8) 0;
+}
+
+.mis-mazos__retry {
+  margin-left: var(--space-3);
+}
+
+/* Grid */
+.mis-mazos__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .mis-mazos__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .mis-mazos__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Mazo Card */
+.mazo-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  cursor: pointer;
+}
+
+.mazo-card:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.mazo-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.mazo-card__nombre {
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mazo-card__comandante {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.mazo-card__cmdr-icon {
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.mazo-card__cmdr-nombre {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 0.9rem;
+  color: var(--text-default);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mazo-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.mazo-card__conteo {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.mazo-card__fecha {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}

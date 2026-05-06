@@ -1,0 +1,119 @@
+.detalle-mazo {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+}
+
+.detalle-mazo__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.detalle-mazo__back {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.detalle-mazo__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.detalle-mazo__titulo-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.detalle-mazo__titulo {
+  color: var(--text-primary);
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.detalle-mazo__editar-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.detalle-mazo__submeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.detalle-mazo__autor {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.detalle-mazo__fecha {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.detalle-mazo__descripcion {
+  color: var(--text-default);
+  max-width: 640px;
+  margin: 0;
+}
+
+.detalle-mazo__loading {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-8) 0;
+}
+
+/* Two-column layout */
+.detalle-mazo__layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.detalle-mazo__col-lista {
+  flex: 1;
+  min-width: 0;
+}
+
+.detalle-mazo__col-stats {
+  flex-shrink: 0;
+}
+
+/* Stats placeholder: altura mínima reservada para que cuando Persona B
+   reemplace por DeckStats el layout no salte */
+.detalle-mazo__stats-placeholder {
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
+@media (min-width: 992px) {
+  .detalle-mazo__layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .detalle-mazo__col-stats {
+    width: 320px;
+  }
+}

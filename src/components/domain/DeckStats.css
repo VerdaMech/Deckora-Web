@@ -1,0 +1,123 @@
+.deck-stats {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  min-height: 420px;
+}
+
+.deck-stats--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.deck-stats__total {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.deck-stats__total-numero {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.deck-stats__total-limite {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+.deck-stats__total-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-left: var(--space-1);
+}
+
+.deck-stats__estado {
+  margin-bottom: var(--space-5);
+}
+
+.deck-stats__estado-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.deck-stats__estado-badge--success {
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid rgba(74, 140, 94, 0.3);
+}
+
+.deck-stats__estado-badge--warning {
+  background: var(--warning-bg);
+  color: var(--warning);
+  border: 1px solid rgba(201, 140, 44, 0.3);
+}
+
+.deck-stats__estado-badge--danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid rgba(192, 57, 43, 0.3);
+}
+
+.deck-stats__problemas {
+  margin: var(--space-2) 0 0 0;
+  padding-left: var(--space-5);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  list-style: disc;
+  line-height: 1.6;
+}
+
+.deck-stats__grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.deck-stats__chart {
+  background: var(--bg-panel-2);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  min-height: 200px;
+}
+
+.deck-stats__chart-titulo {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0 0 var(--space-3) 0;
+}
+
+.deck-stats__chart-empty {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: var(--space-5) 0;
+  margin: 0;
+}
+
+@media (min-width: 992px) {
+  .deck-stats__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  .deck-stats__chart--curva {
+    grid-column: 1 / -1;
+  }
+}

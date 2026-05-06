@@ -5,16 +5,18 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button, Input } from '@/components/ui';
 import { useToast } from '@/context/ToastContext';
 import { traducirError } from '@/utils/errors';
-
-function validarEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
+import { validarEmail as validateEmail, validarRequerido } from '@/utils/validators';
 
 function rolADestino(rol) {
   if (rol === 'jugador') return '/jugador';
   if (rol === 'organizador') return '/organizador';
   if (rol === 'tienda') return '/tienda';
   return '/';
+}
+
+function getMsgOrTrue(fn, valor) {
+  const r = fn(valor);
+  return r === true ? '' : r;
 }
 
 export default function Login() {
@@ -31,14 +33,21 @@ export default function Login() {
 
   const from = location.state?.from;
 
+  function handleEmailBlur() {
+    setEmailError(getMsgOrTrue(validateEmail, email));
+  }
+
+  function handlePasswordBlur() {
+    setPasswordError(getMsgOrTrue(validarRequerido, password) || (password.length < 1 ? 'La contraseña es obligatoria.' : ''));
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
-    setEmailError('');
-    setPasswordError('');
-
-    if (!email) { setEmailError('El correo es obligatorio.'); return; }
-    if (!validarEmail(email)) { setEmailError('Ingresá un correo válido.'); return; }
-    if (!password) { setPasswordError('La contraseña es obligatoria.'); return; }
+    const eErr = getMsgOrTrue(validateEmail, email);
+    const pErr = password ? '' : 'La contraseña es obligatoria.';
+    setEmailError(eErr);
+    setPasswordError(pErr);
+    if (eErr || pErr) return;
 
     setLoading(true);
     try {
@@ -66,7 +75,8 @@ export default function Login() {
             type="email"
             required
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => { setEmail(e.target.value); if (emailError) setEmailError(''); }}
+            onBlur={handleEmailBlur}
             error={emailError}
             autoComplete="email"
           />
@@ -76,7 +86,8 @@ export default function Login() {
               type="password"
               required
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => { setPassword(e.target.value); if (passwordError) setPasswordError(''); }}
+              onBlur={handlePasswordBlur}
               error={passwordError}
               autoComplete="current-password"
             />

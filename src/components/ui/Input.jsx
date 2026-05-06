@@ -23,13 +23,16 @@ export default function Input({
 }) {
   const generatedId = useId();
   const id = idProp ?? generatedId;
+  const errorId = `${id}-error`;
+  const helperId = `${id}-helper`;
+  const describeBy = error ? errorId : helperText ? helperId : undefined;
 
   return (
     <div className="form-field">
       {label && (
         <label className="form-label" htmlFor={id}>
           {label}
-          {required && <span className="form-required">*</span>}
+          {required && <span className="form-required" aria-hidden="true">*</span>}
         </label>
       )}
       <input
@@ -37,12 +40,17 @@ export default function Input({
         type={type}
         required={required}
         className={`form-input${error ? ' form-input--error' : ''} ${className}`}
+        aria-invalid={error ? 'true' : undefined}
+        aria-describedby={describeBy}
         {...rest}
       />
-      {(helperText || error) && (
-        <p className={`form-helper${error ? ' form-helper--error' : ''}`}>
-          {error || helperText}
+      {error && (
+        <p id={errorId} className="form-helper form-helper--error" role="alert" aria-live="polite">
+          {error}
         </p>
+      )}
+      {!error && helperText && (
+        <p id={helperId} className="form-helper">{helperText}</p>
       )}
     </div>
   );

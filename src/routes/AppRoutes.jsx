@@ -65,7 +65,12 @@ export default function AppRoutes() {
         <Route path="/organizador" element={<ProtectedRoute requireRol="organizador"><ConSuspense><DashboardOrganizador /></ConSuspense></ProtectedRoute>} />
         <Route path="/tienda" element={<ProtectedRoute requireRol="tienda"><ConSuspense><DashboardTienda /></ConSuspense></ProtectedRoute>} />
         <Route path="/configuracion" element={<ProtectedRoute requireRol="any"><ConSuspense><Configuracion /></ConSuspense></ProtectedRoute>} />
-        <Route path="/organizador/torneos/:id/gestion" element={<ProtectedRoute requireRol="organizador"><ConSuspense><GestionTorneo /></ConSuspense></ProtectedRoute>} />
+        <Route path="/colecciones" element={<ProtectedRoute requireRol="jugador"><ConSuspense><MisColecciones /></ConSuspense></ProtectedRoute>} />
+        <Route path="/colecciones/:id" element={<ProtectedRoute requireRol="jugador"><ConSuspense><DetalleColeccion /></ConSuspense></ProtectedRoute>} />
+        <Route path="/mazos" element={<ProtectedRoute requireRol="jugador"><ConSuspense><MisMazos /></ConSuspense></ProtectedRoute>} />
+        <Route path="/mazos/nuevo" element={<ProtectedRoute requireRol="jugador"><ConSuspense><CrearMazoModal /></ConSuspense></ProtectedRoute>} />
+        <Route path="/mazos/:id" element={<ProtectedRoute requireRol="jugador"><ConSuspense><DetalleMazo /></ConSuspense></ProtectedRoute>} />
+        <Route path="/organizador/torneos/:id/gestion" element={<ProtectedRoute requireRol={['organizador', 'tienda']}><ConSuspense><GestionTorneo /></ConSuspense></ProtectedRoute>} />
       </Route>
 
       {/* ── Rutas sin sidebar (públicas + operativas livianas) ── */}
@@ -79,18 +84,11 @@ export default function AppRoutes() {
         <Route path="/recuperar" element={<ConSuspense><RecuperarPassword /></ConSuspense>} />
         <Route path="/u/:username" element={<ConSuspense><PerfilRouter /></ConSuspense>} />
 
-        {/* Mazos y colecciones */}
-        <Route path="/colecciones" element={<ProtectedRoute requireRol="jugador"><ConSuspense><MisColecciones /></ConSuspense></ProtectedRoute>} />
-        <Route path="/colecciones/:id" element={<ProtectedRoute requireRol="jugador"><ConSuspense><DetalleColeccion /></ConSuspense></ProtectedRoute>} />
-        <Route path="/mazos" element={<ProtectedRoute requireRol="jugador"><ConSuspense><MisMazos /></ConSuspense></ProtectedRoute>} />
-        <Route path="/mazos/nuevo" element={<ProtectedRoute requireRol="jugador"><ConSuspense><CrearMazoModal /></ConSuspense></ProtectedRoute>} />
-        <Route path="/mazos/:id" element={<ProtectedRoute requireRol="jugador"><ConSuspense><DetalleMazo /></ConSuspense></ProtectedRoute>} />
-
         {/* Torneos */}
         <Route path="/torneos" element={<ConSuspense><Cartelera /></ConSuspense>} />
         <Route path="/torneos/:id" element={<ConSuspense><DetalleTorneo /></ConSuspense>} />
-        <Route path="/organizador/torneos/nuevo" element={<ProtectedRoute requireRol="organizador"><ConSuspense><CrearTorneo /></ConSuspense></ProtectedRoute>} />
-        <Route path="/organizador/torneos/:id/editar" element={<ProtectedRoute requireRol="organizador"><ConSuspense><EditarTorneo /></ConSuspense></ProtectedRoute>} />
+        <Route path="/organizador/torneos/nuevo" element={<ProtectedRoute requireRol={['organizador', 'tienda']}><ConSuspense><CrearTorneo /></ConSuspense></ProtectedRoute>} />
+        <Route path="/organizador/torneos/:id/editar" element={<ProtectedRoute requireRol={['organizador', 'tienda']}><ConSuspense><EditarTorneo /></ConSuspense></ProtectedRoute>} />
 
         {/* Globales */}
         <Route path="/forbidden" element={<Forbidden />} />

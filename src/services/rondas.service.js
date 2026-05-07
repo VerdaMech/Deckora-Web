@@ -9,5 +9,5 @@ export async function obtenerRonda(torneoId, rondaId) {
 }
 
 export async function crearRonda(torneoId, { tipo }) {
-  return apiPost(`/torneos/${torneoId}/rondas`, { tipo });
+  return apiPost(`/torneos/${torneoId}/rondas`, { tipo_ronda: tipo });
 }

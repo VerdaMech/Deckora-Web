@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPut, apiPatch, apiDelete } from './api';
+import { apiGet, apiPost, apiPatch, apiDelete } from './api';
 
 export async function listarTorneos(params = {}) {
   const query = new URLSearchParams();
@@ -33,12 +33,7 @@ export async function listarInscripciones(torneoId) {
 }
 
 export async function actualizarTorneo(id, datos) {
-  try {
-    return await apiPut(`/torneos/${id}`, datos);
-  } catch {
-    // TODO: reemplazar por endpoint real cuando exista
-    return Promise.resolve({ ...datos, id });
-  }
+  return apiPatch(`/torneos/${id}`, datos);
 }
 
 export async function cambiarEstadoTorneo(id, nuevoEstado) {
@@ -46,12 +41,7 @@ export async function cambiarEstadoTorneo(id, nuevoEstado) {
 }
 
 export async function cancelarInscripcion(torneoId, inscripcionId) {
-  // TODO: reemplazar por endpoint real cuando exista
-  try {
-    return await apiDelete(`/torneos/${torneoId}/inscripciones/${inscripcionId}`);
-  } catch {
-    return Promise.resolve(null);
-  }
+  return apiDelete(`/torneos/${torneoId}/inscripciones/${inscripcionId}`);
 }
 
 export async function listarTorneosProximos(limit = 5) {

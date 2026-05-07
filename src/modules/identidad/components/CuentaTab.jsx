@@ -65,7 +65,7 @@ export default function CuentaTab() {
       requiereTexto: 'ELIMINAR',
       onConfirmar: async () => {
         try {
-          await apiDelete('/usuarios/me');
+          await apiDelete('/auth/me');
           await logout();
         } catch (err) {
           mostrarError('No se pudo eliminar la cuenta', traducirError(err));

@@ -12,6 +12,12 @@ const RESULTADO_OPCIONES = [
   { value: RESULTADO_ENFRENTAMIENTO.EMPATE, label: 'Empate' },
 ];
 
+const RESULTADO_A_API = {
+  [RESULTADO_ENFRENTAMIENTO.GANADOR]: 'ganador',
+  [RESULTADO_ENFRENTAMIENTO.PERDEDOR]: 'derrota',
+  [RESULTADO_ENFRENTAMIENTO.EMPATE]: 'empate',
+};
+
 function validarResultados(filas) {
   const ganadores = filas.filter((f) => f.resultado === RESULTADO_ENFRENTAMIENTO.GANADOR);
   const todos = filas.every((f) => f.resultado !== RESULTADO_ENFRENTAMIENTO.PENDIENTE);
@@ -26,14 +32,19 @@ export default function ReportarResultadoModal({
   onClose,
   onReportado,
 }) {
-  const jugadores = enfrentamiento?.jugadores ?? enfrentamiento?.participantes ?? [];
+  const participantes = enfrentamiento?.EnfrentamientoParticipantes
+    ?? enfrentamiento?.jugadores
+    ?? enfrentamiento?.participantes
+    ?? [];
 
   const [filas, setFilas] = useState(() =>
-    jugadores.map((j) => ({
-      jugadorId: j.id,
-      nombre: j.nombre_usuario ?? j.nombre ?? '—',
-      resultado: j.resultado ?? RESULTADO_ENFRENTAMIENTO.PENDIENTE,
-      puntos: j.puntos ?? '',
+    participantes.map((p) => ({
+      inscripcionId: p.inscripcion_id ?? p.id,
+      nombre: p.Inscripcion?.Jugador?.Usuario?.nombre_usuario
+        ?? p.nombre_usuario
+        ?? p.nombre
+        ?? '—',
+      resultado: p.resultado ?? RESULTADO_ENFRENTAMIENTO.PENDIENTE,
     }))
   );
   const [guardando, setGuardando] = useState(false);
@@ -56,10 +67,9 @@ export default function ReportarResultadoModal({
     setGuardando(true);
     try {
       const datos = {
-        jugadores: filas.map((f) => ({
-          jugador_id: f.jugadorId,
-          resultado: f.resultado,
-          puntos: f.puntos !== '' ? Number(f.puntos) : null,
+        resultados: filas.map((f) => ({
+          inscripcion_id: f.inscripcionId,
+          resultado: RESULTADO_A_API[f.resultado] ?? f.resultado,
         })),
       };
       await actualizarResultado(enfrentamiento.id, datos);
@@ -97,11 +107,10 @@ export default function ReportarResultadoModal({
           <div className="reportar-resultado__encabezado">
             <span className="reportar-resultado__col reportar-resultado__col--jugador">Jugador</span>
             <span className="reportar-resultado__col reportar-resultado__col--resultado">Resultado</span>
-            <span className="reportar-resultado__col reportar-resultado__col--puntos">Puntos</span>
           </div>
 
           {filas.map((fila, idx) => (
-            <div key={fila.jugadorId ?? idx} className="reportar-resultado__fila">
+            <div key={fila.inscripcionId ?? idx} className="reportar-resultado__fila">
               <span className="reportar-resultado__col reportar-resultado__col--jugador reportar-resultado__nombre">
                 {fila.nombre}
               </span>
@@ -110,17 +119,6 @@ export default function ReportarResultadoModal({
                   value={fila.resultado}
                   onChange={(e) => actualizarFila(idx, 'resultado', e.target.value)}
                   options={RESULTADO_OPCIONES}
-                />
-              </div>
-              <div className="reportar-resultado__col reportar-resultado__col--puntos">
-                <input
-                  type="number"
-                  className="form-input reportar-resultado__pts-input"
-                  value={fila.puntos}
-                  onChange={(e) => actualizarFila(idx, 'puntos', e.target.value)}
-                  min={0}
-                  placeholder="—"
-                  aria-label={`Puntos de ${fila.nombre ?? 'jugador'}`}
                 />
               </div>
             </div>

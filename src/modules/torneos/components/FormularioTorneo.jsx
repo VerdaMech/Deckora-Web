@@ -7,6 +7,7 @@ import { FORMATO_LABELS } from '@/utils/constants';
 import './FormularioTorneo.css';
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
+mapboxgl.setTelemetryEnabled?.(false);
 
 const FORMATO_OPCIONES = Object.entries(FORMATO_LABELS).map(([value, label]) => ({ value, label }));
 const DEFAULT_LAT = -33.4489;
@@ -82,11 +83,20 @@ export default function FormularioTorneo({
 
   function usarMiUbicacion() {
     if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition((pos) => {
-      moveMarkerTo(
-        parseFloat(pos.coords.longitude.toFixed(6)),
-        parseFloat(pos.coords.latitude.toFixed(6))
-      );
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      const longitude = parseFloat(pos.coords.longitude.toFixed(6));
+      const latitude = parseFloat(pos.coords.latitude.toFixed(6));
+      moveMarkerTo(longitude, latitude);
+      try {
+        const res = await fetch(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?language=es&limit=1&access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`
+        );
+        const data = await res.json();
+        const lugar = data.features?.[0]?.place_name;
+        if (lugar) setUbicacion(lugar);
+      } catch {
+        // el usuario puede escribir la dirección manualmente
+      }
     });
   }
 

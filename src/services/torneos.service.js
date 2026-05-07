@@ -9,6 +9,7 @@ export async function listarTorneos(params = {}) {
   if (params.q) query.set('q', params.q);
   if (params.page) query.set('page', params.page);
   if (params.limit) query.set('limit', params.limit);
+  if (params.organizador_id) query.set('organizador_id', params.organizador_id);
 
   const qs = query.toString();
   const data = await apiGet(`/torneos${qs ? `?${qs}` : ''}`);
@@ -41,12 +42,7 @@ export async function actualizarTorneo(id, datos) {
 }
 
 export async function cambiarEstadoTorneo(id, nuevoEstado) {
-  try {
-    return await apiPatch(`/torneos/${id}/estado`, { estado: nuevoEstado });
-  } catch {
-    // TODO: reemplazar por endpoint real cuando exista
-    return Promise.resolve({ id, estado: nuevoEstado });
-  }
+  return apiPatch(`/torneos/${id}/estado`, { estado: nuevoEstado });
 }
 
 export async function cancelarInscripcion(torneoId, inscripcionId) {
@@ -76,5 +72,23 @@ export async function listarMisTorneos(organizadorId) {
     return { data: Array.isArray(data) ? data : (data?.data ?? []) };
   } catch {
     return { data: [] };
+  }
+}
+
+export async function listarTorneosDelJugador(limit = 5) {
+  try {
+    const data = await apiGet(`/jugadores/me/torneos?limit=${limit}`);
+    return { data: Array.isArray(data) ? data : (data?.data ?? []) };
+  } catch {
+    return { data: [] };
+  }
+}
+
+export async function listarMisInscripciones() {
+  try {
+    const data = await apiGet('/jugadores/me/inscripciones');
+    return Array.isArray(data) ? data : (data?.data ?? []);
+  } catch {
+    return [];
   }
 }

@@ -1,33 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { listarTorneos, listarInscripciones, cancelarInscripcion } from '@/services/torneos.service';
+import { listarMisInscripciones, cancelarInscripcion } from '@/services/torneos.service';
 import { TournamentCard } from '@/components/domain/TournamentCard';
 import { Button, Alert, Skeleton, EmptyState } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import './MisInscripcionesTab.css';
-
-// TODO: reemplazar por endpoint /usuarios/:id/inscripciones cuando exista
-async function obtenerMisInscripcionesFallback(userId) {
-  const data = await listarTorneos({ limit: 50 });
-  const todosTorneos = Array.isArray(data) ? data : data?.torneos ?? data?.data ?? [];
-
-  const resultados = await Promise.allSettled(
-    todosTorneos.map(async (torneo) => {
-      const ins = await listarInscripciones(torneo.id).catch(() => []);
-      const lista = Array.isArray(ins) ? ins : ins?.inscripciones ?? ins?.data ?? [];
-      const inscripcion = lista.find(
-        (i) => i.usuario_id === userId || i.jugador_id === userId
-      );
-      if (inscripcion) return { torneo, inscripcion };
-      return null;
-    })
-  );
-
-  return resultados
-    .filter((r) => r.status === 'fulfilled' && r.value !== null)
-    .map((r) => r.value);
-}
 
 export default function MisInscripcionesTab() {
   const navigate = useNavigate();
@@ -42,8 +20,11 @@ export default function MisInscripcionesTab() {
     setCargando(true);
     setError(null);
     try {
-      const data = await obtenerMisInscripcionesFallback(user.id);
-      setItems(data);
+      const data = await listarMisInscripciones();
+      const normalizado = data.map((item) =>
+        item.torneo ? item : { torneo: item, inscripcion: item }
+      );
+      setItems(normalizado);
     } catch (e) {
       setError(e.message ?? 'Error al cargar tus inscripciones');
     } finally {

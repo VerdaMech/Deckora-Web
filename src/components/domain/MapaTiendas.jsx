@@ -11,6 +11,7 @@ import '@/styles/components/StorePin.css';
 import '@/styles/components/MapaTiendas.css';
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
+mapboxgl.setTelemetryEnabled?.(false);
 
 const CENTER_DEFAULT = [-70.6693, -33.4489];
 

@@ -8,7 +8,7 @@ import EstadisticasJugador from '@/components/domain/EstadisticasJugador';
 import BloqueResumen from '../components/BloqueResumen';
 import StatsRapidas from '../components/StatsRapidas';
 import { listarMazosRecientes } from '@/services/mazos.service';
-import { listarTorneosProximos } from '@/services/torneos.service';
+import { listarTorneosDelJugador } from '@/services/torneos.service';
 import { obtenerMiColeccion } from '@/services/colecciones.service';
 import './DashboardJugador.css';
 
@@ -29,7 +29,7 @@ export default function DashboardJugador() {
       .catch(() => setMazos([]))
       .finally(() => setLoadingMazos(false));
 
-    listarTorneosProximos(3)
+    listarTorneosDelJugador(3)
       .then(({ data }) => setTorneos(data ?? []))
       .catch(() => setTorneos([]))
       .finally(() => setLoadingTorneos(false));
@@ -112,7 +112,7 @@ export default function DashboardJugador() {
               <EmptyState
                 icon={CalendarDays}
                 title="Sin torneos próximos"
-                description="Cuando haya torneos disponibles aparecerán aquí."
+                description="Aún no estás inscrito en ningún torneo próximo."
               />
             ) : (
               <ul className="dashboard-jugador__torneo-lista">

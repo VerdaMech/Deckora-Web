@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
-import { Spinner, Alert, Tabs, EmptyState } from '@/components/ui';
+import { Spinner, Alert } from '@/components/ui';
 import {
   obtenerMiColeccion,
   agregarCartaAColeccion,
@@ -34,7 +34,7 @@ export default function DetalleColeccion() {
 
   async function handleAgregar(carta) {
     try {
-      await agregarCartaAColeccion({ scryfallId: carta.id ?? carta.scryfallId, cantidad: 1, foil: false });
+      await agregarCartaAColeccion({ scryfall_id: carta.id ?? carta.scryfall_id, cantidad: 1, es_foil: false });
       cargar();
     } catch (err) {
       setError(err.message ?? 'Error al agregar la carta');
@@ -43,7 +43,7 @@ export default function DetalleColeccion() {
 
   async function handleCantidadChange(entrada, nuevaCantidad) {
     try {
-      await actualizarCartaEnColeccion(entrada.id, { cantidad: nuevaCantidad, foil: entrada.foil });
+      await actualizarCartaEnColeccion(entrada.id, { cantidad: nuevaCantidad, es_foil: entrada.es_foil ?? false });
       setColeccion((prev) => ({
         ...prev,
         cartas: prev.cartas.map((e) =>
@@ -55,13 +55,13 @@ export default function DetalleColeccion() {
     }
   }
 
-  async function handleFoilChange(entrada, foil) {
+  async function handleFoilChange(entrada, es_foil) {
     try {
-      await actualizarCartaEnColeccion(entrada.id, { cantidad: entrada.cantidad, foil });
+      await actualizarCartaEnColeccion(entrada.id, { cantidad: entrada.cantidad, es_foil });
       setColeccion((prev) => ({
         ...prev,
         cartas: prev.cartas.map((e) =>
-          e.id === entrada.id ? { ...e, foil } : e
+          e.id === entrada.id ? { ...e, es_foil } : e
         ),
       }));
     } catch (err) {
@@ -117,30 +117,17 @@ export default function DetalleColeccion() {
           <Spinner />
         </div>
       ) : !coleccion ? null : (
-        <Tabs>
-          <Tabs.Tab eventKey="cartas" label="Cartas">
-            <div className="detalle-coleccion__tab-content">
-              <BarraAgregarCarta onAgregar={handleAgregar} />
-              <div className="detalle-coleccion__lista">
-                <ColeccionEditor
-                  coleccion={coleccion.cartas ?? []}
-                  onCantidadChange={handleCantidadChange}
-                  onFoilChange={handleFoilChange}
-                  onEliminar={handleEliminar}
-                />
-              </div>
-            </div>
-          </Tabs.Tab>
-
-          <Tabs.Tab eventKey="estadisticas" label="Estadísticas">
-            <div className="detalle-coleccion__placeholder">
-              <EmptyState
-                title="Próximamente"
-                description="Las estadísticas de tu colección estarán disponibles pronto."
-              />
-            </div>
-          </Tabs.Tab>
-        </Tabs>
+        <div className="detalle-coleccion__tab-content">
+          <BarraAgregarCarta onAgregar={handleAgregar} />
+          <div className="detalle-coleccion__lista">
+            <ColeccionEditor
+              coleccion={coleccion.cartas ?? []}
+              onCantidadChange={handleCantidadChange}
+              onFoilChange={handleFoilChange}
+              onEliminar={handleEliminar}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

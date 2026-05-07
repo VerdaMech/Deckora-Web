@@ -107,10 +107,10 @@ export default function DetalleTorneo() {
           <h1 className="detalle-torneo__nombre">{torneo.nombre}</h1>
 
           <div className="detalle-torneo__meta">
-            {torneo.fecha_inicio && (
+            {torneo.fecha && (
               <span className="detalle-torneo__meta-item">
-                {formatFecha(torneo.fecha_inicio)}
-                {' · '}{formatHora(torneo.fecha_inicio)}
+                {formatFecha(torneo.fecha)}
+                {' · '}{formatHora(torneo.fecha)}
               </span>
             )}
             {torneo.ubicacion && (
@@ -123,7 +123,7 @@ export default function DetalleTorneo() {
               <span className="detalle-torneo__meta-item">
                 Organizado por{' '}
                 <Link
-                  to={`/perfil/${torneo.organizador?.id ?? torneo.tienda?.id}`}
+                  to={`/u/${torneo.organizador?.nombre_usuario ?? torneo.tienda?.nombre_usuario}`}
                   className="detalle-torneo__org-link"
                 >
                   {torneo.organizador?.nombre_usuario ?? torneo.tienda?.nombre ?? 'Organizador'}

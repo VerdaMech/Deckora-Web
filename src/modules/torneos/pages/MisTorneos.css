@@ -1,0 +1,45 @@
+.mis-torneos-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-6) var(--space-8);
+}
+
+.mis-torneos-page__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.mis-torneos-page__title {
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-h1);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-2);
+}
+
+.mis-torneos-page__subtitle {
+  font-family: 'Crimson Pro', serif;
+  font-size: var(--font-body-lg);
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.mis-torneos-page__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+}
+
+@media (min-width: 768px) {
+  .mis-torneos-page__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1200px) {
+  .mis-torneos-page__grid { grid-template-columns: repeat(3, 1fr); }
+}

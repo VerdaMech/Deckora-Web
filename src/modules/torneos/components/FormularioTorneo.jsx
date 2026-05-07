@@ -1,28 +1,14 @@
-import { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
-import L from 'leaflet';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { Button, Input, Select, Textarea, Alert } from '@/components/ui';
-import { FORMATOS, FORMATO_LABELS } from '@/utils/constants';
+import { FORMATO_LABELS } from '@/utils/constants';
 import './FormularioTorneo.css';
 
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
+
 const FORMATO_OPCIONES = Object.entries(FORMATO_LABELS).map(([value, label]) => ({ value, label }));
-
-const pinIcon = new L.DivIcon({
-  html: '<div class="formulario-torneo__pin"></div>',
-  className: '',
-  iconSize: [20, 20],
-  iconAnchor: [10, 10],
-});
-
-function MapCenterer({ position }) {
-  const map = useMap();
-  useEffect(() => {
-    if (position) map.setView(position, 13);
-  }, [position, map]);
-  return null;
-}
-
 const DEFAULT_LAT = -33.4489;
 const DEFAULT_LNG = -70.6693;
 
@@ -36,19 +22,97 @@ export default function FormularioTorneo({
   const [formato, setFormato] = useState(torneoInicial?.formato ?? 'COMMANDER');
   const [descripcion, setDescripcion] = useState(torneoInicial?.descripcion ?? '');
   const [fechaInicio, setFechaInicio] = useState(
-    torneoInicial?.fecha_inicio
-      ? new Date(torneoInicial.fecha_inicio).toISOString().slice(0, 16)
+    torneoInicial?.fecha
+      ? new Date(torneoInicial.fecha).toISOString().slice(0, 16)
       : ''
   );
   const [ubicacion, setUbicacion] = useState(torneoInicial?.ubicacion ?? '');
   const [lat, setLat] = useState(torneoInicial?.latitud ?? DEFAULT_LAT);
   const [lng, setLng] = useState(torneoInicial?.longitud ?? DEFAULT_LNG);
-  const [centerTarget, setCenterTarget] = useState(null);
   const [cupoMax, setCupoMax] = useState(torneoInicial?.cupo_maximo ?? '');
   const [precio, setPrecio] = useState(torneoInicial?.precio ?? 0);
   const [publico, setPublico] = useState(torneoInicial?.publico ?? true);
   const [errores, setErrores] = useState({});
   const [errorSubmit, setErrorSubmit] = useState(null);
+  const [sugerencias, setSugerencias] = useState([]);
+  const [buscandoDireccion, setBuscandoDireccion] = useState(false);
+
+  const containerRef = useRef(null);
+  const mapRef = useRef(null);
+  const markerRef = useRef(null);
+  const geocodeTimer = useRef(null);
+  const latRef = useRef(lat);
+  const lngRef = useRef(lng);
+
+  useEffect(() => { latRef.current = lat; }, [lat]);
+  useEffect(() => { lngRef.current = lng; }, [lng]);
+
+  useEffect(() => {
+    if (mapRef.current || !containerRef.current) return;
+
+    mapRef.current = new mapboxgl.Map({
+      container: containerRef.current,
+      style: 'mapbox://styles/mapbox/dark-v11',
+      center: [lngRef.current, latRef.current],
+      zoom: 13,
+      scrollZoom: false,
+    });
+
+    const el = document.createElement('div');
+    el.className = 'formulario-torneo__pin';
+    markerRef.current = new mapboxgl.Marker({ element: el, draggable: true })
+      .setLngLat([lngRef.current, latRef.current])
+      .addTo(mapRef.current);
+
+    markerRef.current.on('dragend', () => {
+      const pos = markerRef.current.getLngLat();
+      setLat(parseFloat(pos.lat.toFixed(6)));
+      setLng(parseFloat(pos.lng.toFixed(6)));
+    });
+
+    return () => { mapRef.current?.remove(); mapRef.current = null; };
+  }, []);
+
+  function moveMarkerTo(newLng, newLat) {
+    setLat(newLat);
+    setLng(newLng);
+    markerRef.current?.setLngLat([newLng, newLat]);
+    mapRef.current?.flyTo({ center: [newLng, newLat], zoom: 14 });
+  }
+
+  function usarMiUbicacion() {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition((pos) => {
+      moveMarkerTo(
+        parseFloat(pos.coords.longitude.toFixed(6)),
+        parseFloat(pos.coords.latitude.toFixed(6))
+      );
+    });
+  }
+
+  function handleUbicacionChange(valor) {
+    setUbicacion(valor);
+    clearTimeout(geocodeTimer.current);
+    if (valor.length < 3) { setSugerencias([]); return; }
+    geocodeTimer.current = setTimeout(async () => {
+      setBuscandoDireccion(true);
+      try {
+        const res = await fetch(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(valor)}.json?country=cl&language=es&limit=5&access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`
+        );
+        const data = await res.json();
+        setSugerencias(data.features ?? []);
+      } catch { setSugerencias([]); }
+      finally { setBuscandoDireccion(false); }
+    }, 400);
+  }
+
+  function seleccionarSugerencia(feature) {
+    const [lo, la] = feature.center;
+    moveMarkerTo(parseFloat(lo.toFixed(6)), parseFloat(la.toFixed(6)));
+    setUbicacion(feature.place_name);
+    setSugerencias([]);
+  }
 
   function validar() {
     const e = {};
@@ -57,32 +121,16 @@ export default function FormularioTorneo({
     if (!fechaInicio) e.fechaInicio = 'La fecha de inicio es requerida';
     if (!ubicacion.trim()) e.ubicacion = 'La ubicación es requerida';
     const cupoNum = Number(cupoMax);
-    if (cupoMax !== '' && (isNaN(cupoNum) || cupoNum < 4)) {
-      e.cupoMax = 'El cupo mínimo es 4 jugadores';
-    }
-    const precioNum = Number(precio);
+    if (cupoMax !== '' && (isNaN(cupoNum) || cupoNum < 4)) e.cupoMax = 'El cupo mínimo es 4 jugadores';
+    const precioNum = parseInt(precio, 10);
     if (isNaN(precioNum) || precioNum < 0) e.precio = 'El precio no puede ser negativo';
     return e;
-  }
-
-  function usarMiUbicacion() {
-    if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition((pos) => {
-      const la = parseFloat(pos.coords.latitude.toFixed(6));
-      const lo = parseFloat(pos.coords.longitude.toFixed(6));
-      setLat(la);
-      setLng(lo);
-      setCenterTarget([la, lo]);
-    });
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
     const validaciones = validar();
-    if (Object.keys(validaciones).length > 0) {
-      setErrores(validaciones);
-      return;
-    }
+    if (Object.keys(validaciones).length > 0) { setErrores(validaciones); return; }
     setErrores({});
     setErrorSubmit(null);
     try {
@@ -90,23 +138,18 @@ export default function FormularioTorneo({
         nombre: nombre.trim(),
         formato,
         descripcion: descripcion.trim() || null,
-        fecha_inicio: new Date(fechaInicio).toISOString(),
+        fecha: new Date(fechaInicio).toISOString(),
         ubicacion: ubicacion.trim(),
-        latitud: parseFloat(lat),
-        longitud: parseFloat(lng),
+        latitud: lat,
+        longitud: lng,
         cupo_maximo: cupoMax !== '' ? parseInt(cupoMax, 10) : null,
-        precio: Number(precio),
+        precio: parseInt(precio, 10),
         publico,
       });
     } catch (err) {
       setErrorSubmit(err.message ?? 'Error al guardar el torneo');
     }
   }
-
-  const markerPos = [
-    parseFloat(lat) || DEFAULT_LAT,
-    parseFloat(lng) || DEFAULT_LNG,
-  ];
 
   return (
     <form className="formulario-torneo" onSubmit={handleSubmit} noValidate>
@@ -124,11 +167,7 @@ export default function FormularioTorneo({
 
       <div className="form-field">
         <label className="form-label">Formato</label>
-        <Select
-          value={formato}
-          onChange={(e) => setFormato(e.target.value)}
-          options={FORMATO_OPCIONES}
-        />
+        <Select value={formato} onChange={(e) => setFormato(e.target.value)} options={FORMATO_OPCIONES} />
       </div>
 
       <Textarea
@@ -151,19 +190,33 @@ export default function FormularioTorneo({
           onChange={(e) => setFechaInicio(e.target.value)}
           aria-required="true"
         />
-        {errores.fechaInicio && (
-          <p className="form-helper form-helper--error" role="alert">{errores.fechaInicio}</p>
-        )}
+        {errores.fechaInicio && <p className="form-helper form-helper--error" role="alert">{errores.fechaInicio}</p>}
       </div>
 
-      <Input
-        label="Ubicación"
-        required
-        value={ubicacion}
-        onChange={(e) => setUbicacion(e.target.value)}
-        placeholder="Ej: Providencia, Santiago"
-        error={errores.ubicacion}
-      />
+      <div className="form-field formulario-torneo__campo-ubicacion">
+        <label className="form-label">
+          Ubicación <span className="form-required" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="text"
+          className={`form-input${errores.ubicacion ? ' form-input--error' : ''}`}
+          value={ubicacion}
+          onChange={(e) => handleUbicacionChange(e.target.value)}
+          placeholder="Busca una dirección..."
+          autoComplete="off"
+        />
+        {errores.ubicacion && <p className="form-helper form-helper--error" role="alert">{errores.ubicacion}</p>}
+        {sugerencias.length > 0 && (
+          <ul className="formulario-torneo__sugerencias">
+            {sugerencias.map((f) => (
+              <li key={f.id} className="formulario-torneo__sugerencia" onClick={() => seleccionarSugerencia(f)}>
+                {f.place_name}
+              </li>
+            ))}
+          </ul>
+        )}
+        {buscandoDireccion && <p className="form-helper">Buscando...</p>}
+      </div>
 
       <div className="form-field formulario-torneo__campo-mapa">
         <label className="form-label">Ubicación en el mapa</label>
@@ -173,33 +226,7 @@ export default function FormularioTorneo({
           </Button>
         </div>
         <div className="formulario-torneo__mapa-wrapper">
-          <MapContainer
-            center={markerPos}
-            zoom={13}
-            scrollWheelZoom={false}
-            className="formulario-torneo__mapa"
-            attributionControl
-          >
-            <TileLayer
-              url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-              attribution="© OpenStreetMap contributors © CARTO"
-              subdomains="abcd"
-              maxZoom={18}
-            />
-            {centerTarget && <MapCenterer position={centerTarget} />}
-            <Marker
-              position={markerPos}
-              icon={pinIcon}
-              draggable
-              eventHandlers={{
-                dragend: (ev) => {
-                  const { lat: la, lng: lo } = ev.target.getLatLng();
-                  setLat(parseFloat(la.toFixed(6)));
-                  setLng(parseFloat(lo.toFixed(6)));
-                },
-              }}
-            />
-          </MapContainer>
+          <div ref={containerRef} className="formulario-torneo__mapa" />
         </div>
         <p className="formulario-torneo__mapa-ayuda">
           Arrastra el pin para ajustar la ubicación exacta.
@@ -217,9 +244,7 @@ export default function FormularioTorneo({
             min={4}
             placeholder="Sin límite"
           />
-          {errores.cupoMax && (
-            <p className="form-helper form-helper--error">{errores.cupoMax}</p>
-          )}
+          {errores.cupoMax && <p className="form-helper form-helper--error">{errores.cupoMax}</p>}
         </div>
 
         <div className="form-field">
@@ -230,11 +255,9 @@ export default function FormularioTorneo({
             value={precio}
             onChange={(e) => setPrecio(e.target.value)}
             min={0}
-            step="0.01"
+            step="1"
           />
-          {errores.precio && (
-            <p className="form-helper form-helper--error">{errores.precio}</p>
-          )}
+          {errores.precio && <p className="form-helper form-helper--error">{errores.precio}</p>}
         </div>
       </div>
 

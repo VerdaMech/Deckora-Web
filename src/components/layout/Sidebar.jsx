@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, FolderClosed, Layers, User, Settings,
-  Plus, ChevronLeft, ChevronRight,
+  Plus, ChevronLeft, ChevronRight, CalendarDays,
 } from 'lucide-react';
 
 import { useAuth } from '@/hooks/useAuth';
@@ -17,14 +17,14 @@ const ITEMS = {
   ],
   organizador: (username) => [
     { to: '/organizador', icon: LayoutDashboard, label: 'Dashboard' },
-    { to: `/u/${username}`, icon: User, label: 'Mis torneos' },
+    { to: '/mis-torneos', icon: CalendarDays, label: 'Mis torneos' },
     { to: '/organizador/torneos/nuevo', icon: Plus, label: 'Crear torneo' },
     { to: `/u/${username}`, icon: User, label: 'Mi perfil' },
     { to: '/configuracion', icon: Settings, label: 'Configuración' },
   ],
   tienda: (username) => [
     { to: '/tienda', icon: LayoutDashboard, label: 'Dashboard' },
-    { to: `/u/${username}`, icon: User, label: 'Mis torneos' },
+    { to: '/mis-torneos', icon: CalendarDays, label: 'Mis torneos' },
     { to: '/organizador/torneos/nuevo', icon: Plus, label: 'Crear torneo' },
     { to: `/u/${username}`, icon: User, label: 'Mi perfil' },
     { to: '/configuracion', icon: Settings, label: 'Configuración' },

@@ -31,6 +31,7 @@ const DetalleMazo = lazy(() => import('@/modules/mazos/pages/DetalleMazo'));
 // Módulo: torneos
 const Cartelera = lazy(() => import('@/modules/torneos/pages/Cartelera'));
 const DetalleTorneo = lazy(() => import('@/modules/torneos/pages/DetalleTorneo'));
+const MisTorneos = lazy(() => import('@/modules/torneos/pages/MisTorneos'));
 const CrearTorneo = lazy(() => import('@/modules/torneos/pages/CrearTorneo'));
 const EditarTorneo = lazy(() => import('@/modules/torneos/pages/EditarTorneo'));
 const GestionTorneo = lazy(() => import('@/modules/torneos/pages/GestionTorneo'));
@@ -70,6 +71,10 @@ export default function AppRoutes() {
         <Route path="/mazos" element={<ProtectedRoute requireRol="jugador"><ConSuspense><MisMazos /></ConSuspense></ProtectedRoute>} />
         <Route path="/mazos/nuevo" element={<ProtectedRoute requireRol="jugador"><ConSuspense><CrearMazoModal /></ConSuspense></ProtectedRoute>} />
         <Route path="/mazos/:id" element={<ProtectedRoute requireRol="jugador"><ConSuspense><DetalleMazo /></ConSuspense></ProtectedRoute>} />
+        {/* Torneos */}
+        <Route path="/torneos" element={<ConSuspense><Cartelera /></ConSuspense>} />
+        <Route path="/torneos/:id" element={<ConSuspense><DetalleTorneo /></ConSuspense>} />
+        <Route path="/mis-torneos" element={<ProtectedRoute requireRol={['organizador', 'tienda']}><ConSuspense><MisTorneos /></ConSuspense></ProtectedRoute>} />
         <Route path="/organizador/torneos/:id/gestion" element={<ProtectedRoute requireRol={['organizador', 'tienda']}><ConSuspense><GestionTorneo /></ConSuspense></ProtectedRoute>} />
       </Route>
 
@@ -84,9 +89,6 @@ export default function AppRoutes() {
         <Route path="/recuperar" element={<ConSuspense><RecuperarPassword /></ConSuspense>} />
         <Route path="/u/:username" element={<ConSuspense><PerfilRouter /></ConSuspense>} />
 
-        {/* Torneos */}
-        <Route path="/torneos" element={<ConSuspense><Cartelera /></ConSuspense>} />
-        <Route path="/torneos/:id" element={<ConSuspense><DetalleTorneo /></ConSuspense>} />
         <Route path="/organizador/torneos/nuevo" element={<ProtectedRoute requireRol={['organizador', 'tienda']}><ConSuspense><CrearTorneo /></ConSuspense></ProtectedRoute>} />
         <Route path="/organizador/torneos/:id/editar" element={<ProtectedRoute requireRol={['organizador', 'tienda']}><ConSuspense><EditarTorneo /></ConSuspense></ProtectedRoute>} />
 

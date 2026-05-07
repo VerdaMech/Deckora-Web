@@ -23,11 +23,18 @@ export async function obtenerMazo(id) {
 }
 
 export async function agregarCartaAMazo(mazoId, { scryfallId, cantidad, esComandante }) {
-  return apiPost(`/mazos/${mazoId}/cartas`, { scryfallId, cantidad, esComandante });
+  return apiPost(`/mazos/${mazoId}/cartas`, {
+    scryfall_id: scryfallId,
+    cantidad,
+    es_comandante: esComandante,
+  });
 }
 
 export async function actualizarCartaEnMazo(mazoId, cartaId, { cantidad, esComandante }) {
-  return apiPatch(`/mazos/${mazoId}/cartas/${cartaId}`, { cantidad, esComandante });
+  return apiPatch(`/mazos/${mazoId}/cartas/${cartaId}`, {
+    cantidad,
+    es_comandante: esComandante,
+  });
 }
 
 export async function eliminarCartaDeMazo(mazoId, cartaId) {

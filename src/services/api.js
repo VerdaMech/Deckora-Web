@@ -2,6 +2,14 @@ import { supabase } from './supabase';
 
 const API_URL = import.meta.env.VITE_API_URL ?? '';
 
+async function limpiarSesionExpirada() {
+  try {
+    await supabase.auth.signOut();
+  } catch {
+    // best effort
+  }
+}
+
 async function getAccessToken() {
   try {
     const timeout = new Promise((resolve) => setTimeout(() => resolve(null), 3000));
@@ -24,6 +32,10 @@ async function apiFetch(path, options = {}) {
   const res = await fetch(`${API_URL}${path}`, { ...options, headers });
 
   if (res.status === 204) return null;
+
+  if (res.status === 401 && token) {
+    limpiarSesionExpirada();
+  }
 
   if (!res.ok) {
     let msg = `HTTP ${res.status}`;

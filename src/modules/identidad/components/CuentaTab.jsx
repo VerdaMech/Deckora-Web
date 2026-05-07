@@ -6,6 +6,7 @@ import { useToast } from '@/context/ToastContext';
 import { useConfirmDialog } from '@/hooks/useConfirmDialog.jsx';
 import { traducirError } from '@/utils/errors';
 import { supabase } from '@/services/supabase';
+import { apiDelete } from '@/services/api';
 
 export default function CuentaTab() {
   const { user, logout } = useAuth();
@@ -63,8 +64,12 @@ export default function CuentaTab() {
       variante: 'destructivo',
       requiereTexto: 'ELIMINAR',
       onConfirmar: async () => {
-        // TODO: endpoint real DELETE /usuarios/me
-        await logout();
+        try {
+          await apiDelete('/usuarios/me');
+          await logout();
+        } catch (err) {
+          mostrarError('No se pudo eliminar la cuenta', traducirError(err));
+        }
       },
     });
   }

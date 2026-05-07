@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { useAuth } from '@/hooks/useAuth';
-import { Button, Input } from '@/components/ui';
+import { Button, Input, Alert } from '@/components/ui';
 import { useToast } from '@/context/ToastContext';
 import { traducirError } from '@/utils/errors';
 import { validarEmail as validateEmail, validarRequerido } from '@/utils/validators';
@@ -30,6 +30,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   const from = location.state?.from;
 
@@ -49,6 +50,7 @@ export default function Login() {
     setPasswordError(pErr);
     if (eErr || pErr) return;
 
+    setLoginError('');
     setLoading(true);
     try {
       const data = await login(email, password);
@@ -57,7 +59,9 @@ export default function Login() {
       mostrarExito('Bienvenido de vuelta', 'Iniciaste sesión correctamente.');
       navigate(destino, { replace: true });
     } catch (err) {
-      mostrarError('No se pudo iniciar sesión', traducirError(err));
+      const msg = traducirError(err);
+      setLoginError(msg);
+      mostrarError('No se pudo iniciar sesión', msg);
     } finally {
       setLoading(false);
     }
@@ -70,6 +74,9 @@ export default function Login() {
         <h2 className="auth-card__title">Bienvenido de vuelta</h2>
 
         <form className="auth-form" onSubmit={handleSubmit} noValidate>
+          {loginError && (
+            <Alert variant="danger">{loginError}</Alert>
+          )}
           <Input
             label="Correo"
             type="email"

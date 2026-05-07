@@ -5,7 +5,7 @@ import { Input, Button, Textarea } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/context/ToastContext';
 import { traducirError } from '@/utils/errors';
-import { apiGet, apiPatch } from '@/services/api';
+import { apiGet, apiPut } from '@/services/api';
 
 export default function ConfiguracionOrganizadorTab() {
   const { user } = useAuth();
@@ -30,7 +30,7 @@ export default function ConfiguracionOrganizadorTab() {
     e.preventDefault();
     setLoading(true);
     try {
-      await apiPatch('/organizadores/me', {
+      await apiPut('/organizadores/me', {
         descripcion: descripcion.trim() || undefined,
         sitio_web: sitioWeb.trim() || undefined,
       });

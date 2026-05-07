@@ -76,6 +76,12 @@
   gap: var(--space-3);
 }
 
+.formulario-torneo__toggle-label {
+  font-family: 'Crimson Pro', serif;
+  font-size: 1rem;
+  color: var(--text-default);
+}
+
 .formulario-torneo__toggle {
   position: relative;
   width: 44px;

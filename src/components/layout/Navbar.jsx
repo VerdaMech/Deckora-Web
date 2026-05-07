@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Dropdown, Offcanvas } from 'react-bootstrap';
 import { Menu, LogOut, User, Settings } from 'lucide-react';
 
@@ -14,6 +14,8 @@ function getInitials(user) {
 export default function Navbar() {
   const { user, rol, logout } = useAuth();
   const [showOffcanvas, setShowOffcanvas] = useState(false);
+  const location = useLocation();
+  const isHome = location.pathname === '/';
 
   const username = user?.nombre_usuario ?? user?.email?.split('@')[0] ?? '';
 
@@ -34,9 +36,11 @@ export default function Navbar() {
     <nav className="navbar-deckora">
       <Link to="/" className="navbar-logo">DECKORA</Link>
 
-      <ul className="navbar-links">
-        {user ? authLinks : publicLinks}
-      </ul>
+      {!isHome && (
+        <ul className="navbar-links">
+          {user ? authLinks : publicLinks}
+        </ul>
+      )}
 
       <div className="navbar-actions">
         {user ? (
@@ -78,9 +82,11 @@ export default function Navbar() {
           <Offcanvas.Title className="navbar-logo">DECKORA</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          <ul className="offcanvas-nav">
-            {user ? authLinks : publicLinks}
-          </ul>
+          {!isHome && (
+            <ul className="offcanvas-nav">
+              {user ? authLinks : publicLinks}
+            </ul>
+          )}
           {!user && (
             <div className="offcanvas-nav-actions">
               <Button variant="ghost" as={Link} to="/login" onClick={() => setShowOffcanvas(false)}>Iniciar sesión</Button>

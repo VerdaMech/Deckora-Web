@@ -97,7 +97,7 @@ export default function ConfiguracionTiendaTab() {
 
         <div>
           <p className="form-label">Ubicación</p>
-          <p className="config-section__warning">Hacé clic en el mapa para fijar la ubicación.</p>
+          <p className="config-section__warning">Haz clic en el mapa para fijar la ubicación.</p>
           <div className="config-tienda__map-edit">
             <MapContainer
               center={pos}
@@ -114,10 +114,6 @@ export default function ConfiguracionTiendaTab() {
               <MapClickHandler onMapClick={handleMapClick} />
               <Marker position={pos} icon={editIcon} />
             </MapContainer>
-          </div>
-          <div className="config-tienda__coords">
-            <Input label="Latitud" value={pos[0].toFixed(6)} readOnly />
-            <Input label="Longitud" value={pos[1].toFixed(6)} readOnly />
           </div>
         </div>
 

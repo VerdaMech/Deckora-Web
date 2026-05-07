@@ -46,6 +46,10 @@
   align-items: center;
 }
 
+.cartelera-filtros .form-field {
+  margin-bottom: 0;
+}
+
 .cartelera-filtros__busqueda,
 .cartelera-filtros__fecha {
   background: var(--bg-panel);

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 
-import { Button, Input, Select, Textarea, Alert, Spinner } from '@/components/ui';
+import { Button, Input, Select, Textarea, Alert } from '@/components/ui';
 import { FORMATOS, FORMATO_LABELS } from '@/utils/constants';
 import './FormularioTorneo.css';
 
@@ -166,32 +166,8 @@ export default function FormularioTorneo({
       />
 
       <div className="form-field formulario-torneo__campo-mapa">
-        <label className="form-label">Coordenadas</label>
+        <label className="form-label">Ubicación en el mapa</label>
         <div className="formulario-torneo__coords-row">
-          <div className="formulario-torneo__coord">
-            <label className="formulario-torneo__coord-label" htmlFor="ft-lat">Lat</label>
-            <input
-              id="ft-lat"
-              type="number"
-              className="form-input formulario-torneo__coord-input"
-              value={lat}
-              onChange={(e) => setLat(e.target.value)}
-              step="0.000001"
-              aria-label="Latitud"
-            />
-          </div>
-          <div className="formulario-torneo__coord">
-            <label className="formulario-torneo__coord-label" htmlFor="ft-lng">Lng</label>
-            <input
-              id="ft-lng"
-              type="number"
-              className="form-input formulario-torneo__coord-input"
-              value={lng}
-              onChange={(e) => setLng(e.target.value)}
-              step="0.000001"
-              aria-label="Longitud"
-            />
-          </div>
           <Button type="button" variant="ghost" size="sm" onClick={usarMiUbicacion}>
             Usar mi ubicación
           </Button>
@@ -226,7 +202,7 @@ export default function FormularioTorneo({
           </MapContainer>
         </div>
         <p className="formulario-torneo__mapa-ayuda">
-          Arrastrá el pin para ajustar la ubicación exacta.
+          Arrastra el pin para ajustar la ubicación exacta.
         </p>
       </div>
 
@@ -247,7 +223,7 @@ export default function FormularioTorneo({
         </div>
 
         <div className="form-field">
-          <label className="form-label">Precio de inscripción ($)</label>
+          <label className="form-label">Precio de inscripción (CLP)</label>
           <input
             type="number"
             className={`form-input${errores.precio ? ' form-input--error' : ''}`}
@@ -263,7 +239,7 @@ export default function FormularioTorneo({
       </div>
 
       <div className="formulario-torneo__toggle-row">
-        <span className="form-label">Torneo público</span>
+        <span className="formulario-torneo__toggle-label">Torneo público</span>
         <button
           type="button"
           role="switch"
@@ -279,8 +255,8 @@ export default function FormularioTorneo({
       </div>
 
       <div className="formulario-torneo__actions">
-        <Button type="submit" variant="primary" disabled={submitting}>
-          {submitting ? <Spinner size="sm" /> : submitLabel}
+        <Button type="submit" variant="primary" loading={submitting}>
+          {submitLabel}
         </Button>
       </div>
     </form>

@@ -6,11 +6,11 @@ import { CommanderBadge } from './CommanderBadge';
 import './MTGCard.css';
 
 function getImageUrls(carta) {
-  if (!carta) return { small: '', normal: '' };
+  if (!carta) return { small: null, normal: null };
   const uris = carta.image_uris ?? {};
   return {
-    small: uris.small ?? uris.normal ?? carta.imageSmall ?? carta.imageNormal ?? '',
-    normal: uris.normal ?? uris.small ?? carta.imageNormal ?? carta.imageSmall ?? '',
+    small: uris.small ?? uris.normal ?? carta.imageSmall ?? carta.imageNormal ?? null,
+    normal: uris.normal ?? uris.small ?? carta.imageNormal ?? carta.imageSmall ?? null,
   };
 }
 
@@ -61,7 +61,7 @@ export function MTGCard({ carta, variant = 'thumbnail', onClick, esComandante, p
             <CommanderBadge />
           </span>
         )}
-        {imgError ? (
+        {imgError || (!small && !normal) ? (
           <div className="mtg-card__image mtg-card__image--placeholder" aria-label={altText} />
         ) : (
           <>
@@ -96,7 +96,7 @@ export function MTGCard({ carta, variant = 'thumbnail', onClick, esComandante, p
         tabIndex={hasClick ? 0 : undefined}
         onKeyDown={handleKeyDown}
       >
-        {imgError ? (
+        {imgError || (!small && !normal) ? (
           <div className="mtg-card__image mtg-card__image--placeholder" aria-label={altText} />
         ) : (
           <>
@@ -126,7 +126,7 @@ export function MTGCard({ carta, variant = 'thumbnail', onClick, esComandante, p
 
   return (
     <div className={`mtg-card mtg-card--full${esComandante ? ' mtg-card--commander' : ''}`}>
-      {imgError ? (
+      {imgError || (!small && !normal) ? (
         <div className="mtg-card__image mtg-card__image--placeholder" aria-label={altText} />
       ) : (
         <>

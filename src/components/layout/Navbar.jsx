@@ -19,11 +19,7 @@ export default function Navbar() {
 
   const username = user?.nombre_usuario ?? user?.email?.split('@')[0] ?? '';
 
-  const publicLinks = (
-    <>
-      <li><NavLink to="/torneos" className="navbar-link">Torneos</NavLink></li>
-    </>
-  );
+  const publicLinks = null;
 
   const authLinks = (
     <>

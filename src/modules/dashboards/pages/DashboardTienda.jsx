@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CalendarDays, Users, Trophy, PlusCircle, Settings, User } from 'lucide-react';
+import { CalendarDays, Users, Trophy } from 'lucide-react';
 
 import { useAuth } from '@/hooks/useAuth';
-import { Button, EmptyState } from '@/components/ui';
+import { EmptyState } from '@/components/ui';
 import BloqueResumen from '../components/BloqueResumen';
 import StatsRapidas from '../components/StatsRapidas';
 import { listarTorneosDeTienda } from '@/services/tiendas.service';
@@ -12,7 +12,6 @@ import './DashboardTienda.css';
 export default function DashboardTienda() {
   const { user, perfil } = useAuth();
   const nombre = perfil?.nombre_tienda ?? user?.nombre_usuario ?? user?.correo ?? 'Tienda';
-  const username = user?.nombre_usuario ?? '';
   const tiendaId = user?.id;
 
   const [torneos, setTorneos] = useState(null);
@@ -89,21 +88,6 @@ export default function DashboardTienda() {
         )}
       </BloqueResumen>
 
-      <BloqueResumen titulo="Acciones rápidas" icono={PlusCircle}>
-        <div className="dashboard-tienda__acciones">
-          <Link to="/organizador/torneos/nuevo">
-            <Button variant="primary" icon={PlusCircle}>Crear torneo</Button>
-          </Link>
-          <Link to="/configuracion?tab=tienda">
-            <Button variant="secondary" icon={Settings}>Configurar mi tienda</Button>
-          </Link>
-          {username && (
-            <Link to={`/u/${username}`}>
-              <Button variant="ghost" icon={User}>Ver mi perfil público</Button>
-            </Link>
-          )}
-        </div>
-      </BloqueResumen>
     </div>
   );
 }

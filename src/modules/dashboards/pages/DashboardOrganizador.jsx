@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CalendarDays, Trophy, CheckCircle, PlusCircle, User } from 'lucide-react';
+import { CalendarDays, Trophy, CheckCircle } from 'lucide-react';
 
 import { useAuth } from '@/hooks/useAuth';
-import { Button, EmptyState } from '@/components/ui';
+import { EmptyState } from '@/components/ui';
 import BloqueResumen from '../components/BloqueResumen';
 import StatsRapidas from '../components/StatsRapidas';
 import { listarMisTorneos } from '@/services/torneos.service';
@@ -88,18 +88,6 @@ export default function DashboardOrganizador() {
         )}
       </BloqueResumen>
 
-      <BloqueResumen titulo="Acciones rápidas" icono={PlusCircle}>
-        <div className="dashboard-organizador__acciones">
-          <Link to="/organizador/torneos/nuevo">
-            <Button variant="primary" icon={PlusCircle}>Crear torneo</Button>
-          </Link>
-          {username && (
-            <Link to={`/u/${username}`}>
-              <Button variant="secondary" icon={User}>Ir a mi perfil</Button>
-            </Link>
-          )}
-        </div>
-      </BloqueResumen>
     </div>
   );
 }

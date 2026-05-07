@@ -63,8 +63,8 @@ export default function Navbar() {
           </Dropdown>
         ) : (
           <>
-            <Button variant="ghost" size="sm" as={Link} to="/login">Iniciar sesión</Button>
-            <Button variant="primary" size="sm" as={Link} to="/registro">Crear cuenta</Button>
+            <Link to="/login"><Button variant="ghost" size="sm">Iniciar sesión</Button></Link>
+            <Link to="/registro"><Button variant="primary" size="sm">Crear cuenta</Button></Link>
           </>
         )}
 
@@ -89,8 +89,8 @@ export default function Navbar() {
           )}
           {!user && (
             <div className="offcanvas-nav-actions">
-              <Button variant="ghost" as={Link} to="/login" onClick={() => setShowOffcanvas(false)}>Iniciar sesión</Button>
-              <Button variant="primary" as={Link} to="/registro" onClick={() => setShowOffcanvas(false)}>Crear cuenta</Button>
+              <Link to="/login" onClick={() => setShowOffcanvas(false)}><Button variant="ghost">Iniciar sesión</Button></Link>
+              <Link to="/registro" onClick={() => setShowOffcanvas(false)}><Button variant="primary">Crear cuenta</Button></Link>
             </div>
           )}
         </Offcanvas.Body>

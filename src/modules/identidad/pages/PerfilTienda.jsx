@@ -19,7 +19,7 @@ export default function PerfilTienda({ perfil }) {
   const nombreDisplay = perfil.nombre_tienda ?? perfil.nombre_usuario;
 
   useEffect(() => {
-    obtenerTorneosDeUsuario(perfil.id, 'tienda').then(setTorneos).catch(() => {});
+    obtenerTorneosDeUsuario(perfil.id).then(setTorneos).catch(() => setTorneos([]));
   }, [perfil.id]);
 
   return (
@@ -37,7 +37,7 @@ export default function PerfilTienda({ perfil }) {
       <div className="profile-body">
         {esDueno && (
           <div className="profile-edit-banner">
-            <span>Administrá los datos de tu tienda</span>
+            <span>Administra los datos de tu tienda</span>
             <a href="/configuracion?tab=tienda" className="btn btn--secondary btn--sm">
               Editar mi tienda
             </a>

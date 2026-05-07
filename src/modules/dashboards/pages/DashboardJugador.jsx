@@ -14,7 +14,7 @@ import './DashboardJugador.css';
 
 export default function DashboardJugador() {
   const { user, perfil } = useAuth();
-  const nombre = perfil?.username ?? perfil?.nombre ?? user?.email ?? 'Jugador';
+  const nombre = user?.nombre_usuario ?? user?.correo ?? 'Jugador';
 
   const [mazos, setMazos] = useState(null);
   const [torneos, setTorneos] = useState(null);

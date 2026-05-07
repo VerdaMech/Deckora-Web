@@ -11,9 +11,9 @@ import './DashboardTienda.css';
 
 export default function DashboardTienda() {
   const { user, perfil } = useAuth();
-  const nombre = perfil?.nombre_tienda ?? perfil?.username ?? user?.email ?? 'Tienda';
-  const username = perfil?.username ?? '';
-  const tiendaId = perfil?.tienda_id ?? user?.id;
+  const nombre = perfil?.nombre_tienda ?? user?.nombre_usuario ?? user?.correo ?? 'Tienda';
+  const username = user?.nombre_usuario ?? '';
+  const tiendaId = user?.id;
 
   const [torneos, setTorneos] = useState(null);
   const [loading, setLoading] = useState(true);

@@ -11,8 +11,8 @@ import './DashboardOrganizador.css';
 
 export default function DashboardOrganizador() {
   const { user, perfil } = useAuth();
-  const nombre = perfil?.username ?? perfil?.nombre ?? user?.email ?? 'Organizador';
-  const username = perfil?.username ?? '';
+  const nombre = user?.nombre_usuario ?? user?.correo ?? 'Organizador';
+  const username = user?.nombre_usuario ?? '';
 
   const [torneos, setTorneos] = useState(null);
   const [loading, setLoading] = useState(true);

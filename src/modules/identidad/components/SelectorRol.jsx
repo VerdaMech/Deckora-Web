@@ -5,19 +5,19 @@ const ROLES = [
     valor: 'jugador',
     label: 'Jugador',
     Icono: User,
-    descripcion: 'Construí mazos, participá en torneos.',
+    descripcion: 'Construye mazos, participa en torneos.',
   },
   {
     valor: 'organizador',
     label: 'Organizador',
     Icono: Swords,
-    descripcion: 'Organizá y gestioná torneos.',
+    descripcion: 'Organiza y gestiona torneos.',
   },
   {
     valor: 'tienda',
     label: 'Tienda',
     Icono: Store,
-    descripcion: 'Difundí tus eventos y atraé jugadores.',
+    descripcion: 'Difunde tus eventos y atrae jugadores.',
   },
 ];
 

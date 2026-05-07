@@ -54,7 +54,7 @@ export default function DashboardTienda() {
       <StatsRapidas items={statsItems} />
 
       <BloqueResumen
-        titulo="Próximos eventos en mi tienda"
+        titulo="Próximos eventos"
         icono={CalendarDays}
         cta={{ texto: 'Ver cartelera', to: '/torneos' }}
         cargando={loading}

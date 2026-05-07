@@ -107,7 +107,7 @@ export default function Login() {
         </form>
 
         <p className="auth-form__footer">
-          ¿No tenés cuenta?{' '}
+          ¿No tienes cuenta?{' '}
           <Link to="/registro">Crear una</Link>
         </p>
       </div>

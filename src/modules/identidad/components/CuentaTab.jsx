@@ -81,7 +81,7 @@ export default function CuentaTab() {
             type="email"
             value={nuevoCorreo}
             onChange={(e) => setNuevoCorreo(e.target.value)}
-            placeholder="Dejá vacío si no querés cambiarlo"
+            placeholder="Deja vacío si no quieres cambiarlo"
           />
           <Input
             label="Nueva contraseña"

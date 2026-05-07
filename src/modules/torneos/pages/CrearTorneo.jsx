@@ -31,7 +31,7 @@ export default function CrearTorneo() {
       <div className="crear-torneo-page__header">
         <h1 className="crear-torneo-page__title">Crear torneo</h1>
         <p className="crear-torneo-page__subtitle">
-          Completá los datos para publicar tu torneo.
+          Completa los datos para publicar tu torneo.
         </p>
       </div>
       <div className="crear-torneo-page__body">

@@ -37,10 +37,10 @@ export default function Registro() {
     else if (!NOMBRE_REGEX.test(nombreUsuario))
       errs.nombreUsuario = 'Solo letras, números, guión y guión bajo. Entre 3 y 30 caracteres.';
     if (!correo) errs.correo = 'El correo es obligatorio.';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) errs.correo = 'Ingresá un correo válido.';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) errs.correo = 'Ingresa un correo válido.';
     if (!password) errs.password = 'La contraseña es obligatoria.';
     else if (password.length < 8) errs.password = 'La contraseña debe tener al menos 8 caracteres.';
-    if (!confirmacion) errs.confirmacion = 'Confirmá tu contraseña.';
+    if (!confirmacion) errs.confirmacion = 'Confirma tu contraseña.';
     else if (password !== confirmacion) errs.confirmacion = 'Las contraseñas no coinciden.';
     if (rol === 'tienda' && !nombreTienda) errs.nombreTienda = 'El nombre de la tienda es obligatorio.';
     return errs;
@@ -140,8 +140,8 @@ export default function Registro() {
         </form>
 
         <p className="auth-form__footer">
-          ¿Ya tenés cuenta?{' '}
-          <Link to="/login">Iniciá sesión</Link>
+          ¿Ya tienes cuenta?{' '}
+          <Link to="/login">Inicia sesión</Link>
         </p>
       </div>
     </div>

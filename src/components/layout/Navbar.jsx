@@ -19,14 +19,19 @@ export default function Navbar() {
 
   const username = user?.nombre_usuario ?? user?.email?.split('@')[0] ?? '';
 
-  const publicLinks = null;
+  const commonLinks = (
+    <li><NavLink to="/biblioteca" className="navbar-link">Biblioteca</NavLink></li>
+  );
 
   const authLinks = (
     <>
+      {commonLinks}
       <li><NavLink to="/torneos" className="navbar-link">Torneos</NavLink></li>
       <li><NavLink to={`/${rol}`} className="navbar-link">Mi panel</NavLink></li>
     </>
   );
+
+  const publicLinks = commonLinks;
 
   return (
     <nav className="navbar-deckora">

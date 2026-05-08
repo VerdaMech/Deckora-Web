@@ -6,8 +6,6 @@ import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import ErrorChunk from '@/components/ui/ErrorChunk';
 import ProtectedRoute from '@/routes/ProtectedRoute';
 
-const MisColecciones = lazy(() => import('./pages/MisColecciones'));
-const DetalleColeccion = lazy(() => import('./pages/DetalleColeccion'));
 const MisMazos = lazy(() => import('./pages/MisMazos'));
 const DetalleMazo = lazy(() => import('./pages/DetalleMazo'));
 
@@ -29,22 +27,6 @@ function ConSuspense({ children }) {
 
 export const mazosRoutes = (
   <>
-    <Route
-      path="/colecciones"
-      element={
-        <ProtectedRoute requireRol="jugador">
-          <ConSuspense><MisColecciones /></ConSuspense>
-        </ProtectedRoute>
-      }
-    />
-    <Route
-      path="/colecciones/:id"
-      element={
-        <ProtectedRoute requireRol="jugador">
-          <ConSuspense><DetalleColeccion /></ConSuspense>
-        </ProtectedRoute>
-      }
-    />
     <Route
       path="/mazos"
       element={

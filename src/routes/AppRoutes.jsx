@@ -21,9 +21,10 @@ const RecuperarPassword = lazy(() => import('@/modules/identidad/pages/Recuperar
 const PerfilRouter = lazy(() => import('@/modules/identidad/pages/PerfilRouter'));
 const Configuracion = lazy(() => import('@/modules/identidad/pages/Configuracion'));
 
+// Módulo: biblioteca
+const Biblioteca = lazy(() => import('@/modules/biblioteca/pages/Biblioteca'));
+
 // Módulo: mazos
-const MisColecciones = lazy(() => import('@/modules/mazos/pages/MisColecciones'));
-const DetalleColeccion = lazy(() => import('@/modules/mazos/pages/DetalleColeccion'));
 const MisMazos = lazy(() => import('@/modules/mazos/pages/MisMazos'));
 const CrearMazoModal = lazy(() => import('@/modules/mazos/pages/CrearMazoModal'));
 const DetalleMazo = lazy(() => import('@/modules/mazos/pages/DetalleMazo'));
@@ -66,8 +67,7 @@ export default function AppRoutes() {
         <Route path="/organizador" element={<ProtectedRoute requireRol="organizador"><ConSuspense><DashboardOrganizador /></ConSuspense></ProtectedRoute>} />
         <Route path="/tienda" element={<ProtectedRoute requireRol="tienda"><ConSuspense><DashboardTienda /></ConSuspense></ProtectedRoute>} />
         <Route path="/configuracion" element={<ProtectedRoute requireRol="any"><ConSuspense><Configuracion /></ConSuspense></ProtectedRoute>} />
-        <Route path="/colecciones" element={<ProtectedRoute requireRol="jugador"><ConSuspense><MisColecciones /></ConSuspense></ProtectedRoute>} />
-        <Route path="/colecciones/:id" element={<ProtectedRoute requireRol="jugador"><ConSuspense><DetalleColeccion /></ConSuspense></ProtectedRoute>} />
+        <Route path="/biblioteca" element={<ConSuspense><Biblioteca /></ConSuspense>} />
         <Route path="/mazos" element={<ProtectedRoute requireRol="jugador"><ConSuspense><MisMazos /></ConSuspense></ProtectedRoute>} />
         <Route path="/mazos/nuevo" element={<ProtectedRoute requireRol="jugador"><ConSuspense><CrearMazoModal /></ConSuspense></ProtectedRoute>} />
         <Route path="/mazos/:id" element={<ProtectedRoute requireRol="jugador"><ConSuspense><DetalleMazo /></ConSuspense></ProtectedRoute>} />

@@ -11,9 +11,9 @@ export function AuthProvider({ children }) {
   const [perfil, setPerfil] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  async function fetchMe() {
+  async function fetchMe(token) {
     try {
-      const data = await authService.getMe();
+      const data = await authService.getMe(token);
       setUser(data.user ?? data);
       setRol(data.rol ?? data.user?.rol ?? null);
       setPerfil(data.perfil ?? null);
@@ -26,13 +26,13 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
-      if (session) await fetchMe();
+      if (session) await fetchMe(session.access_token);
       setLoading(false);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session) {
-        await fetchMe();
+        await fetchMe(session.access_token);
       } else {
         setUser(null);
         setRol(null);

@@ -70,7 +70,7 @@ export default function DetalleMazo() {
                 <button
                   className="btn btn--ghost btn--sm"
                   type="button"
-                  onClick={() => setModoEdicion(false)}
+                  onClick={() => { setModoEdicion(false); cargar(); }}
                   aria-label="Salir del modo edición"
                 >
                   <X size={16} />
@@ -133,7 +133,7 @@ export default function DetalleMazo() {
         modoEdicion ? (
           <ModoEdicionMazo
             mazo={mazo}
-            onSalir={() => setModoEdicion(false)}
+            onSalir={() => { setModoEdicion(false); cargar(); }}
           />
         ) : (mazo.cartas ?? []).length === 0 ? (
           <EmptyState

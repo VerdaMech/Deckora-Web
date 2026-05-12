@@ -27,7 +27,10 @@ export async function logout() {
   }
 }
 
-export async function getMe() {
+export async function getMe(token) {
+  if (token) {
+    return apiFetch('/auth/me', { method: 'GET', headers: { 'Authorization': `Bearer ${token}` } });
+  }
   return apiGet('/auth/me');
 }
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Search, X } from 'lucide-react';
+import { Check, Search, X } from 'lucide-react';
 
 import { Modal } from '@/components/ui';
 import { DeckBuilder } from '@/components/domain';
@@ -177,6 +177,14 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
           >
             <Search size={16} />
             Buscar carta
+          </button>
+          <button
+            className="btn btn--primary btn--sm"
+            type="button"
+            onClick={onSalir}
+          >
+            <Check size={16} />
+            Confirmar edición
           </button>
           <button
             className="btn btn--ghost btn--sm"

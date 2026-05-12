@@ -34,7 +34,10 @@ async function apiFetch(path, options = {}) {
   if (res.status === 204) return null;
 
   if (res.status === 401 && token) {
-    limpiarSesionExpirada();
+    const { error: refreshError } = await supabase.auth.refreshSession();
+    if (refreshError) {
+      limpiarSesionExpirada();
+    }
   }
 
   if (!res.ok) {

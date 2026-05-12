@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '@/hooks/useAuth';
-import { Button, Input } from '@/components/ui';
+import { Button, Input, Alert } from '@/components/ui';
 import { useToast } from '@/context/ToastContext';
 import { traducirError } from '@/utils/errors';
 import SelectorRol from '../components/SelectorRol';
@@ -30,6 +30,7 @@ export default function Registro() {
 
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
+  const [registroError, setRegistroError] = useState('');
 
   function validar() {
     const errs = {};
@@ -53,6 +54,7 @@ export default function Registro() {
     setFieldErrors(errs);
     if (Object.keys(errs).length > 0) return;
 
+    setRegistroError('');
     setLoading(true);
     try {
       const data = await signup({
@@ -65,7 +67,9 @@ export default function Registro() {
       mostrarExito('Cuenta creada', 'Bienvenido a Deckora. ¡A jugar!');
       navigate(rolADestino(rolObtenido), { replace: true });
     } catch (err) {
-      mostrarError('No se pudo crear la cuenta', traducirError(err));
+      const msg = traducirError(err);
+      setRegistroError(msg);
+      mostrarError('No se pudo crear la cuenta', msg);
     } finally {
       setLoading(false);
     }
@@ -78,6 +82,9 @@ export default function Registro() {
         <h2 className="auth-card__title">Crear cuenta</h2>
 
         <form className="auth-form" onSubmit={handleSubmit} noValidate>
+          {registroError && (
+            <Alert variant="danger">{registroError}</Alert>
+          )}
           <SelectorRol value={rol} onChange={setRol} disabled={loading} />
 
           <Input

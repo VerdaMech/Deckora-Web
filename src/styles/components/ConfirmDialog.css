@@ -40,4 +40,7 @@
   display: flex;
   gap: var(--space-3);
   justify-content: center;
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
 }

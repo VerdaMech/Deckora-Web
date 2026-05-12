@@ -37,26 +37,6 @@ export default function ConfirmDialog({
       onHide={cargando ? undefined : onCancelar}
       title={titulo}
       size="sm"
-      className={`confirm-dialog confirm-dialog--${variante}`}
-      footer={
-        <div className="confirm-dialog__acciones">
-          <Button
-            ref={cancelarRef}
-            variant="secondary"
-            onClick={onCancelar}
-            disabled={cargando}
-          >
-            {textoCancelar}
-          </Button>
-          <Button
-            variant={varianteBtnConfirmar}
-            onClick={onConfirmar}
-            disabled={!puedeConfirmar}
-          >
-            {cargando ? <Spinner size="sm" /> : textoConfirmar}
-          </Button>
-        </div>
-      }
     >
       <p className="confirm-dialog__cuerpo" id="confirm-dialog-msg">{mensaje}</p>
       {requiereTexto && (
@@ -73,6 +53,23 @@ export default function ConfirmDialog({
           />
         </>
       )}
+      <div className="confirm-dialog__acciones">
+        <Button
+          ref={cancelarRef}
+          variant="secondary"
+          onClick={onCancelar}
+          disabled={cargando}
+        >
+          {textoCancelar}
+        </Button>
+        <Button
+          variant={varianteBtnConfirmar}
+          onClick={onConfirmar}
+          disabled={!puedeConfirmar}
+        >
+          {cargando ? <Spinner size="sm" /> : textoConfirmar}
+        </Button>
+      </div>
     </Modal>
   );
 }

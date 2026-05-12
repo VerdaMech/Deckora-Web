@@ -195,6 +195,11 @@ export default function DetalleTorneo() {
           <Button variant="ghost" onClick={() => navigate('/torneos')}>
             <ArrowLeft size={16} /> Volver a cartelera
           </Button>
+          {user?.id === torneo.organizador_id && torneo.estado === 'pendiente' && (
+            <Button variant="secondary" onClick={() => navigate(`/organizador/torneos/${id}/editar`)}>
+              Editar torneo
+            </Button>
+          )}
         </div>
       </div>
     </div>

@@ -64,8 +64,8 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
 
   async function handleAgregarCarta(carta) {
     const entrada = {
-      id: carta.id ?? carta.scryfallId,
-      scryfallId: carta.id ?? carta.scryfallId,
+      id: carta.id,
+      scryfallId: carta.scryfall_id ?? carta.id,
       cantidad: 1,
       esComandante: false,
       carta,

@@ -17,10 +17,14 @@ export function AuthProvider({ children }) {
       setUser(data.user ?? data);
       setRol(data.rol ?? data.user?.rol ?? null);
       setPerfil(data.perfil ?? null);
-    } catch {
-      setUser(null);
-      setRol(null);
-      setPerfil(null);
+    } catch (err) {
+      const msg = err?.message ?? '';
+      const esErrorAuth = msg.includes('401') || msg.includes('403') || msg.toLowerCase().includes('sesión expirada');
+      if (esErrorAuth) {
+        setUser(null);
+        setRol(null);
+        setPerfil(null);
+      }
     }
   }
 

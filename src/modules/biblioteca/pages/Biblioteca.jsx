@@ -192,7 +192,7 @@ export default function Biblioteca() {
         show={!!cartaZoom}
         onHide={() => setCartaZoom(null)}
         title={cartaZoom?.nombre ?? ''}
-        size="md"
+        size="lg"
       >
         <div className="biblioteca__zoom">
           {cartaZoom?.imagen_url ? (

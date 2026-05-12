@@ -6,6 +6,7 @@ import {
 } from 'recharts';
 
 import { Spinner, Alert } from '@/components/ui';
+import UITooltip from '@/components/ui/Tooltip';
 import { obtenerEstadisticasJugador } from '@/services/usuarios.service';
 import '@/styles/components/EstadisticasJugador.css';
 
@@ -73,7 +74,9 @@ export default function EstadisticasJugador({ usuarioId, variante = 'completo' }
         <div className="estadisticas-jugador__card">
           <Swords size={20} className="estadisticas-jugador__card-icono estadisticas-jugador__card-icono--gold" />
           <span className="estadisticas-jugador__numero">{winRatePct}%</span>
-          <span className="estadisticas-jugador__label">Win Rate</span>
+          <UITooltip content="Porcentaje de partidas ganadas sobre el total jugado." placement="top">
+            <span className="estadisticas-jugador__label">Win Rate</span>
+          </UITooltip>
         </div>
       </div>
 

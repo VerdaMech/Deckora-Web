@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Pencil, Calendar, X } from 'lucide-react';
+import { ArrowLeft, Pencil, Calendar, X, Layers } from 'lucide-react';
 
-import { Spinner, Alert, Tooltip } from '@/components/ui';
+import { Spinner, Alert, Tooltip, EmptyState } from '@/components/ui';
 import { FormatBadge, DeckList, DeckStats } from '@/components/domain';
 import { ModoEdicionMazo } from '@/modules/mazos/components/ModoEdicionMazo';
 import { obtenerMazo } from '@/services/mazos.service';
@@ -120,6 +120,21 @@ export default function DetalleMazo() {
           <ModoEdicionMazo
             mazo={mazo}
             onSalir={() => setModoEdicion(false)}
+          />
+        ) : (mazo.cartas ?? []).length === 0 ? (
+          <EmptyState
+            icon={Layers}
+            title="Tu mazo está vacío"
+            description="Entra al modo edición y empieza a construirlo."
+            action={
+              <button
+                className="btn btn--primary btn--md"
+                type="button"
+                onClick={() => setModoEdicion(true)}
+              >
+                Editar mazo
+              </button>
+            }
           />
         ) : (
           <div className="detalle-mazo__layout">

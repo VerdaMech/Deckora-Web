@@ -7,14 +7,30 @@ Este documento es para que cualquier persona (humana o IA) que entre al proyecto
 
 ---
 
-## Estado general
+## Estado general — PROYECTO COMPLETO
 
 - [x] **Fase 1 — Fundamentos** (Sprint 0)
 - [x] **Fase 2 — Identidad** (auth + perfiles)
 - [x] **Fase 3 — Mazos y Colecciones**
 - [x] **Fase 4 — Torneos**
 - [x] **Fase 5 — Mapa y Dashboards**
-- [ ] **Fase 6 — Pulido final**
+- [x] **Fase 6 — Pulido final**
+
+### Pendientes futuros (fuera de alcance del proyecto académico)
+
+- [ ] Asistente IA: integración real con endpoint backend (hoy mockeado).
+- [ ] Endpoints "Mis inscripciones" y "Mis torneos": verificar implementación backend.
+- [ ] Endpoint `/usuarios/:id/estadisticas`: hoy mockeado en frontend.
+- [ ] Endpoint "Asistentes totales" del DashboardTienda: hoy mockeado.
+- [ ] Vista pública de mazo compartible.
+- [ ] Notificaciones in-app o por email.
+- [ ] Internacionalización (hoy solo español).
+- [ ] WCAG AA (hoy cumplimos A).
+- [ ] Tests automatizados (Vitest + React Testing Library).
+- [ ] Atajos de teclado avanzados.
+- [ ] Foco visible accesible en mapa Leaflet (alternativa textual documentada).
+
+Última actualización: 2026-05-06 — Fase 6 cerrada por Persona B.
 
 ---
 
@@ -240,13 +256,72 @@ Objetivo: que un usuario pueda registrarse, loguearse y ver su perfil.
 
 ## Fase 6 — Pulido final
 
-- [ ] QA cruzado de todas las pantallas
-- [ ] Responsive en breakpoints clave (375, 768, 1280, 1920)
-- [ ] Lazy loading de imágenes de cartas
-- [ ] Code splitting por módulo
-- [ ] Empty states y error states completos
-- [ ] Deploy a Vercel
-- [ ] CORS de producción configurado en backend
+Rama de trabajo: `feature/pulido-final`
+
+### Persona A — Commits completados
+
+- [x] **Commit A0** (pre-trabajo) · `fix(services): agregar listarTorneosProximos y listarMisTorneos` _(incluido en Commit 1)_
+  - Fix de build: `torneos.service.js` carecía de estos exports requeridos por Fase 5 B1
+
+- [x] **Commit A1** · `feat(ui): agregar sistema de toasts y traducción de errores`
+  - `src/utils/errors.js`: `traducirError()` (mapeo HTTP + Supabase → español neutro), `esColdStart()`
+  - `src/components/ui/Toast.jsx` + `Toast.css`: toast con variantes exito/error/info/advertencia, aria-live, pause-on-hover, animaciones slide/fade
+  - `src/context/ToastContext.jsx`: provider con máx 4 toasts, container fixed top-right (top-center mobile), hooks `mostrarExito/Error/Info/Advertencia`
+  - `App.jsx`: monta `ToastProvider`
+  - Integración toasts en: Login, Registro, RecuperarPassword, CuentaTab, ConfiguracionTiendaTab, CrearMazoModal, CrearTorneo, EditarTorneo, PanelInscripcion
+
+- [x] **Commit A2** · `feat(ui): agregar ConfirmDialog destructivo y mensaje de cold start`
+  - `src/components/ui/ConfirmDialog.jsx` + `ConfirmDialog.css`: modal de confirmación con variantes, requiereTexto, foco en Cancelar, aria
+  - `src/hooks/useConfirmDialog.jsx`: hook con estado y async onConfirmar
+  - `src/hooks/useApiCall.js`: hook para llamadas async con detección de cold start
+  - `Spinner.jsx`: prop `mostrarColdStart` muestra mensaje "El servidor está despertando…"
+  - `CuentaTab.jsx`: reemplaza modal manual por `useConfirmDialog` con `requiereTexto="ELIMINAR"`
+  - `MisMazos.jsx`: timer 3s activa cold start en carga inicial
+
+- [x] **Commit A3** · `feat(ui): agregar ErrorBoundary global, rediseño 404/403 y validación inline`
+  - `src/components/ui/ErrorBoundary.jsx` + css: captura crashes de render, fallback temático, detalle en dev
+  - `main.jsx`: monta ErrorBoundary sobre toda la app
+  - `src/pages/NotFound.jsx` + css: SVG carta, "404 — Esta carta no está en el grimorio"
+  - `src/pages/Forbidden.jsx` + css: SVG candado, "403 — No puedes cruzar este umbral"
+  - `src/utils/validators.js`: funciones puras de validación
+  - `src/hooks/useFormValidation.js`: hook con touched/errors, on-blur, validar() al submit
+  - `Input.jsx`: aria-invalid + aria-describedby
+  - `Login.jsx`: validación on-blur
+
+### Persona B — Commits en progreso
+
+- [x] **Commit B1** · `perf(ui): agregar lazy loading de imágenes y code splitting por módulo`
+  - `MTGCard.jsx`: skeleton durante carga (`imgCargada` state), `decoding="async"`, prop `prioridad` ("auto"|"alta"), `loading="lazy"` condicional.
+  - `MTGCard.css`: `.mtg-card__skeleton` con `aspect-ratio: 488/680` y animación shimmer.
+  - `AppRoutes.jsx`: todas las páginas convertidas a `React.lazy()` + `<Suspense>` + `<ErrorBoundary fallback={<ErrorChunk />}>`. Landing queda eagerly loaded.
+  - `ErrorBoundary.jsx`: extendido con prop `fallback` opcional.
+  - `ErrorChunk.jsx` + `ErrorChunk.css`: creados — fallback de chunk con botón Reintentar.
+  - `vite.config.js`: `rolldownOptions.output.codeSplitting: true` para Rolldown (Vite 8).
+  - Bundle: index 1.2 MB → 380 kB. Chunks por módulo: Login ~2 kB, MisMazos ~3 kB, Cartelera ~3 kB, etc.
+  - Nota: `EstadisticasJugador` chunk pesa 358 kB por recharts (dependencia pesada, esperado).
+
+- [x] **Commit B2** · `feat(a11y): cumplir WCAG A y agregar tooltips en términos MTG`
+  - `index.html`: `lang="es"` (corregido desde `lang="en"`). (WCAG 3.1.1)
+  - `base.css`: `*:focus-visible` con outline dorado 2px. (WCAG 2.4.7)
+  - `FormatBadge.jsx`: tooltip descriptivo por formato (Commander, Standard, Modern, Pioneer, Legacy). (H10.1)
+  - `CommanderBadge.jsx`: tooltip explicativo del comandante. (H10.1)
+  - `EstadisticasJugador.jsx`: tooltip en "Win Rate" con definición. (H10.1)
+  - `ColeccionEditor.jsx`: tooltip en "Foil" explicando el término. (H10.1)
+  - `Cartelera.jsx`: `aria-label` en inputs de búsqueda y fecha sin label visible. (WCAG 1.3.1)
+  - `FormularioTorneo.jsx`: labels asociados vía htmlFor/id en datetime-local y coords lat/lng; `aria-required` y `role="alert"` en errores. (WCAG 1.3.1, 3.3.2)
+  - `ReportarResultadoModal.jsx`: `aria-label` dinámico en input de puntos por jugador. (WCAG 1.3.1)
+  - `AppLayout.jsx`: ya usa `<main>`, `<nav>` — estructura semántica correcta. (WCAG 1.3.1)
+  - `Modal.jsx`: ya tiene `aria-label="Cerrar"` en botón close. Bootstrap maneja focus trap. (WCAG 2.1.1)
+  - Deuda documentada: foco visible en Leaflet map (mapa), WCAG AA (ratio 4.5:1), tests automáticos de a11y.
+
+- [x] **Commit B3** · `chore(deploy): completar empty states, configurar Vercel y documentar deploy`
+  - Empty states revisados y copy corregido a español neutro (sin voseo): MisMazos, MisColecciones, MisTorneosTab, MisInscripcionesTab, Cartelera, ListaInscritos, DetalleMazo.
+  - `DetalleMazo.jsx`: empty state con CTA "Editar mazo" cuando el mazo no tiene cartas.
+  - `vercel.json`: creado — rewrites SPA, Cache-Control inmutable en /assets.
+  - `.env.example`: actualizado con variables actuales.
+  - `README.md`: sección "Deploy" con guía Vercel, variables de entorno, notas de cold start y build local.
+  - Limpieza: eliminados `console.info` de mocks en torneos.service.js, AsistenteIA.jsx, ModoEdicionMazo.jsx.
+  - Build limpio: sin warnings de chunk size. Bundle index 380 kB, chunks por módulo separados.
 
 ---
 

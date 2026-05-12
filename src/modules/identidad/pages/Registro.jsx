@@ -2,23 +2,12 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '@/hooks/useAuth';
-import { Button, Input, Alert } from '@/components/ui';
+import { Button, Input } from '@/components/ui';
+import { useToast } from '@/context/ToastContext';
+import { traducirError } from '@/utils/errors';
 import SelectorRol from '../components/SelectorRol';
 
 const NOMBRE_REGEX = /^[a-zA-Z0-9_-]{3,30}$/;
-
-const SIGNUP_ERROR_MAP = {
-  'User already registered': 'Ya existe una cuenta con ese correo.',
-  'duplicate key': 'El nombre de usuario ya está en uso.',
-  'Email already in use': 'Ya existe una cuenta con ese correo.',
-};
-
-function traducirError(msg) {
-  for (const [clave, traduccion] of Object.entries(SIGNUP_ERROR_MAP)) {
-    if (msg?.includes(clave)) return traduccion;
-  }
-  return msg || 'Ocurrió un error. Intentá de nuevo.';
-}
 
 function rolADestino(rol) {
   if (rol === 'jugador') return '/jugador';
@@ -30,6 +19,7 @@ function rolADestino(rol) {
 export default function Registro() {
   const { signup } = useAuth();
   const navigate = useNavigate();
+  const { mostrarExito, mostrarError } = useToast();
 
   const [rol, setRol] = useState('jugador');
   const [nombreUsuario, setNombreUsuario] = useState('');
@@ -39,7 +29,6 @@ export default function Registro() {
   const [nombreTienda, setNombreTienda] = useState('');
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
 
   function validar() {
@@ -48,10 +37,10 @@ export default function Registro() {
     else if (!NOMBRE_REGEX.test(nombreUsuario))
       errs.nombreUsuario = 'Solo letras, números, guión y guión bajo. Entre 3 y 30 caracteres.';
     if (!correo) errs.correo = 'El correo es obligatorio.';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) errs.correo = 'Ingresá un correo válido.';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) errs.correo = 'Ingresa un correo válido.';
     if (!password) errs.password = 'La contraseña es obligatoria.';
     else if (password.length < 8) errs.password = 'La contraseña debe tener al menos 8 caracteres.';
-    if (!confirmacion) errs.confirmacion = 'Confirmá tu contraseña.';
+    if (!confirmacion) errs.confirmacion = 'Confirma tu contraseña.';
     else if (password !== confirmacion) errs.confirmacion = 'Las contraseñas no coinciden.';
     if (rol === 'tienda' && !nombreTienda) errs.nombreTienda = 'El nombre de la tienda es obligatorio.';
     return errs;
@@ -59,7 +48,6 @@ export default function Registro() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setError('');
 
     const errs = validar();
     setFieldErrors(errs);
@@ -74,9 +62,10 @@ export default function Registro() {
         rol,
       });
       const rolObtenido = data?.rol ?? data?.user?.rol ?? rol;
+      mostrarExito('Cuenta creada', 'Bienvenido a Deckora. ¡A jugar!');
       navigate(rolADestino(rolObtenido), { replace: true });
     } catch (err) {
-      setError(traducirError(err?.message));
+      mostrarError('No se pudo crear la cuenta', traducirError(err));
     } finally {
       setLoading(false);
     }
@@ -87,8 +76,6 @@ export default function Registro() {
       <div className="auth-card card">
         <div className="auth-card__logo">DECKORA</div>
         <h2 className="auth-card__title">Crear cuenta</h2>
-
-        {error && <Alert variant="danger">{error}</Alert>}
 
         <form className="auth-form" onSubmit={handleSubmit} noValidate>
           <SelectorRol value={rol} onChange={setRol} disabled={loading} />
@@ -153,8 +140,8 @@ export default function Registro() {
         </form>
 
         <p className="auth-form__footer">
-          ¿Ya tenés cuenta?{' '}
-          <Link to="/login">Iniciá sesión</Link>
+          ¿Ya tienes cuenta?{' '}
+          <Link to="/login">Inicia sesión</Link>
         </p>
       </div>
     </div>

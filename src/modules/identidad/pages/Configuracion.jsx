@@ -5,6 +5,7 @@ import { Tabs } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import CuentaTab from '../components/CuentaTab';
 import ConfiguracionTiendaTab from '../components/ConfiguracionTiendaTab';
+import ConfiguracionOrganizadorTab from '../components/ConfiguracionOrganizadorTab';
 
 export default function Configuracion() {
   const { rol } = useAuth();
@@ -25,6 +26,11 @@ export default function Configuracion() {
         <Tabs.Tab eventKey="cuenta" label="Cuenta">
           <CuentaTab />
         </Tabs.Tab>
+        {rol === 'organizador' && (
+          <Tabs.Tab eventKey="organizador" label="Mi organización">
+            <ConfiguracionOrganizadorTab />
+          </Tabs.Tab>
+        )}
         {rol === 'tienda' && (
           <Tabs.Tab eventKey="tienda" label="Configuración de tienda">
             <ConfiguracionTiendaTab />

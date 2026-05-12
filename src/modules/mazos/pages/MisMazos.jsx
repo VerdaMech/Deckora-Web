@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layers, Plus, Calendar } from 'lucide-react';
 
@@ -57,22 +57,27 @@ export default function MisMazos() {
   const navigate = useNavigate();
   const [mazos, setMazos] = useState([]);
   const [cargando, setCargando] = useState(true);
+  const [coldStart, setColdStart] = useState(false);
   const [error, setError] = useState(null);
   const [modalAbierto, setModalAbierto] = useState(false);
+  const coldTimer = useRef(null);
 
   function cargar() {
     setCargando(true);
+    setColdStart(false);
     setError(null);
+    clearTimeout(coldTimer.current);
+    coldTimer.current = setTimeout(() => setColdStart(true), 3000);
     listarMisMazos()
       .then((data) => {
         const lista = Array.isArray(data) ? data : (data?.mazos ?? data?.data ?? []);
         setMazos(lista);
       })
       .catch((err) => setError(err.message ?? 'Error al cargar los mazos'))
-      .finally(() => setCargando(false));
+      .finally(() => { setCargando(false); setColdStart(false); clearTimeout(coldTimer.current); });
   }
 
-  useEffect(() => { cargar(); }, []);
+  useEffect(() => { cargar(); return () => clearTimeout(coldTimer.current); }, []);
 
   function handleMazoCreado() {
     setModalAbierto(false);
@@ -95,7 +100,7 @@ export default function MisMazos() {
 
       {cargando && (
         <div className="mis-mazos__loading">
-          <Spinner />
+          <Spinner mostrarColdStart={coldStart} />
         </div>
       )}
 
@@ -115,15 +120,15 @@ export default function MisMazos() {
       {!cargando && !error && mazos.length === 0 && (
         <EmptyState
           icon={Layers}
-          title="Aún no tenés mazos"
-          description="Creá tu primer mazo y empezá a armar tu estrategia."
+          title="Aún no tienes mazos"
+          description="Crea tu primer mazo Commander para empezar a armar tu estrategia."
           action={
             <button
               className="btn btn--primary btn--md"
               type="button"
               onClick={() => setModalAbierto(true)}
             >
-              Crear tu primer mazo
+              Crear mazo
             </button>
           }
         />

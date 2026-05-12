@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Layers, FolderClosed, Swords, CalendarDays } from 'lucide-react';
+import { Layers, Swords, CalendarDays } from 'lucide-react';
 
 import { useAuth } from '@/hooks/useAuth';
 import { EmptyState } from '@/components/ui';
@@ -8,20 +8,17 @@ import EstadisticasJugador from '@/components/domain/EstadisticasJugador';
 import BloqueResumen from '../components/BloqueResumen';
 import StatsRapidas from '../components/StatsRapidas';
 import { listarMazosRecientes } from '@/services/mazos.service';
-import { listarTorneosProximos } from '@/services/torneos.service';
-import { obtenerMiColeccion } from '@/services/colecciones.service';
+import { listarTorneosDelJugador } from '@/services/torneos.service';
 import './DashboardJugador.css';
 
 export default function DashboardJugador() {
   const { user, perfil } = useAuth();
-  const nombre = perfil?.username ?? perfil?.nombre ?? user?.email ?? 'Jugador';
+  const nombre = user?.nombre_usuario ?? user?.correo ?? 'Jugador';
 
   const [mazos, setMazos] = useState(null);
   const [torneos, setTorneos] = useState(null);
-  const [coleccion, setColeccion] = useState(null);
   const [loadingMazos, setLoadingMazos] = useState(true);
   const [loadingTorneos, setLoadingTorneos] = useState(true);
-  const [loadingColeccion, setLoadingColeccion] = useState(true);
 
   useEffect(() => {
     listarMazosRecientes(3)
@@ -29,27 +26,17 @@ export default function DashboardJugador() {
       .catch(() => setMazos([]))
       .finally(() => setLoadingMazos(false));
 
-    listarTorneosProximos(3)
+    listarTorneosDelJugador(3)
       .then(({ data }) => setTorneos(data ?? []))
       .catch(() => setTorneos([]))
       .finally(() => setLoadingTorneos(false));
-
-    obtenerMiColeccion()
-      .then((res) => {
-        const raw = res?.data ?? res;
-        setColeccion(raw ?? null);
-      })
-      .catch(() => setColeccion(null))
-      .finally(() => setLoadingColeccion(false));
   }, []);
 
   const totalMazos = mazos?.length ?? 0;
-  const totalCartas = coleccion?.totalCartas ?? coleccion?.total_cartas ?? 0;
   const torneosJugados = perfil?.torneos_participados ?? 0;
 
   const statsItems = [
     { label: 'Mazos', valor: totalMazos, icono: Layers },
-    { label: 'Cartas', valor: totalCartas, icono: FolderClosed },
     { label: 'Torneos jugados', valor: torneosJugados, icono: Swords },
   ];
 
@@ -112,7 +99,7 @@ export default function DashboardJugador() {
               <EmptyState
                 icon={CalendarDays}
                 title="Sin torneos próximos"
-                description="Cuando haya torneos disponibles aparecerán aquí."
+                description="Aún no estás inscrito en ningún torneo próximo."
               />
             ) : (
               <ul className="dashboard-jugador__torneo-lista">
@@ -132,38 +119,6 @@ export default function DashboardJugador() {
             )}
           </BloqueResumen>
 
-          <BloqueResumen
-            titulo="Tu colección"
-            icono={FolderClosed}
-            cta={{ texto: 'Abrir', to: '/colecciones' }}
-            cargando={loadingColeccion}
-            vacio={!loadingColeccion && !coleccion}
-          >
-            {!coleccion ? (
-              <EmptyState
-                icon={FolderClosed}
-                title="Colección vacía"
-                description="Agrega cartas para verlas aquí."
-              />
-            ) : (
-              <div className="dashboard-jugador__coleccion">
-                <p className="dashboard-jugador__coleccion-total">
-                  <span className="dashboard-jugador__coleccion-numero">
-                    {coleccion.totalCartas ?? coleccion.total_cartas ?? 0}
-                  </span>
-                  <span className="dashboard-jugador__coleccion-label">cartas en tu colección</span>
-                </p>
-                {(coleccion.ultimasAgregadas ?? coleccion.ultimas_agregadas)?.length > 0 && (
-                  <p className="dashboard-jugador__coleccion-recientes">
-                    Últimas agregadas: {(coleccion.ultimasAgregadas ?? coleccion.ultimas_agregadas)
-                      .slice(0, 3)
-                      .map((c) => c.nombre ?? c.name)
-                      .join(', ')}
-                  </p>
-                )}
-              </div>
-            )}
-          </BloqueResumen>
         </div>
       </div>
     </div>

@@ -84,6 +84,7 @@ export default function Cartelera() {
           className="cartelera-filtros__busqueda"
           type="text"
           placeholder="Buscar por nombre..."
+          aria-label="Buscar torneos por nombre"
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
         />
@@ -100,6 +101,7 @@ export default function Cartelera() {
         <input
           className="cartelera-filtros__fecha"
           type="date"
+          aria-label="Filtrar por fecha"
           value={filtroFecha}
           onChange={(e) => setFiltroFecha(e.target.value)}
         />
@@ -128,8 +130,8 @@ export default function Cartelera() {
           <h3 className="cartelera-empty__title">No hay torneos disponibles</h3>
           <p className="cartelera-empty__desc">
             {hayFiltros
-              ? 'Ningún torneo coincide con los filtros aplicados.'
-              : 'Pronto habrá nuevos torneos. Revisá más tarde.'}
+              ? 'No hay torneos que coincidan con tus filtros.'
+              : 'Pronto habrá nuevos torneos. Vuelve a revisar más tarde.'}
           </p>
           {hayFiltros && (
             <Button variant="ghost" onClick={limpiarFiltros}>

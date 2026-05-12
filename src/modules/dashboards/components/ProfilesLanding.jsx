@@ -7,8 +7,8 @@ const ROLES = [
     nombre: 'Jugador',
     clase: 'profiles-landing__card--jugador',
     bullets: [
-      'Crea y comparte mazos de Commander',
-      'Lleva registro de tu colección',
+      'Crea y comparte mazos de Magic',
+      'Explora la biblioteca de cartas de Magic',
       'Inscríbete en torneos locales',
       'Consulta tus estadísticas de partidas',
     ],

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Modal, Input, Select, Textarea, Alert, Spinner } from '@/components/ui';
+import { useToast } from '@/context/ToastContext';
+import { traducirError } from '@/utils/errors';
 import { FORMATOS, FORMATO_LABELS } from '@/utils/constants';
 import { crearMazo } from '@/services/mazos.service';
 
@@ -14,6 +16,7 @@ const FORMATO_OPTIONS = Object.entries(FORMATOS).map(([, value]) => ({
 
 export function CrearMazoModal({ show, onHide, onCreado }) {
   const navigate = useNavigate();
+  const { mostrarExito, mostrarError } = useToast();
   const [form, setForm] = useState({
     nombre: '',
     formato: FORMATOS.COMMANDER,
@@ -56,10 +59,12 @@ export function CrearMazoModal({ show, onHide, onCreado }) {
         descripcion: form.descripcion.trim() || undefined,
         publico: form.publico,
       });
+      mostrarExito('Mazo creado', `"${form.nombre.trim()}" está listo para armar.`);
       onCreado?.();
       navigate(`/mazos/${mazo.id ?? mazo.mazo?.id}`);
     } catch (err) {
-      setErrorGlobal(err.message ?? 'Error al crear el mazo');
+      mostrarError('No se pudo crear el mazo', traducirError(err));
+      setErrorGlobal(traducirError(err));
     } finally {
       setGuardando(false);
     }

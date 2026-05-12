@@ -4,3 +4,11 @@
   align-items: center;
   min-height: 60vh;
 }
+
+.modulo-cargando {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  padding: var(--space-8);
+}

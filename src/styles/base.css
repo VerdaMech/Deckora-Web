@@ -27,6 +27,17 @@ body::before {
   background-size: 256px 256px;
 }
 
+/* Foco visible para navegación por teclado (WCAG 2.4.7) */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
 a {
   color: var(--gold);
   text-decoration: none;

@@ -17,7 +17,7 @@ export default function PerfilOrganizador({ perfil }) {
   const [torneos, setTorneos] = useState([]);
 
   useEffect(() => {
-    obtenerTorneosDeUsuario(perfil.id, 'organizador').then(setTorneos).catch(() => {});
+    obtenerTorneosDeUsuario(perfil.id).then(setTorneos).catch(() => setTorneos([]));
   }, [perfil.id]);
 
   return (
@@ -35,7 +35,7 @@ export default function PerfilOrganizador({ perfil }) {
       <div className="profile-body">
         {esDueno && (
           <div className="profile-edit-banner">
-            <span>Administrá tu perfil de organizador</span>
+            <span>Administra tu perfil de organizador</span>
             <a href="/configuracion" className="btn btn--secondary btn--sm">Editar perfil</a>
           </div>
         )}

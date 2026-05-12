@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Dropdown, Offcanvas } from 'react-bootstrap';
 import { Menu, LogOut, User, Settings } from 'lucide-react';
 
@@ -14,29 +14,34 @@ function getInitials(user) {
 export default function Navbar() {
   const { user, rol, logout } = useAuth();
   const [showOffcanvas, setShowOffcanvas] = useState(false);
+  const location = useLocation();
+  const isHome = location.pathname === '/';
 
   const username = user?.nombre_usuario ?? user?.email?.split('@')[0] ?? '';
 
-  const publicLinks = (
-    <>
-      <li><NavLink to="/torneos" className="navbar-link">Torneos</NavLink></li>
-    </>
+  const commonLinks = (
+    <li><NavLink to="/biblioteca" className="navbar-link">Biblioteca</NavLink></li>
   );
 
   const authLinks = (
     <>
+      {commonLinks}
       <li><NavLink to="/torneos" className="navbar-link">Torneos</NavLink></li>
       <li><NavLink to={`/${rol}`} className="navbar-link">Mi panel</NavLink></li>
     </>
   );
 
+  const publicLinks = commonLinks;
+
   return (
     <nav className="navbar-deckora">
       <Link to="/" className="navbar-logo">DECKORA</Link>
 
-      <ul className="navbar-links">
-        {user ? authLinks : publicLinks}
-      </ul>
+      {!isHome && (
+        <ul className="navbar-links">
+          {user ? authLinks : publicLinks}
+        </ul>
+      )}
 
       <div className="navbar-actions">
         {user ? (
@@ -59,8 +64,8 @@ export default function Navbar() {
           </Dropdown>
         ) : (
           <>
-            <Button variant="ghost" size="sm" as={Link} to="/login">Iniciar sesión</Button>
-            <Button variant="primary" size="sm" as={Link} to="/registro">Crear cuenta</Button>
+            <Link to="/login"><Button variant="ghost" size="sm">Iniciar sesión</Button></Link>
+            <Link to="/registro"><Button variant="primary" size="sm">Crear cuenta</Button></Link>
           </>
         )}
 
@@ -78,13 +83,15 @@ export default function Navbar() {
           <Offcanvas.Title className="navbar-logo">DECKORA</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          <ul className="offcanvas-nav">
-            {user ? authLinks : publicLinks}
-          </ul>
+          {!isHome && (
+            <ul className="offcanvas-nav">
+              {user ? authLinks : publicLinks}
+            </ul>
+          )}
           {!user && (
             <div className="offcanvas-nav-actions">
-              <Button variant="ghost" as={Link} to="/login" onClick={() => setShowOffcanvas(false)}>Iniciar sesión</Button>
-              <Button variant="primary" as={Link} to="/registro" onClick={() => setShowOffcanvas(false)}>Crear cuenta</Button>
+              <Link to="/login" onClick={() => setShowOffcanvas(false)}><Button variant="ghost">Iniciar sesión</Button></Link>
+              <Link to="/registro" onClick={() => setShowOffcanvas(false)}><Button variant="primary">Crear cuenta</Button></Link>
             </div>
           )}
         </Offcanvas.Body>

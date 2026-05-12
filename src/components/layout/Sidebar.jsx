@@ -1,32 +1,28 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
-  LayoutDashboard, FolderClosed, Layers, User, Settings,
-  Plus, ChevronLeft, ChevronRight,
+  LayoutDashboard, Layers, Settings,
+  Plus, ChevronLeft, ChevronRight, CalendarDays,
 } from 'lucide-react';
 
 import { useAuth } from '@/hooks/useAuth';
 
 const ITEMS = {
-  jugador: (username) => [
+  jugador: () => [
     { to: '/jugador', icon: LayoutDashboard, label: 'Dashboard' },
-    { to: '/colecciones', icon: FolderClosed, label: 'Mi colección' },
     { to: '/mazos', icon: Layers, label: 'Mis mazos' },
-    { to: `/u/${username}`, icon: User, label: 'Mi perfil' },
     { to: '/configuracion', icon: Settings, label: 'Configuración' },
   ],
-  organizador: (username) => [
+  organizador: () => [
     { to: '/organizador', icon: LayoutDashboard, label: 'Dashboard' },
-    { to: `/u/${username}`, icon: User, label: 'Mis torneos' },
+    { to: '/mis-torneos', icon: CalendarDays, label: 'Mis torneos' },
     { to: '/organizador/torneos/nuevo', icon: Plus, label: 'Crear torneo' },
-    { to: `/u/${username}`, icon: User, label: 'Mi perfil' },
     { to: '/configuracion', icon: Settings, label: 'Configuración' },
   ],
-  tienda: (username) => [
+  tienda: () => [
     { to: '/tienda', icon: LayoutDashboard, label: 'Dashboard' },
-    { to: `/u/${username}`, icon: User, label: 'Mis torneos' },
+    { to: '/mis-torneos', icon: CalendarDays, label: 'Mis torneos' },
     { to: '/organizador/torneos/nuevo', icon: Plus, label: 'Crear torneo' },
-    { to: `/u/${username}`, icon: User, label: 'Mi perfil' },
     { to: '/configuracion', icon: Settings, label: 'Configuración' },
   ],
 };
@@ -35,8 +31,7 @@ export default function Sidebar() {
   const { user, rol } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
-  const username = user?.nombre_usuario ?? user?.email?.split('@')[0] ?? '';
-  const items = rol ? (ITEMS[rol]?.(username) ?? []) : [];
+  const items = rol ? (ITEMS[rol]?.() ?? []) : [];
 
   return (
     <aside className={`sidebar-deckora${collapsed ? ' sidebar-deckora--collapsed' : ''}`}>

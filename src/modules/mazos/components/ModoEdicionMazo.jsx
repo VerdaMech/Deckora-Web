@@ -199,7 +199,7 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
         onCantidadChange={handleCantidadChange}
         onEliminar={handleEliminar}
         onMarcarComandante={handleMarcarComandante}
-        onAplicarSugerencia={(s) => console.info('[AsistenteIA] sugerencia aplicada (mock):', s)}
+        onAplicarSugerencia={() => {}}
       />
 
       <Modal

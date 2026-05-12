@@ -45,6 +45,11 @@
   gap: var(--space-4);
 }
 
+.config-form .btn {
+  width: 100%;
+  justify-content: center;
+}
+
 .config-tienda__map-edit {
   height: 320px;
   border-radius: var(--radius-md);

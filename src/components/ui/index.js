@@ -11,3 +11,6 @@ export { default as Tabs } from './Tabs';
 export { default as Alert } from './Alert';
 export { default as Tooltip } from './Tooltip';
 export { default as Skeleton } from './Skeleton';
+export { default as Toast } from './Toast';
+export { default as ConfirmDialog } from './ConfirmDialog';
+export { default as ErrorBoundary } from './ErrorBoundary';

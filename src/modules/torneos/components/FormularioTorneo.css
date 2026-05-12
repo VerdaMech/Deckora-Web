@@ -69,11 +69,52 @@
   gap: var(--space-4);
 }
 
+/* Geocoding sugerencias */
+.formulario-torneo__campo-ubicacion {
+  position: relative;
+}
+
+.formulario-torneo__sugerencias {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: var(--bg-panel-2);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  margin: 0;
+  padding: var(--space-1) 0;
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.formulario-torneo__sugerencia {
+  padding: var(--space-2) var(--space-3);
+  font-family: 'Crimson Pro', serif;
+  font-size: 0.9rem;
+  color: var(--text-default);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.formulario-torneo__sugerencia:hover {
+  background: var(--bg-elevated);
+  color: var(--gold-light);
+}
+
 /* Toggle público */
 .formulario-torneo__toggle-row {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+}
+
+.formulario-torneo__toggle-label {
+  font-family: 'Crimson Pro', serif;
+  font-size: 1rem;
+  color: var(--text-default);
 }
 
 .formulario-torneo__toggle {

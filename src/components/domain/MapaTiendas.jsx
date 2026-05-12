@@ -1,53 +1,19 @@
-import { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { useEffect, useRef, useCallback } from 'react';
+import mapboxgl from 'mapbox-gl';
 import { Link } from 'react-router-dom';
-import { Crosshair, Plus, Minus, MapPin } from 'lucide-react';
+import { createRoot } from 'react-dom/client';
+import { Crosshair, MapPin } from 'lucide-react';
 
-import { crearStorePinIcon } from './StorePin';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { EmptyState } from '@/components/ui';
-
-// leaflet/dist/leaflet.css se importa una sola vez en main.jsx para evitar duplicados
+import 'mapbox-gl/dist/mapbox-gl.css';
 import '@/styles/components/StorePin.css';
 import '@/styles/components/MapaTiendas.css';
 
-const TILES_URL = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
-const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
-const CENTER_DEFAULT = [-33.4489, -70.6693];
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
+mapboxgl.setTelemetryEnabled?.(false);
 
-function ZoomControles() {
-  const map = useMap();
-  return (
-    <div className="mapa-tiendas__zoom-controles">
-      <button className="mapa-tiendas__zoom-btn" onClick={() => map.zoomIn()} aria-label="Acercar">
-        <Plus size={16} />
-      </button>
-      <button className="mapa-tiendas__zoom-btn" onClick={() => map.zoomOut()} aria-label="Alejar">
-        <Minus size={16} />
-      </button>
-    </div>
-  );
-}
-
-function BtnGeolocalizacion() {
-  const map = useMap();
-  const { coords, loading, requestLocation } = useGeolocation();
-
-  useEffect(() => {
-    if (coords) map.flyTo([coords.lat, coords.lng], 12);
-  }, [coords, map]);
-
-  return (
-    <button
-      className="mapa-tiendas__geo-btn"
-      onClick={requestLocation}
-      disabled={loading}
-      aria-label="Mi ubicación"
-    >
-      <Crosshair size={18} />
-    </button>
-  );
-}
+const CENTER_DEFAULT = [-70.6693, -33.4489];
 
 export default function MapaTiendas({
   tiendas = [],
@@ -58,47 +24,96 @@ export default function MapaTiendas({
   pinActivoId = null,
   mostrarBotonGeo = true,
 }) {
+  const containerRef = useRef(null);
+  const mapRef = useRef(null);
+  const markersRef = useRef([]);
+  const popupsRef = useRef([]);
+  const { coords, loading: geoLoading, requestLocation } = useGeolocation();
+
+  useEffect(() => {
+    if (mapRef.current || !containerRef.current) return;
+
+    mapRef.current = new mapboxgl.Map({
+      container: containerRef.current,
+      style: 'mapbox://styles/mapbox/dark-v11',
+      center: Array.isArray(center) ? center : [center.longitude, center.latitude],
+      zoom,
+      minZoom: 4,
+      maxZoom: 18,
+    });
+
+    mapRef.current.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
+
+    return () => { mapRef.current?.remove(); mapRef.current = null; };
+  }, []);
+
+  useEffect(() => {
+    if (!mapRef.current) return;
+    markersRef.current.forEach((m) => m.remove());
+    popupsRef.current.forEach((p) => p.remove());
+    markersRef.current = [];
+    popupsRef.current = [];
+
+    tiendas.forEach((tienda) => {
+      const lat = tienda.latitud ?? tienda.lat;
+      const lng = tienda.longitud ?? tienda.lng;
+      if (lat == null || lng == null) return;
+
+      const el = document.createElement('div');
+      el.className = `store-pin${tienda.id === pinActivoId ? ' store-pin--active' : ''}`;
+      el.style.cursor = 'pointer';
+
+      const popup = new mapboxgl.Popup({ offset: 25, className: 'mapa-tiendas__popup-wrapper' })
+        .setHTML(`<div id="popup-${tienda.id}"></div>`);
+
+      popup.on('open', () => {
+        const container = document.getElementById(`popup-${tienda.id}`);
+        if (!container) return;
+        const root = createRoot(container);
+        root.render(
+          <>
+            <p className="mapa-tiendas__popup-title">{tienda.nombre ?? tienda.nombre_tienda}</p>
+            {tienda.direccion && <p className="mapa-tiendas__popup-direccion">{tienda.direccion}</p>}
+            {tienda.nombre_usuario && (
+              <a href={`/u/${tienda.nombre_usuario}`} className="mapa-tiendas__popup-link">
+                Ver tienda
+              </a>
+            )}
+          </>
+        );
+      });
+
+      const marker = new mapboxgl.Marker({ element: el })
+        .setLngLat([lng, lat])
+        .setPopup(popup)
+        .addTo(mapRef.current);
+
+      el.addEventListener('click', () => onPinClick?.(tienda));
+      markersRef.current.push(marker);
+      popupsRef.current.push(popup);
+    });
+  }, [tiendas, pinActivoId, onPinClick]);
+
+  useEffect(() => {
+    if (coords && mapRef.current) {
+      mapRef.current.flyTo({ center: [coords.lng, coords.lat], zoom: 12 });
+    }
+  }, [coords]);
+
   return (
     <div className="mapa-tiendas" style={{ '--mapa-alto': alto }}>
-      <MapContainer
-        center={center}
-        zoom={zoom}
-        className="mapa-tiendas__map"
-        zoomControl={false}
-        minZoom={4}
-        maxZoom={18}
-      >
-        <TileLayer
-          url={TILES_URL}
-          attribution={ATTRIBUTION}
-          subdomains="abcd"
-          maxZoom={18}
-        />
+      <div ref={containerRef} className="mapa-tiendas__map" style={{ height: alto }} />
 
-        {tiendas.map((tienda) => (
-          <Marker
-            key={tienda.id}
-            position={[tienda.lat, tienda.lng]}
-            icon={crearStorePinIcon({ activo: tienda.id === pinActivoId })}
-            eventHandlers={{ click: () => onPinClick?.(tienda) }}
-          >
-            <Popup className="mapa-tiendas__popup">
-              <p className="mapa-tiendas__popup-title">{tienda.nombre}</p>
-              {tienda.direccion && (
-                <p className="mapa-tiendas__popup-direccion">{tienda.direccion}</p>
-              )}
-              {tienda.username && (
-                <Link to={`/u/${tienda.username}`} className="mapa-tiendas__popup-link">
-                  Ver tienda
-                </Link>
-              )}
-            </Popup>
-          </Marker>
-        ))}
-
-        <ZoomControles />
-        {mostrarBotonGeo && <BtnGeolocalizacion />}
-      </MapContainer>
+      {mostrarBotonGeo && (
+        <button
+          className="mapa-tiendas__geo-btn"
+          onClick={requestLocation}
+          disabled={geoLoading}
+          aria-label="Mi ubicación"
+        >
+          <Crosshair size={18} />
+        </button>
+      )}
 
       {tiendas.length === 0 && (
         <div className="mapa-tiendas__empty">

@@ -8,7 +8,7 @@ export default function ListaInscritos({ inscripciones = [], editable = false, o
   if (inscripciones.length === 0) {
     return (
       <div className="lista-inscritos__empty">
-        Aún no hay inscritos.
+        <p className="lista-inscritos__empty-texto">Aún no hay jugadores inscritos. Sé el primero.</p>
       </div>
     );
   }

@@ -8,7 +8,7 @@
 
 .auth-card {
   width: 100%;
-  max-width: 420px;
+  max-width: 520px;
 }
 
 .auth-card__logo {
@@ -47,7 +47,7 @@
 }
 .auth-form__forgot:hover { color: var(--gold-light); }
 
-.auth-form__submit { width: 100%; margin-top: var(--space-3); }
+.auth-form__submit { width: 100%; margin-top: var(--space-3); justify-content: center; }
 
 .auth-form__footer {
   text-align: center;

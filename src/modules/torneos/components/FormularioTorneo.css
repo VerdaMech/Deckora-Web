@@ -9,99 +9,11 @@
   margin-bottom: var(--space-2);
 }
 
-/* Coordenadas + mapa */
-.formulario-torneo__campo-mapa {}
-
-.formulario-torneo__coords-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  flex-wrap: wrap;
-  margin-bottom: var(--space-3);
-}
-
-.formulario-torneo__coord {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.formulario-torneo__coord-label {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  white-space: nowrap;
-}
-
-.formulario-torneo__coord-input {
-  width: 130px;
-}
-
-.formulario-torneo__mapa-wrapper {
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.formulario-torneo__mapa {
-  height: 260px;
-  width: 100%;
-}
-
-.formulario-torneo__mapa-ayuda {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-top: var(--space-2);
-}
-
-.formulario-torneo__pin {
-  width: 20px;
-  height: 20px;
-  background: var(--gold);
-  border: 2px solid var(--bg-app);
-  border-radius: 50%;
-  box-shadow: var(--glow-gold);
-}
-
 /* Dos columnas para cupo/precio */
 .formulario-torneo__fila-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
-}
-
-/* Geocoding sugerencias */
-.formulario-torneo__campo-ubicacion {
-  position: relative;
-}
-
-.formulario-torneo__sugerencias {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  background: var(--bg-panel-2);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
-  margin: 0;
-  padding: var(--space-1) 0;
-  list-style: none;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.formulario-torneo__sugerencia {
-  padding: var(--space-2) var(--space-3);
-  font-family: 'Crimson Pro', serif;
-  font-size: 0.9rem;
-  color: var(--text-default);
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.formulario-torneo__sugerencia:hover {
-  background: var(--bg-elevated);
-  color: var(--gold-light);
 }
 
 /* Toggle público */
@@ -164,10 +76,5 @@
 @media (max-width: 480px) {
   .formulario-torneo__fila-2 {
     grid-template-columns: 1fr;
-  }
-
-  .formulario-torneo__coords-row {
-    flex-direction: column;
-    align-items: flex-start;
   }
 }

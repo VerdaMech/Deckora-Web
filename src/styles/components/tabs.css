@@ -8,6 +8,7 @@
   gap: 0;
   border-bottom: 1px solid var(--border-subtle);
   overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .tabs-nav__btn {

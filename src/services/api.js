@@ -12,8 +12,11 @@ async function limpiarSesionExpirada() {
 
 async function getAccessToken() {
   try {
-    const { data } = await supabase.auth.getSession();
-    return data?.session?.access_token ?? null;
+    // Timeout como red de seguridad: getSession() puede bloquearse si Supabase
+    // está ejecutando un auto-refresh o manteniendo un lock interno durante signIn.
+    const timeout = new Promise((resolve) => setTimeout(() => resolve(null), 10000));
+    const tokenP = supabase.auth.getSession().then(({ data }) => data?.session?.access_token ?? null);
+    return await Promise.race([tokenP, timeout]);
   } catch {
     return null;
   }
@@ -33,14 +36,15 @@ async function apiFetch(path, options = {}) {
   if (res.status === 204) return null;
 
   if (res.status === 401) {
-    const { error: refreshError } = await supabase.auth.refreshSession();
+    const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
     if (refreshError) {
       await limpiarSesionExpirada();
       throw new Error('Sesión expirada');
     }
 
-    const { data: refreshedData } = await supabase.auth.getSession();
-    const newToken = refreshedData?.session?.access_token ?? null;
+    // Usar el token devuelto por refreshSession() directamente para evitar
+    // una segunda llamada a getSession() que podría bloquearse.
+    const newToken = refreshData?.session?.access_token ?? null;
     const retryHeaders = { ...options.headers };
     if (newToken) retryHeaders['Authorization'] = `Bearer ${newToken}`;
     if (options.body && !retryHeaders['Content-Type']) {

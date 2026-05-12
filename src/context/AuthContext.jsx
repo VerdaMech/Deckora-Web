@@ -17,14 +17,10 @@ export function AuthProvider({ children }) {
       setUser(data.user ?? data);
       setRol(data.rol ?? data.user?.rol ?? null);
       setPerfil(data.perfil ?? null);
-    } catch (err) {
-      const msg = err?.message ?? '';
-      const esErrorAuth = msg.includes('401') || msg.includes('403') || msg.toLowerCase().includes('sesión expirada');
-      if (esErrorAuth) {
-        setUser(null);
-        setRol(null);
-        setPerfil(null);
-      }
+    } catch {
+      // No limpiar el estado aquí: errores de red temporales no deben cerrar la sesión.
+      // Cuando la sesión expira de verdad, api.js llama signOut() → onAuthStateChange
+      // dispara el else branch que limpia el estado correctamente.
     }
   }
 

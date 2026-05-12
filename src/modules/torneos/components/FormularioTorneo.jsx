@@ -48,6 +48,13 @@ export default function FormularioTorneo({
   useEffect(() => { latRef.current = lat; }, [lat]);
   useEffect(() => { lngRef.current = lng; }, [lng]);
 
+  // Reposiciona el mapa y marker cuando cambian las coordenadas desde afuera (ej. carga inicial en edición)
+  useEffect(() => {
+    if (!mapRef.current || !markerRef.current) return;
+    markerRef.current.setLngLat([lng, lat]);
+    mapRef.current.flyTo({ center: [lng, lat], zoom: 13 });
+  }, [lat, lng]);
+
   useEffect(() => {
     if (mapRef.current || !containerRef.current) return;
 
@@ -65,10 +72,22 @@ export default function FormularioTorneo({
       .setLngLat([lngRef.current, latRef.current])
       .addTo(mapRef.current);
 
-    markerRef.current.on('dragend', () => {
+    markerRef.current.on('dragend', async () => {
       const pos = markerRef.current.getLngLat();
-      setLat(parseFloat(pos.lat.toFixed(6)));
-      setLng(parseFloat(pos.lng.toFixed(6)));
+      const newLat = parseFloat(pos.lat.toFixed(6));
+      const newLng = parseFloat(pos.lng.toFixed(6));
+      setLat(newLat);
+      setLng(newLng);
+      try {
+        const res = await fetch(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${newLng},${newLat}.json?language=es&limit=1&access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`
+        );
+        const data = await res.json();
+        const lugar = data.features?.[0]?.place_name;
+        if (lugar) setUbicacion(lugar);
+      } catch {
+        // el usuario puede escribir la dirección manualmente
+      }
     });
 
     return () => { mapRef.current?.remove(); mapRef.current = null; };

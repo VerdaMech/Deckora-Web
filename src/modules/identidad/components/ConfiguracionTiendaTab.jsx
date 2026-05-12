@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-import { Input, Button } from '@/components/ui';
+import { Input, Button, Alert } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/context/ToastContext';
 import { traducirError } from '@/utils/errors';
@@ -24,6 +24,7 @@ export default function ConfiguracionTiendaTab() {
   const [lng, setLng] = useState(perfil?.longitud ?? DEFAULT_LNG);
   const [loading, setLoading] = useState(false);
   const [nombreError, setNombreError] = useState('');
+  const [feedbackGuardado, setFeedbackGuardado] = useState(null);
 
   const containerRef = useRef(null);
   const mapRef = useRef(null);
@@ -65,6 +66,7 @@ export default function ConfiguracionTiendaTab() {
   async function handleGuardar(e) {
     e.preventDefault();
     setNombreError('');
+    setFeedbackGuardado(null);
     if (!nombreTienda.trim()) {
       setNombreError('El nombre de la tienda es obligatorio.');
       return;
@@ -76,12 +78,13 @@ export default function ConfiguracionTiendaTab() {
         direccion,
         numero_telefono: telefono,
         horario_apertura: horario,
-        latitud: lat,
-        longitud: lng,
       });
+      setFeedbackGuardado({ tipo: 'success', mensaje: 'Los datos de tu tienda se guardaron correctamente.' });
       mostrarExito('Tienda actualizada', 'Los datos de tu tienda se guardaron correctamente.');
     } catch (err) {
-      mostrarError('No se pudo guardar', traducirError(err));
+      const mensaje = traducirError(err);
+      setFeedbackGuardado({ tipo: 'danger', mensaje });
+      mostrarError('No se pudo guardar', mensaje);
     } finally {
       setLoading(false);
     }
@@ -125,6 +128,9 @@ export default function ConfiguracionTiendaTab() {
           </div>
         </div>
 
+        {feedbackGuardado && (
+          <Alert variant={feedbackGuardado.tipo}>{feedbackGuardado.mensaje}</Alert>
+        )}
         <Button type="submit" variant="primary" loading={loading}>
           Guardar
         </Button>

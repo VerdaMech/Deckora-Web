@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '@/hooks/useAuth';
 import { Button, Input, Alert } from '@/components/ui';
@@ -22,7 +22,6 @@ function getMsgOrTrue(fn, valor) {
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
   const { mostrarExito, mostrarError } = useToast();
 
   const [email, setEmail] = useState('');
@@ -31,8 +30,6 @@ export default function Login() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [loginError, setLoginError] = useState('');
-
-  const from = location.state?.from;
 
   function handleEmailBlur() {
     setEmailError(getMsgOrTrue(validateEmail, email));
@@ -55,7 +52,7 @@ export default function Login() {
     try {
       const data = await login(email, password);
       const rolObtenido = data?.rol ?? data?.user?.rol;
-      const destino = from ?? rolADestino(rolObtenido);
+      const destino = rolADestino(rolObtenido);
       mostrarExito('Bienvenido de vuelta', 'Iniciaste sesión correctamente.');
       navigate(destino, { replace: true });
     } catch (err) {

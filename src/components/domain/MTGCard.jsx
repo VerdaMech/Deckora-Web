@@ -7,11 +7,9 @@ import './MTGCard.css';
 
 function getImageUrls(carta) {
   if (!carta) return { small: null, normal: null };
-  const uris = carta.image_uris ?? {};
-  return {
-    small: uris.small ?? uris.normal ?? carta.imageSmall ?? carta.imageNormal ?? null,
-    normal: uris.normal ?? uris.small ?? carta.imageNormal ?? carta.imageSmall ?? null,
-  };
+  const normal = carta.imagen_url ?? carta.image_uris?.normal ?? carta.imageNormal ?? null;
+  const small = carta.image_uris?.small ?? normal;
+  return { small, normal };
 }
 
 function CardImage({ src, srcSet, sizes, alt, onError, onLoad, className, prioridad }) {
@@ -35,8 +33,8 @@ export function MTGCard({ carta, variant = 'thumbnail', onClick, esComandante, p
   const [imgCargada, setImgCargada] = useState(false);
   const { small, normal } = getImageUrls(carta);
 
-  const altText = carta?.name ?? carta?.nombre ?? 'Carta MTG';
-  const manaCost = carta?.mana_cost ?? carta?.manaCost ?? '';
+  const altText = carta?.nombre ?? carta?.name ?? 'Carta MTG';
+  const manaCost = carta?.costo_mana ?? carta?.mana_cost ?? carta?.manaCost ?? '';
   const hasClick = typeof onClick === 'function';
 
   const handleKeyDown = hasClick ? (e) => {
@@ -148,8 +146,8 @@ export function MTGCard({ carta, variant = 'thumbnail', onClick, esComandante, p
           <span className="mtg-card__name">{altText}</span>
           {manaCost && <ManaCost cost={manaCost} />}
         </div>
-        {carta?.type_line && (
-          <span className="mtg-card__type">{carta.type_line}</span>
+        {(carta?.tipo ?? carta?.type_line) && (
+          <span className="mtg-card__type">{carta.tipo ?? carta.type_line}</span>
         )}
         {esComandante && (
           <div className="mtg-card__commander-badge">

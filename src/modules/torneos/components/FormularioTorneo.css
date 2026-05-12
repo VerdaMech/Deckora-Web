@@ -73,6 +73,71 @@
   padding-top: var(--space-2);
 }
 
+.formulario-torneo__ubicacion-wrapper {
+  position: relative;
+}
+
+.formulario-torneo__sugerencias {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: var(--bg-panel-2);
+  border: 1px solid var(--border-default);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.formulario-torneo__sugerencia-item {
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 0.9rem;
+  color: var(--text-default);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.formulario-torneo__sugerencia-item:last-child {
+  border-bottom: none;
+}
+
+.formulario-torneo__sugerencia-item:hover {
+  background: var(--bg-panel);
+  color: var(--text-primary);
+}
+
+.formulario-torneo__usar-ubicacion {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+  background: transparent;
+  border: none;
+  color: var(--gold);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.formulario-torneo__usar-ubicacion:hover {
+  color: var(--gold-light);
+}
+
+.formulario-torneo__mapa {
+  height: 280px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
 @media (max-width: 480px) {
   .formulario-torneo__fila-2 {
     grid-template-columns: 1fr;

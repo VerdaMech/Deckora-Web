@@ -1,17 +1,10 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import { useState } from 'react';
 
 import { Button, Input, Select, Textarea, Alert } from '@/components/ui';
 import { FORMATO_LABELS } from '@/utils/constants';
 import './FormularioTorneo.css';
 
-mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
-mapboxgl.setTelemetryEnabled?.(false);
-
 const FORMATO_OPCIONES = Object.entries(FORMATO_LABELS).map(([value, label]) => ({ value, label }));
-const DEFAULT_LAT = -33.4489;
-const DEFAULT_LNG = -70.6693;
 
 export default function FormularioTorneo({
   torneoInicial,
@@ -28,120 +21,11 @@ export default function FormularioTorneo({
       : ''
   );
   const [ubicacion, setUbicacion] = useState(torneoInicial?.ubicacion ?? '');
-  const [lat, setLat] = useState(torneoInicial?.latitud ?? DEFAULT_LAT);
-  const [lng, setLng] = useState(torneoInicial?.longitud ?? DEFAULT_LNG);
   const [cupoMax, setCupoMax] = useState(torneoInicial?.cupo_maximo ?? '');
   const [precio, setPrecio] = useState(torneoInicial?.precio ?? 0);
   const [publico, setPublico] = useState(torneoInicial?.publico ?? true);
   const [errores, setErrores] = useState({});
   const [errorSubmit, setErrorSubmit] = useState(null);
-  const [sugerencias, setSugerencias] = useState([]);
-  const [buscandoDireccion, setBuscandoDireccion] = useState(false);
-
-  const containerRef = useRef(null);
-  const mapRef = useRef(null);
-  const markerRef = useRef(null);
-  const geocodeTimer = useRef(null);
-  const latRef = useRef(lat);
-  const lngRef = useRef(lng);
-
-  useEffect(() => { latRef.current = lat; }, [lat]);
-  useEffect(() => { lngRef.current = lng; }, [lng]);
-
-  // Reposiciona el mapa y marker cuando cambian las coordenadas desde afuera (ej. carga inicial en edición)
-  useEffect(() => {
-    if (!mapRef.current || !markerRef.current) return;
-    markerRef.current.setLngLat([lng, lat]);
-    mapRef.current.flyTo({ center: [lng, lat], zoom: 13 });
-  }, [lat, lng]);
-
-  useEffect(() => {
-    if (mapRef.current || !containerRef.current) return;
-
-    mapRef.current = new mapboxgl.Map({
-      container: containerRef.current,
-      style: 'mapbox://styles/mapbox/dark-v11',
-      center: [lngRef.current, latRef.current],
-      zoom: 13,
-      scrollZoom: false,
-    });
-
-    const el = document.createElement('div');
-    el.className = 'formulario-torneo__pin';
-    markerRef.current = new mapboxgl.Marker({ element: el, draggable: true })
-      .setLngLat([lngRef.current, latRef.current])
-      .addTo(mapRef.current);
-
-    markerRef.current.on('dragend', async () => {
-      const pos = markerRef.current.getLngLat();
-      const newLat = parseFloat(pos.lat.toFixed(6));
-      const newLng = parseFloat(pos.lng.toFixed(6));
-      setLat(newLat);
-      setLng(newLng);
-      try {
-        const res = await fetch(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${newLng},${newLat}.json?language=es&limit=1&access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`
-        );
-        const data = await res.json();
-        const lugar = data.features?.[0]?.place_name;
-        if (lugar) setUbicacion(lugar);
-      } catch {
-        // el usuario puede escribir la dirección manualmente
-      }
-    });
-
-    return () => { mapRef.current?.remove(); mapRef.current = null; };
-  }, []);
-
-  function moveMarkerTo(newLng, newLat) {
-    setLat(newLat);
-    setLng(newLng);
-    markerRef.current?.setLngLat([newLng, newLat]);
-    mapRef.current?.flyTo({ center: [newLng, newLat], zoom: 14 });
-  }
-
-  function usarMiUbicacion() {
-    if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-      const longitude = parseFloat(pos.coords.longitude.toFixed(6));
-      const latitude = parseFloat(pos.coords.latitude.toFixed(6));
-      moveMarkerTo(longitude, latitude);
-      try {
-        const res = await fetch(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?language=es&limit=1&access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`
-        );
-        const data = await res.json();
-        const lugar = data.features?.[0]?.place_name;
-        if (lugar) setUbicacion(lugar);
-      } catch {
-        // el usuario puede escribir la dirección manualmente
-      }
-    });
-  }
-
-  function handleUbicacionChange(valor) {
-    setUbicacion(valor);
-    clearTimeout(geocodeTimer.current);
-    if (valor.length < 3) { setSugerencias([]); return; }
-    geocodeTimer.current = setTimeout(async () => {
-      setBuscandoDireccion(true);
-      try {
-        const res = await fetch(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(valor)}.json?country=cl&language=es&limit=5&access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`
-        );
-        const data = await res.json();
-        setSugerencias(data.features ?? []);
-      } catch { setSugerencias([]); }
-      finally { setBuscandoDireccion(false); }
-    }, 400);
-  }
-
-  function seleccionarSugerencia(feature) {
-    const [lo, la] = feature.center;
-    moveMarkerTo(parseFloat(lo.toFixed(6)), parseFloat(la.toFixed(6)));
-    setUbicacion(feature.place_name);
-    setSugerencias([]);
-  }
 
   function validar() {
     const e = {};
@@ -169,8 +53,6 @@ export default function FormularioTorneo({
         descripcion: descripcion.trim() || null,
         fecha: new Date(fechaInicio).toISOString(),
         ubicacion: ubicacion.trim(),
-        latitud: lat,
-        longitud: lng,
         cupo_maximo: cupoMax !== '' ? parseInt(cupoMax, 10) : null,
         precio: parseInt(precio, 10),
         publico,
@@ -222,7 +104,7 @@ export default function FormularioTorneo({
         {errores.fechaInicio && <p className="form-helper form-helper--error" role="alert">{errores.fechaInicio}</p>}
       </div>
 
-      <div className="form-field formulario-torneo__campo-ubicacion">
+      <div className="form-field">
         <label className="form-label">
           Ubicación <span className="form-required" aria-hidden="true">*</span>
         </label>
@@ -230,36 +112,10 @@ export default function FormularioTorneo({
           type="text"
           className={`form-input${errores.ubicacion ? ' form-input--error' : ''}`}
           value={ubicacion}
-          onChange={(e) => handleUbicacionChange(e.target.value)}
-          placeholder="Busca una dirección..."
-          autoComplete="off"
+          onChange={(e) => setUbicacion(e.target.value)}
+          placeholder="Ej: Av. Providencia 1234, Santiago"
         />
         {errores.ubicacion && <p className="form-helper form-helper--error" role="alert">{errores.ubicacion}</p>}
-        {sugerencias.length > 0 && (
-          <ul className="formulario-torneo__sugerencias">
-            {sugerencias.map((f) => (
-              <li key={f.id} className="formulario-torneo__sugerencia" onClick={() => seleccionarSugerencia(f)}>
-                {f.place_name}
-              </li>
-            ))}
-          </ul>
-        )}
-        {buscandoDireccion && <p className="form-helper">Buscando...</p>}
-      </div>
-
-      <div className="form-field formulario-torneo__campo-mapa">
-        <label className="form-label">Ubicación en el mapa</label>
-        <div className="formulario-torneo__coords-row">
-          <Button type="button" variant="ghost" size="sm" onClick={usarMiUbicacion}>
-            Usar mi ubicación
-          </Button>
-        </div>
-        <div className="formulario-torneo__mapa-wrapper">
-          <div ref={containerRef} className="formulario-torneo__mapa" />
-        </div>
-        <p className="formulario-torneo__mapa-ayuda">
-          Arrastra el pin para ajustar la ubicación exacta.
-        </p>
       </div>
 
       <div className="formulario-torneo__fila-2">

@@ -11,7 +11,7 @@ import { listarCartas, listarSets } from '@/services/biblioteca.service';
 
 import './Biblioteca.css';
 
-const LIMIT = 50;
+const LIMIT = 40;
 
 function adaptarCarta(carta) {
   return {

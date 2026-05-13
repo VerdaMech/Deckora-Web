@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "PowerShell(Get-ChildItem src/modules/mazos/ -Recurse | Select-Object Name, DirectoryName | Where-Object {$_.Name -match '\\\\.\\(jsx|js|css\\)$'})"
     ]
   }
 }

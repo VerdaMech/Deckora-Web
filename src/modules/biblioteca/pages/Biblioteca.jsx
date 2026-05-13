@@ -139,6 +139,7 @@ export default function Biblioteca() {
               carta={adaptarCarta(carta)}
               variant="thumbnail"
               onClick={() => setCartaZoom(carta)}
+              sizes="(max-width: 576px) 45vw, 240px"
             />
           ))}
         </div>

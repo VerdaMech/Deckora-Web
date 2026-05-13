@@ -38,8 +38,33 @@
 
 .biblioteca__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: var(--space-3);
+}
+
+.biblioteca__grid .mtg-card--thumbnail {
+  width: 90%;
+  margin: 0 auto;
+  height: auto;
+  flex-shrink: unset;
+}
+
+.biblioteca__grid .mtg-card__preview {
+  display: none !important;
+}
+
+.biblioteca__grid .mtg-card--thumbnail .mtg-card__image,
+.biblioteca__grid .mtg-card--thumbnail .mtg-card__image--placeholder {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 488 / 680;
+  display: block;
+}
+
+.biblioteca__grid .mtg-card--thumbnail .mtg-card__skeleton {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 488 / 680;
 }
 
 .biblioteca__skeleton {
@@ -128,7 +153,7 @@
   }
 
   .biblioteca__grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--space-2);
   }
 }

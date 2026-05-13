@@ -19,27 +19,21 @@ export default function Navbar() {
 
   const username = user?.nombre_usuario ?? user?.email?.split('@')[0] ?? '';
 
-  const commonLinks = (
-    <li><NavLink to="/biblioteca" className="navbar-link">Biblioteca</NavLink></li>
-  );
-
   const authLinks = (
     <>
-      {commonLinks}
+      <li><NavLink to="/biblioteca" className="navbar-link">Biblioteca</NavLink></li>
       <li><NavLink to="/torneos" className="navbar-link">Torneos</NavLink></li>
       <li><NavLink to={`/${rol}`} className="navbar-link">Mi panel</NavLink></li>
     </>
   );
 
-  const publicLinks = commonLinks;
-
   return (
     <nav className="navbar-deckora">
       <Link to="/" className="navbar-logo">DECKORA</Link>
 
-      {!isHome && (
+      {!isHome && user && (
         <ul className="navbar-links">
-          {user ? authLinks : publicLinks}
+          {authLinks}
         </ul>
       )}
 
@@ -83,9 +77,9 @@ export default function Navbar() {
           <Offcanvas.Title className="navbar-logo">DECKORA</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          {!isHome && (
+          {!isHome && user && (
             <ul className="offcanvas-nav">
-              {user ? authLinks : publicLinks}
+              {authLinks}
             </ul>
           )}
           {!user && (

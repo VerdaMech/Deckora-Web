@@ -28,7 +28,7 @@ function CardImage({ src, srcSet, sizes, alt, onError, onLoad, className, priori
   );
 }
 
-export function MTGCard({ carta, variant = 'thumbnail', onClick, esComandante, prioridad = 'auto' }) {
+export function MTGCard({ carta, variant = 'thumbnail', onClick, esComandante, prioridad = 'auto', sizes }) {
   const [imgError, setImgError] = useState(false);
   const [imgCargada, setImgCargada] = useState(false);
   const { small, normal } = getImageUrls(carta);
@@ -68,7 +68,7 @@ export function MTGCard({ carta, variant = 'thumbnail', onClick, esComandante, p
               className={`mtg-card__image${!imgCargada ? ' mtg-card__image--oculta' : ''}`}
               src={small || normal}
               srcSet={small && normal ? `${small} 146w, ${normal} 488w` : undefined}
-              sizes="100px"
+              sizes={sizes ?? "100px"}
               alt={altText}
               onError={() => setImgError(true)}
               onLoad={() => setImgCargada(true)}

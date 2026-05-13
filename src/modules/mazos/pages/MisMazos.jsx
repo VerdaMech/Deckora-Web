@@ -11,7 +11,7 @@ import { CrearMazoModal } from './CrearMazoModal';
 import './MisMazos.css';
 
 function MazoCard({ mazo, onClick }) {
-  const totalCartas = mazo.totalCartas ?? mazo.cartas?.length ?? 0;
+  const totalCartas = Number(mazo.total_cartas ?? mazo.totalCartas ?? mazo.cartas?.length ?? 0);
   const comandante = mazo.comandante ?? null;
   const updatedAt = mazo.updatedAt ?? mazo.updated_at ?? mazo.createdAt ?? mazo.created_at;
 

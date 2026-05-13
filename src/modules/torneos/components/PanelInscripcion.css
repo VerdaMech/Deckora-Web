@@ -12,6 +12,15 @@
   border-color: var(--border-default);
 }
 
+.panel-inscripcion--pendiente {
+  border-color: var(--warning, #c8921a);
+  background: color-mix(in srgb, var(--warning, #c8921a) 8%, var(--bg-panel));
+}
+
+.panel-inscripcion__mensaje--info {
+  color: var(--warning, #c8921a);
+}
+
 .panel-inscripcion--info,
 .panel-inscripcion--cerrado,
 .panel-inscripcion--lleno {

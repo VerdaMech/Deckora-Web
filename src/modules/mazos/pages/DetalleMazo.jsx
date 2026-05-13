@@ -23,7 +23,21 @@ export default function DetalleMazo() {
     setCargando(true);
     setError(null);
     obtenerMazo(id)
-      .then((data) => setMazo(data?.mazo ?? data))
+      .then((data) => {
+        const raw = data?.mazo ?? data;
+        const cartas = (raw?.MazoCartas ?? raw?.cartas ?? []).map((mc) =>
+          mc.Carta
+            ? {
+                id: mc.Carta.id,
+                scryfallId: mc.Carta.scryfall_id,
+                cantidad: mc.cantidad,
+                esComandante: mc.es_comandante,
+                carta: mc.Carta,
+              }
+            : mc,
+        );
+        setMazo({ ...raw, cartas });
+      })
       .catch((err) => setError(err.message ?? 'Error al cargar el mazo'))
       .finally(() => setCargando(false));
   }
@@ -56,7 +70,7 @@ export default function DetalleMazo() {
                 <button
                   className="btn btn--ghost btn--sm"
                   type="button"
-                  onClick={() => setModoEdicion(false)}
+                  onClick={() => { setModoEdicion(false); cargar(); }}
                   aria-label="Salir del modo edición"
                 >
                   <X size={16} />
@@ -119,7 +133,7 @@ export default function DetalleMazo() {
         modoEdicion ? (
           <ModoEdicionMazo
             mazo={mazo}
-            onSalir={() => setModoEdicion(false)}
+            onSalir={() => { setModoEdicion(false); cargar(); }}
           />
         ) : (mazo.cartas ?? []).length === 0 ? (
           <EmptyState

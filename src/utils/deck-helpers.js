@@ -13,7 +13,7 @@ export function agruparPorTipo(cartas = []) {
 
   for (const entrada of cartas) {
     const carta = entrada.carta ?? entrada;
-    const tipos = (carta.type_line ?? carta.typeLine ?? '').toLowerCase();
+    const tipos = (carta.tipo ?? carta.type_line ?? carta.typeLine ?? '').toLowerCase();
 
     if (entrada.esComandante) {
       grupos.comandante.push(entrada);
@@ -44,7 +44,7 @@ export function calcularCurva(cartas = []) {
 
   for (const entrada of cartas) {
     const carta = entrada.carta ?? entrada;
-    const tipos = (carta.type_line ?? carta.typeLine ?? '').toLowerCase();
+    const tipos = (carta.tipo ?? carta.type_line ?? carta.typeLine ?? '').toLowerCase();
     if (tipos.includes('land')) continue;
 
     const cmc = carta.cmc ?? 0;

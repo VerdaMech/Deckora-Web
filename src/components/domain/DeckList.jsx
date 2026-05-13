@@ -53,7 +53,7 @@ function EntradaCarta({
   const carta = entrada.carta ?? entrada;
   const nombre = carta?.name ?? carta?.nombre ?? '—';
   const manaCost = carta?.mana_cost ?? carta?.manaCost ?? '';
-  const typeLine = (carta?.type_line ?? carta?.typeLine ?? '').toLowerCase();
+  const typeLine = (carta?.tipo ?? carta?.type_line ?? carta?.typeLine ?? '').toLowerCase();
   const esLegendaria = typeLine.includes('legendary') && typeLine.includes('creature');
   const esCommander = formato?.toUpperCase() === 'COMMANDER';
   const puedeSerComandante = esCommander && esLegendaria && !esComandante;

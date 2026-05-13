@@ -12,9 +12,11 @@ async function limpiarSesionExpirada() {
 
 async function getAccessToken() {
   try {
-    const timeout = new Promise((resolve) => setTimeout(() => resolve(null), 3000));
-    const session = supabase.auth.getSession().then(({ data }) => data?.session?.access_token ?? null);
-    return await Promise.race([session, timeout]);
+    // Timeout como red de seguridad: getSession() puede bloquearse si Supabase
+    // está ejecutando un auto-refresh o manteniendo un lock interno durante signIn.
+    const timeout = new Promise((resolve) => setTimeout(() => resolve(null), 10000));
+    const tokenP = supabase.auth.getSession().then(({ data }) => data?.session?.access_token ?? null);
+    return await Promise.race([tokenP, timeout]);
   } catch {
     return null;
   }
@@ -33,8 +35,39 @@ async function apiFetch(path, options = {}) {
 
   if (res.status === 204) return null;
 
-  if (res.status === 401 && token) {
-    limpiarSesionExpirada();
+  if (res.status === 401) {
+    const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
+    if (refreshError) {
+      await limpiarSesionExpirada();
+      throw new Error('Sesión expirada');
+    }
+
+    // Usar el token devuelto por refreshSession() directamente para evitar
+    // una segunda llamada a getSession() que podría bloquearse.
+    const newToken = refreshData?.session?.access_token ?? null;
+    const retryHeaders = { ...options.headers };
+    if (newToken) retryHeaders['Authorization'] = `Bearer ${newToken}`;
+    if (options.body && !retryHeaders['Content-Type']) {
+      retryHeaders['Content-Type'] = 'application/json';
+    }
+
+    const retryRes = await fetch(`${API_URL}${path}`, { ...options, headers: retryHeaders });
+    if (retryRes.status === 204) return null;
+    if (retryRes.status === 401) {
+      await limpiarSesionExpirada();
+      throw new Error('Sesión expirada');
+    }
+    if (!retryRes.ok) {
+      let msg = `HTTP ${retryRes.status}`;
+      try {
+        const body = await retryRes.json();
+        msg = body?.message ?? body?.error ?? msg;
+      } catch {
+        try { msg = await retryRes.text(); } catch { /* noop */ }
+      }
+      throw new Error(msg);
+    }
+    return retryRes.json();
   }
 
   if (!res.ok) {

@@ -11,7 +11,7 @@ import { listarCartas, listarSets } from '@/services/biblioteca.service';
 
 import './Biblioteca.css';
 
-const LIMIT = 50;
+const LIMIT = 40;
 
 function adaptarCarta(carta) {
   return {
@@ -139,6 +139,7 @@ export default function Biblioteca() {
               carta={adaptarCarta(carta)}
               variant="thumbnail"
               onClick={() => setCartaZoom(carta)}
+              sizes="(max-width: 576px) 45vw, 240px"
             />
           ))}
         </div>
@@ -192,7 +193,7 @@ export default function Biblioteca() {
         show={!!cartaZoom}
         onHide={() => setCartaZoom(null)}
         title={cartaZoom?.nombre ?? ''}
-        size="md"
+        size="lg"
       >
         <div className="biblioteca__zoom">
           {cartaZoom?.imagen_url ? (

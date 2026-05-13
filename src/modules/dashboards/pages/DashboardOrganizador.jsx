@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/ui';
 import BloqueResumen from '../components/BloqueResumen';
 import StatsRapidas from '../components/StatsRapidas';
 import { listarMisTorneos } from '@/services/torneos.service';
+import BandejaInscripciones from '@/modules/torneos/components/BandejaInscripciones';
 import './DashboardOrganizador.css';
 
 export default function DashboardOrganizador() {
@@ -48,6 +49,8 @@ export default function DashboardOrganizador() {
       </div>
 
       <StatsRapidas items={statsItems} />
+
+      <BandejaInscripciones torneos={torneos ?? []} />
 
       <BloqueResumen
         titulo="Mis torneos recientes"

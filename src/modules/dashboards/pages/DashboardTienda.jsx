@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/ui';
 import BloqueResumen from '../components/BloqueResumen';
 import StatsRapidas from '../components/StatsRapidas';
 import { listarTorneosDeTienda } from '@/services/tiendas.service';
+import BandejaInscripciones from '@/modules/torneos/components/BandejaInscripciones';
 import './DashboardTienda.css';
 
 export default function DashboardTienda() {
@@ -51,6 +52,8 @@ export default function DashboardTienda() {
       </div>
 
       <StatsRapidas items={statsItems} />
+
+      <BandejaInscripciones torneos={torneos ?? []} />
 
       <BloqueResumen
         titulo="Próximos eventos"

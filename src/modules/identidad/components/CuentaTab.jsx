@@ -38,6 +38,8 @@ export default function CuentaTab() {
     }
     setLoading(true);
     try {
+      // Si se cambia el correo, Supabase envía un enlace de confirmación al nuevo email.
+      // El cambio no es inmediato. Se requiere configuración SMTP en el dashboard de Supabase.
       const { error: supabaseError } = await supabase.auth.updateUser(updates);
       if (supabaseError) throw supabaseError;
       mostrarExito(
@@ -78,9 +80,9 @@ export default function CuentaTab() {
     <div>
       <div className="config-section">
         <h2 className="config-section__title">Cuenta</h2>
+        <p className="config-form__info-text">Correo actual: {user?.email}</p>
         <form onSubmit={handleGuardar} className="config-form">
           {localError && <p className="config-form__error">{localError}</p>}
-          <Input label="Correo actual" value={user?.email ?? ''} readOnly />
           <Input
             label="Nuevo correo"
             type="email"

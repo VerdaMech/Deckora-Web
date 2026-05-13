@@ -36,7 +36,7 @@ export default function ConfirmDialog({
       show={abierto}
       onHide={cargando ? undefined : onCancelar}
       title={titulo}
-      size="sm"
+      size="md"
     >
       <p className="confirm-dialog__cuerpo" id="confirm-dialog-msg">{mensaje}</p>
       {requiereTexto && (

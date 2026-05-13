@@ -5,8 +5,9 @@ import { ArrowLeft, Pencil, Calendar, X, Layers } from 'lucide-react';
 import { Spinner, Alert, Tooltip, EmptyState } from '@/components/ui';
 import { FormatBadge, DeckList, DeckStats } from '@/components/domain';
 import { ModoEdicionMazo } from '@/modules/mazos/components/ModoEdicionMazo';
-import { obtenerMazo } from '@/services/mazos.service';
+import { obtenerMazo, validarMazo } from '@/services/mazos.service';
 import { relativeDate } from '@/utils/formatters';
+import { PanelValidacion } from '@/modules/mazos/components/PanelValidacion';
 
 import './DetalleMazo.css';
 
@@ -18,6 +19,8 @@ export default function DetalleMazo() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [modoEdicion, setModoEdicion] = useState(false);
+  const [validacion, setValidacion] = useState(null);
+  const [validandoMazo, setValidandoMazo] = useState(false);
 
   function cargar() {
     setCargando(true);
@@ -37,6 +40,14 @@ export default function DetalleMazo() {
             : mc,
         );
         setMazo({ ...raw, cartas });
+        if ((raw?.MazoCartas ?? raw?.cartas ?? []).length > 0) {
+          setValidandoMazo(true);
+          setValidacion(null);
+          validarMazo(id)
+            .then((v) => setValidacion(v))
+            .catch(() => setValidacion(null))
+            .finally(() => setValidandoMazo(false));
+        }
       })
       .catch((err) => setError(err.message ?? 'Error al cargar el mazo'))
       .finally(() => setCargando(false));
@@ -161,6 +172,12 @@ export default function DetalleMazo() {
             </div>
 
             <aside className="detalle-mazo__col-stats">
+              <PanelValidacion
+                validacion={validacion}
+                formato={mazo.formato}
+                totalCartas={(mazo.cartas ?? []).reduce((s, c) => s + (c.cantidad ?? 1), 0)}
+                cargando={validandoMazo}
+              />
               <DeckStats
                 cartas={mazo.cartas ?? []}
                 formato={mazo.formato}

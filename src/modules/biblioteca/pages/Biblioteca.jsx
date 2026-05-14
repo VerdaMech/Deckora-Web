@@ -272,8 +272,8 @@ export default function Biblioteca() {
                 )}
               </div>
 
-              {cartaZoom.texto_oracle && (
-                <p className="biblioteca__zoom-texto">{cartaZoom.texto_oracle}</p>
+              {cartaZoom.texto && (
+                <p className="biblioteca__zoom-texto">{cartaZoom.texto}</p>
               )}
 
               {cartaZoom.fuerza != null && cartaZoom.resistencia != null && (
@@ -282,12 +282,12 @@ export default function Biblioteca() {
                 </p>
               )}
 
-              {(cartaZoom.set_nombre || cartaZoom.fecha_lanzamiento) && (
+              {(cartaZoom.set_nombre || cartaZoom.set_fecha_lanzamiento) && (
                 <div className="biblioteca__zoom-set">
                   {cartaZoom.set_nombre && <span>{cartaZoom.set_nombre}</span>}
-                  {cartaZoom.fecha_lanzamiento && (
+                  {cartaZoom.set_fecha_lanzamiento && (
                     <span>
-                      {new Date(cartaZoom.fecha_lanzamiento).toLocaleDateString('es-CL', {
+                      {new Date(cartaZoom.set_fecha_lanzamiento).toLocaleDateString('es-CL', {
                         year: 'numeric',
                         month: 'long',
                       })}
@@ -302,8 +302,8 @@ export default function Biblioteca() {
                   <div className="biblioteca__legalities-grid">
                     {FORMATOS_LEGALITIES.map((formato) => (
                       <div key={formato} className="biblioteca__legality-item">
-                        <span className="biblioteca__legality-formato">{formato}</span>
                         <LegalityBadge status={cartaZoom.legalities[formato]} />
+                        <span className="biblioteca__legality-formato">{formato}</span>
                       </div>
                     ))}
                   </div>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, Layers, Settings,
-  Plus, ChevronLeft, ChevronRight, CalendarDays,
+  Plus, ChevronLeft, ChevronRight, CalendarDays, BookOpen,
 } from 'lucide-react';
 
 import { useAuth } from '@/hooks/useAuth';
@@ -10,6 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 const ITEMS = {
   jugador: () => [
     { to: '/jugador', icon: LayoutDashboard, label: 'Dashboard' },
+    { to: '/biblioteca', icon: BookOpen, label: 'Biblioteca' },
     { to: '/mazos', icon: Layers, label: 'Mis mazos' },
     { to: '/configuracion', icon: Settings, label: 'Configuración' },
   ],

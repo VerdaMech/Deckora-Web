@@ -145,16 +145,22 @@ export default function DetalleMazo() {
                   />
                 </div>
                 <div className="detalle-mazo__panel-meta-fila">
-                  <label className="detalle-mazo__panel-meta-label" htmlFor="mazo-publico-edit">
-                    Público
+                  <span className="detalle-mazo__panel-meta-label">Público</span>
+                  <label className="detalle-mazo__switch">
+                    <input
+                      id="mazo-publico-edit"
+                      type="checkbox"
+                      checked={publicoEdit}
+                      onChange={(e) => setPublicoEdit(e.target.checked)}
+                      disabled={guardando}
+                    />
+                    <span className="detalle-mazo__switch-track">
+                      <span className="detalle-mazo__switch-thumb" />
+                    </span>
+                    <span className="detalle-mazo__switch-label">
+                      {publicoEdit ? 'Visible para todos' : 'Solo tú'}
+                    </span>
                   </label>
-                  <input
-                    id="mazo-publico-edit"
-                    type="checkbox"
-                    checked={publicoEdit}
-                    onChange={(e) => setPublicoEdit(e.target.checked)}
-                    disabled={guardando}
-                  />
                 </div>
                 <button
                   className="btn btn--primary btn--sm"

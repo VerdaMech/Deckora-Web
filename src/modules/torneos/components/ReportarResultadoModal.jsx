@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { actualizarResultado, actualizarEstado } from '@/services/enfrentamientos.service';
+import { actualizarResultado } from '@/services/enfrentamientos.service';
 import { Button, Modal, Alert, Spinner, Select } from '@/components/ui';
 import { RESULTADO_ENFRENTAMIENTO } from '@/utils/constants';
 import './ReportarResultadoModal.css';
@@ -73,7 +73,6 @@ export default function ReportarResultadoModal({
         })),
       };
       await actualizarResultado(enfrentamiento.id, datos);
-      await actualizarEstado(enfrentamiento.id, { estado: 'finalizado' });
       onReportado?.();
       onClose();
     } catch (err) {

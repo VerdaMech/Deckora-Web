@@ -37,7 +37,7 @@
 @media (min-width: 992px) {
   .deck-builder {
     display: grid;
-    grid-template-columns: 320px 1fr 360px;
+    grid-template-columns: 320px 1fr 420px;
     gap: var(--space-5);
     align-items: start;
   }

@@ -26,7 +26,7 @@ export function PodTable({ enfrentamiento, editable = false, onReportarResultado
 
   if (!enfrentamiento) return null;
 
-  const jugadores = enfrentamientoLocal.jugadores ?? enfrentamientoLocal.participantes ?? [];
+  const jugadores = enfrentamientoLocal.participantes ?? [];
   const numero = enfrentamientoLocal.numero_mesa ?? enfrentamientoLocal.mesa ?? enfrentamientoLocal.numero ?? '?';
 
   function abrirModal() {

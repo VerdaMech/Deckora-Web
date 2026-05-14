@@ -1,19 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Pencil, Calendar, X, Layers } from 'lucide-react';
+import { ArrowLeft, Pencil, Calendar, Layers } from 'lucide-react';
 
 import { Spinner, Alert, Tooltip, EmptyState } from '@/components/ui';
 import { FormatBadge, DeckList, DeckStats } from '@/components/domain';
 import { ModoEdicionMazo } from '@/modules/mazos/components/ModoEdicionMazo';
-import { obtenerMazo, validarMazo } from '@/services/mazos.service';
+import { obtenerMazo, validarMazo, actualizarMazo } from '@/services/mazos.service';
 import { relativeDate } from '@/utils/formatters';
 import { PanelValidacion } from '@/modules/mazos/components/PanelValidacion';
+import { useToast } from '@/context/ToastContext';
 
 import './DetalleMazo.css';
 
 export default function DetalleMazo() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { mostrarExito, mostrarError } = useToast();
 
   const [mazo, setMazo] = useState(null);
   const [cargando, setCargando] = useState(true);
@@ -21,6 +23,10 @@ export default function DetalleMazo() {
   const [modoEdicion, setModoEdicion] = useState(false);
   const [validacion, setValidacion] = useState(null);
   const [validandoMazo, setValidandoMazo] = useState(false);
+
+  const [nombreEdit, setNombreEdit] = useState('');
+  const [publicoEdit, setPublicoEdit] = useState(false);
+  const [guardando, setGuardando] = useState(false);
 
   function cargar() {
     setCargando(true);
@@ -40,6 +46,8 @@ export default function DetalleMazo() {
             : mc,
         );
         setMazo({ ...raw, cartas });
+        setNombreEdit(raw?.nombre ?? '');
+        setPublicoEdit(raw?.publico ?? false);
         if ((raw?.MazoCartas ?? raw?.cartas ?? []).length > 0) {
           setValidandoMazo(true);
           setValidacion(null);
@@ -54,6 +62,19 @@ export default function DetalleMazo() {
   }
 
   useEffect(() => { cargar(); }, [id]);
+
+  async function handleGuardarMeta() {
+    setGuardando(true);
+    try {
+      await actualizarMazo(mazo.id, { nombre: nombreEdit, publico: publicoEdit });
+      setMazo((prev) => ({ ...prev, nombre: nombreEdit, publico: publicoEdit }));
+      mostrarExito('Mazo actualizado', 'Los cambios se guardaron correctamente.');
+    } catch (err) {
+      mostrarError('Error al guardar', err?.message ?? 'No se pudieron guardar los cambios.');
+    } finally {
+      setGuardando(false);
+    }
+  }
 
   const updatedAt = mazo?.updatedAt ?? mazo?.updated_at ?? mazo?.createdAt ?? mazo?.created_at;
   const autor = mazo?.usuario?.nombre_usuario ?? mazo?.autor ?? null;
@@ -77,17 +98,7 @@ export default function DetalleMazo() {
               <h1 className="detalle-mazo__titulo font-h2">{mazo.nombre}</h1>
               <FormatBadge formato={mazo.formato} />
 
-              {modoEdicion ? (
-                <button
-                  className="btn btn--ghost btn--sm"
-                  type="button"
-                  onClick={() => { setModoEdicion(false); cargar(); }}
-                  aria-label="Salir del modo edición"
-                >
-                  <X size={16} />
-                  Salir de edición
-                </button>
-              ) : (
+              {!modoEdicion && (
                 <Tooltip content="Editar mazo" placement="top">
                   <button
                     className="btn btn--ghost btn--sm detalle-mazo__editar-btn"
@@ -116,6 +127,44 @@ export default function DetalleMazo() {
 
             {mazo.descripcion && (
               <p className="detalle-mazo__descripcion font-body">{mazo.descripcion}</p>
+            )}
+
+            {modoEdicion && (
+              <div className="detalle-mazo__panel-meta">
+                <div className="detalle-mazo__panel-meta-fila">
+                  <label className="detalle-mazo__panel-meta-label" htmlFor="mazo-nombre-edit">
+                    Nombre
+                  </label>
+                  <input
+                    id="mazo-nombre-edit"
+                    className="detalle-mazo__panel-meta-input"
+                    type="text"
+                    value={nombreEdit}
+                    onChange={(e) => setNombreEdit(e.target.value)}
+                    disabled={guardando}
+                  />
+                </div>
+                <div className="detalle-mazo__panel-meta-fila">
+                  <label className="detalle-mazo__panel-meta-label" htmlFor="mazo-publico-edit">
+                    Público
+                  </label>
+                  <input
+                    id="mazo-publico-edit"
+                    type="checkbox"
+                    checked={publicoEdit}
+                    onChange={(e) => setPublicoEdit(e.target.checked)}
+                    disabled={guardando}
+                  />
+                </div>
+                <button
+                  className="btn btn--primary btn--sm"
+                  type="button"
+                  onClick={handleGuardarMeta}
+                  disabled={guardando}
+                >
+                  {guardando ? <Spinner size={14} /> : 'Guardar cambios'}
+                </button>
+              </div>
             )}
           </div>
         )}

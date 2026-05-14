@@ -44,3 +44,7 @@ export async function eliminarCartaDeMazo(mazoId, cartaId) {
 export async function validarMazo(mazoId) {
   return apiPost(`/mazos/${mazoId}/validar`, {});
 }
+
+export async function actualizarMazo(mazoId, datos) {
+  return apiPatch(`/mazos/${mazoId}`, datos);
+}

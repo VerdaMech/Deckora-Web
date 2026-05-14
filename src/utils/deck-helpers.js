@@ -39,6 +39,39 @@ export function agruparPorTipo(cartas = []) {
   return grupos;
 }
 
+function parseCmcDesdeCosto(costoMana = '') {
+  const tokens = costoMana.match(/\{([^}]+)\}/g) ?? [];
+  let total = 0;
+  for (const token of tokens) {
+    const inner = token.slice(1, -1);
+    if (/^\d+$/.test(inner)) {
+      total += parseInt(inner, 10);
+    } else if (/^[WUBRGSP]$/.test(inner)) {
+      total += 1;
+    } else if (inner.includes('/')) {
+      total += 1;
+    }
+    // X, Y, Z cuentan 0
+  }
+  return total;
+}
+
+function extractColoresDesdeCosto(costoMana = '') {
+  const tokens = costoMana.match(/\{([^}]+)\}/g) ?? [];
+  const set = new Set();
+  for (const token of tokens) {
+    const inner = token.slice(1, -1);
+    if (/^[WUBRG]$/.test(inner)) {
+      set.add(inner);
+    } else if (inner.includes('/')) {
+      for (const part of inner.split('/')) {
+        if (/^[WUBRG]$/.test(part)) set.add(part);
+      }
+    }
+  }
+  return Array.from(set);
+}
+
 export function calcularCurva(cartas = []) {
   const counts = {};
 
@@ -47,7 +80,7 @@ export function calcularCurva(cartas = []) {
     const tipos = (carta.tipo ?? carta.type_line ?? carta.typeLine ?? '').toLowerCase();
     if (tipos.includes('land')) continue;
 
-    const cmc = carta.cmc ?? 0;
+    const cmc = carta.cmc ?? parseCmcDesdeCosto(carta.costo_mana ?? carta.mana_cost ?? '');
     const bucket = cmc >= 7 ? '7+' : String(Math.floor(cmc));
     counts[bucket] = (counts[bucket] ?? 0) + (entrada.cantidad ?? 1);
   }
@@ -65,7 +98,9 @@ export function calcularDistribucionColor(cartas = []) {
 
   for (const entrada of cartas) {
     const carta = entrada.carta ?? entrada;
-    const colors = carta.colors ?? [];
+    const colors = (carta.colors?.length > 0)
+      ? carta.colors
+      : extractColoresDesdeCosto(carta.costo_mana ?? carta.mana_cost ?? '');
     if (colors.length === 0) {
       dist.C += entrada.cantidad ?? 1;
     } else {

@@ -10,6 +10,7 @@ import { RoundView } from '@/components/domain/RoundView';
 import ListaInscritos from '../components/ListaInscritos';
 import PanelInscripcion from '../components/PanelInscripcion';
 import BandejaInscripciones from '../components/BandejaInscripciones';
+import ReportarResultadoModal from '../components/ReportarResultadoModal';
 import { Button, Alert, Skeleton, Modal, Spinner } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { ESTADO_TORNEO, ROLES } from '@/utils/constants';
@@ -30,6 +31,8 @@ export default function DetalleTorneo() {
   const [cambiandoEstado, setCambiandoEstado] = useState(false);
   const [confirmarEstado, setConfirmarEstado] = useState(null);
   const [errorEstado, setErrorEstado] = useState(null);
+
+  const [enfrentamientoSeleccionado, setEnfrentamientoSeleccionado] = useState(null);
 
   const cargarDatos = useCallback(async () => {
     setCargando(true);
@@ -60,6 +63,12 @@ export default function DetalleTorneo() {
   useEffect(() => {
     cargarDatos();
   }, [cargarDatos]);
+
+  async function handleResultadoReportado() {
+    setEnfrentamientoSeleccionado(null);
+    const r = await listarRondas(id).catch(() => []);
+    setRondas(Array.isArray(r) ? r : r?.rondas ?? r?.data ?? []);
+  }
 
   async function handleCambiarEstado(nuevoEstado) {
     setCambiandoEstado(true);
@@ -228,7 +237,9 @@ export default function DetalleTorneo() {
               <h2 className="detalle-torneo__section-title">
                 Inscritos ({inscripciones.length})
               </h2>
-              <BandejaInscripciones torneos={[{ id: torneo.id, nombre: torneo.nombre }]} />
+              {estado === ESTADO_TORNEO.PENDIENTE && (
+                <BandejaInscripciones torneos={[{ id: torneo.id, nombre: torneo.nombre }]} />
+              )}
               <ListaInscritos
                 inscripciones={inscripciones}
                 editable={false}
@@ -258,6 +269,7 @@ export default function DetalleTorneo() {
                       key={ronda.id ?? idx}
                       ronda={ronda}
                       editable={estado === ESTADO_TORNEO.EN_CURSO}
+                      onReportarResultado={estado === ESTADO_TORNEO.EN_CURSO ? setEnfrentamientoSeleccionado : undefined}
                     />
                   ))}
                 </div>
@@ -320,6 +332,16 @@ export default function DetalleTorneo() {
           </Button>
         </div>
       </div>
+
+      {/* Modal reportar resultado (organizador) */}
+      {enfrentamientoSeleccionado && (
+        <ReportarResultadoModal
+          enfrentamiento={enfrentamientoSeleccionado}
+          isOpen
+          onClose={() => setEnfrentamientoSeleccionado(null)}
+          onReportado={handleResultadoReportado}
+        />
+      )}
 
       {/* Modal confirmación cambio de estado */}
       {confirmarEstado && (

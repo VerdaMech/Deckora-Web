@@ -6,6 +6,7 @@ import { obtenerTorneo, cambiarEstadoTorneo } from '@/services/torneos.service';
 import { listarRondas, crearRonda, eliminarRonda } from '@/services/rondas.service';
 import { EstadoBadge } from '@/components/domain/EstadoBadge';
 import { RoundView } from '@/components/domain/RoundView';
+import ReportarResultadoModal from '@/modules/torneos/components/ReportarResultadoModal';
 import { Button, Alert, Skeleton, Select, Spinner, Modal, EmptyState, Tabs } from '@/components/ui';
 import { TIPO_RONDA, ESTADO_TORNEO } from '@/utils/constants';
 import './GestionTorneo.css';
@@ -36,6 +37,8 @@ export default function GestionTorneo() {
 
   const [confirmarEliminar, setConfirmarEliminar] = useState(null);
   const [eliminandoRonda, setEliminandoRonda] = useState(false);
+
+  const [enfrentamientoSeleccionado, setEnfrentamientoSeleccionado] = useState(null);
 
   const cargar = useCallback(async () => {
     setCargando(true);
@@ -103,6 +106,13 @@ export default function GestionTorneo() {
     } finally {
       setCambiandoEstado(false);
     }
+  }
+
+  async function handleResultadoReportado() {
+    setEnfrentamientoSeleccionado(null);
+    const r = await listarRondas(id).catch(() => []);
+    const lista = Array.isArray(r) ? r : r?.rondas ?? r?.data ?? [];
+    setRondas(lista);
   }
 
   if (cargando) {
@@ -207,7 +217,11 @@ export default function GestionTorneo() {
           {tabsRondas.map(({ key, label, ronda }) => (
             <Tabs.Tab key={key} eventKey={key} label={label}>
               <div className="gestion-torneo-page__ronda">
-                <RoundView ronda={ronda} editable />
+                <RoundView
+                  ronda={ronda}
+                  editable={estado === ESTADO_TORNEO.EN_CURSO}
+                  onReportarResultado={setEnfrentamientoSeleccionado}
+                />
                 <div className="gestion-torneo-page__ronda-footer">
                   <Button
                     variant="danger"
@@ -241,6 +255,16 @@ export default function GestionTorneo() {
           </Tabs.Tab>
         </Tabs>
       </div>
+
+      {/* Modal reportar resultado */}
+      {enfrentamientoSeleccionado && (
+        <ReportarResultadoModal
+          enfrentamiento={enfrentamientoSeleccionado}
+          isOpen
+          onClose={() => setEnfrentamientoSeleccionado(null)}
+          onReportado={handleResultadoReportado}
+        />
+      )}
 
       {/* Modal confirmación eliminar ronda */}
       {confirmarEliminar && (

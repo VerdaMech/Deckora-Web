@@ -70,15 +70,17 @@ function EntradaCarta({
         } : undefined}
       >
         <MTGCard carta={carta} variant="thumbnail" esComandante={esComandante} />
-        <div className="deck-list__entrada-texto">
-          <span className="deck-list__carta-nombre">{nombre}</span>
-          {manaCost && <ManaCost cost={manaCost} />}
-          {esComandante && (
-            <div className="deck-list__cmdr-badge">
-              <CommanderBadge />
-            </div>
-          )}
-        </div>
+        {editable && (
+          <div className="deck-list__entrada-texto">
+            <span className="deck-list__carta-nombre">{nombre}</span>
+            {manaCost && <ManaCost cost={manaCost} />}
+            {esComandante && (
+              <div className="deck-list__cmdr-badge">
+                <CommanderBadge />
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {editable ? (
@@ -151,7 +153,7 @@ export function DeckList({
   const grupos = agruparPorTipo(cartas);
 
   return (
-    <div className="deck-list">
+    <div className={`deck-list${editable ? ' deck-list--editable' : ''}`}>
       {GRUPO_ORDER.map((key) => {
         const entradas = grupos[key];
         if (!entradas.length) return null;

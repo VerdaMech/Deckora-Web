@@ -138,7 +138,7 @@ export function DeckStats({ cartas = [], formato = 'COMMANDER', comandanteId }) 
       <div className="deck-stats__grid">
         <div className="deck-stats__chart deck-stats__chart--curva">
           <h4 className="deck-stats__chart-titulo">Curva de maná</h4>
-          <ResponsiveContainer width="100%" height={160}>
+          <ResponsiveContainer width="100%" height={200}>
             <BarChart data={curva} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
               <XAxis dataKey="cmc" tick={{ fill: '#7a6a58', fontSize: 11 }} />
               <YAxis tick={{ fill: '#7a6a58', fontSize: 11 }} allowDecimals={false} />
@@ -151,9 +151,9 @@ export function DeckStats({ cartas = [], formato = 'COMMANDER', comandanteId }) 
         <div className="deck-stats__chart deck-stats__chart--identidad">
           <h4 className="deck-stats__chart-titulo">Identidad de color</h4>
           {colorData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={240}>
               <PieChart>
-                <Pie data={colorData} dataKey="value" nameKey="name" cx="50%" cy="45%" outerRadius={60}>
+                <Pie data={colorData} dataKey="value" nameKey="name" cx="50%" cy="45%" outerRadius={80}>
                   {colorData.map((entry, i) => (
                     <Cell key={i} fill={entry.color} />
                   ))}
@@ -170,9 +170,9 @@ export function DeckStats({ cartas = [], formato = 'COMMANDER', comandanteId }) 
         <div className="deck-stats__chart deck-stats__chart--tipos">
           <h4 className="deck-stats__chart-titulo">Por tipos</h4>
           {tipoData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={240}>
               <PieChart>
-                <Pie data={tipoData} dataKey="value" nameKey="name" cx="50%" cy="45%" outerRadius={60} innerRadius={28}>
+                <Pie data={tipoData} dataKey="value" nameKey="name" cx="50%" cy="45%" outerRadius={80} innerRadius={36}>
                   {tipoData.map((entry, i) => (
                     <Cell key={i} fill={entry.color} />
                   ))}

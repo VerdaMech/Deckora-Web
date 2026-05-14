@@ -107,6 +107,121 @@
   padding: var(--space-6);
 }
 
+/* Panel de edición de metadatos del mazo */
+.detalle-mazo__panel-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  max-width: 480px;
+}
+
+.detalle-mazo__panel-meta-fila {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.detalle-mazo__panel-meta-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  min-width: 64px;
+  flex-shrink: 0;
+}
+
+.detalle-mazo__panel-meta-input {
+  flex: 1;
+  background: var(--bg-panel-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 1rem;
+  padding: var(--space-2) var(--space-3);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.detalle-mazo__panel-meta-input:focus {
+  border-color: var(--gold);
+}
+
+.detalle-mazo__panel-meta-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Switch toggle para campo público */
+.detalle-mazo__switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  gap: var(--space-2);
+}
+
+.detalle-mazo__switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.detalle-mazo__switch-track {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  background: var(--bg-panel-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: 11px;
+  transition: background 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.detalle-mazo__switch input:checked ~ .detalle-mazo__switch-track {
+  background: rgba(201, 168, 76, 0.25);
+  border-color: var(--gold);
+}
+
+.detalle-mazo__switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: var(--text-muted);
+  border-radius: 50%;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.detalle-mazo__switch input:checked ~ .detalle-mazo__switch-track .detalle-mazo__switch-thumb {
+  transform: translateX(18px);
+  background: var(--gold);
+}
+
+.detalle-mazo__switch-label {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 0.95rem;
+  color: var(--text-default);
+  user-select: none;
+}
+
+.detalle-mazo__switch input:disabled ~ .detalle-mazo__switch-track {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.detalle-mazo__switch input:disabled ~ .detalle-mazo__switch-label {
+  opacity: 0.4;
+}
+
 @media (min-width: 992px) {
   .detalle-mazo__layout {
     flex-direction: row;
@@ -114,6 +229,6 @@
   }
 
   .detalle-mazo__col-stats {
-    width: 320px;
+    width: 420px;
   }
 }

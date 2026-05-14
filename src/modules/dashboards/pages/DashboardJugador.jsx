@@ -7,7 +7,7 @@ import { EmptyState } from '@/components/ui';
 import EstadisticasJugador from '@/components/domain/EstadisticasJugador';
 import BloqueResumen from '../components/BloqueResumen';
 import StatsRapidas from '../components/StatsRapidas';
-import { listarMazosRecientes } from '@/services/mazos.service';
+import { listarMisMazos, listarMazosRecientes } from '@/services/mazos.service';
 import { listarTorneosDelJugador } from '@/services/torneos.service';
 import './DashboardJugador.css';
 
@@ -15,15 +15,26 @@ export default function DashboardJugador() {
   const { user, perfil } = useAuth();
   const nombre = user?.nombre_usuario ?? user?.correo ?? 'Jugador';
 
-  const [mazos, setMazos] = useState(null);
+  const [mazosRecientes, setMazosRecientes] = useState(null);
+  const [totalMazos, setTotalMazos] = useState(0);
   const [torneos, setTorneos] = useState(null);
   const [loadingMazos, setLoadingMazos] = useState(true);
   const [loadingTorneos, setLoadingTorneos] = useState(true);
 
   useEffect(() => {
-    listarMazosRecientes(3)
-      .then((data) => setMazos(Array.isArray(data) ? data : []))
-      .catch(() => setMazos([]))
+    Promise.all([
+      listarMisMazos(),
+      listarMazosRecientes(3),
+    ])
+      .then(([todos, recientes]) => {
+        const listaTodos = Array.isArray(todos) ? todos : [];
+        setTotalMazos(listaTodos.length);
+        setMazosRecientes(Array.isArray(recientes) ? recientes : []);
+      })
+      .catch(() => {
+        setTotalMazos(0);
+        setMazosRecientes([]);
+      })
       .finally(() => setLoadingMazos(false));
 
     listarTorneosDelJugador(3)
@@ -31,8 +42,6 @@ export default function DashboardJugador() {
       .catch(() => setTorneos([]))
       .finally(() => setLoadingTorneos(false));
   }, []);
-
-  const totalMazos = mazos?.length ?? 0;
   const torneosJugados = perfil?.torneos_participados ?? 0;
 
   const statsItems = [
@@ -63,9 +72,9 @@ export default function DashboardJugador() {
           icono={Layers}
           cta={{ texto: 'Ver todos', to: '/mazos' }}
           cargando={loadingMazos}
-          vacio={!loadingMazos && mazos?.length === 0}
+          vacio={!loadingMazos && mazosRecientes?.length === 0}
         >
-          {mazos?.length === 0 ? (
+          {mazosRecientes?.length === 0 ? (
             <EmptyState
               icon={Layers}
               title="Sin mazos todavía"
@@ -74,7 +83,7 @@ export default function DashboardJugador() {
             />
           ) : (
             <ul className="dashboard-jugador__mazo-lista">
-              {mazos?.map((mazo) => (
+              {mazosRecientes?.map((mazo) => (
                 <li key={mazo.id} className="dashboard-jugador__mazo-item">
                   <Link to={`/mazos/${mazo.id}`} className="dashboard-jugador__mazo-link">
                     <Layers size={14} className="dashboard-jugador__mazo-icono" aria-hidden="true" />

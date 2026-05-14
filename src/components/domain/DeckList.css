@@ -27,6 +27,7 @@
   justify-content: space-between;
   padding: var(--space-1) 0;
   border-bottom: 1px solid var(--border-subtle);
+  grid-column: 1 / -1;
 }
 
 .deck-list__group-label {
@@ -45,6 +46,12 @@
 }
 
 .deck-list__group-entradas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.deck-list--editable .deck-list__group-entradas {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
@@ -53,18 +60,27 @@
 /* Entry */
 .deck-list__entrada {
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  overflow: hidden;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.deck-list--editable .deck-list__entrada {
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
   padding: var(--space-2);
-  border-radius: var(--radius-md);
-  border: 1px solid transparent;
-  transition: background-color 0.15s, border-color 0.15s;
 }
 
 .deck-list__entrada:hover {
-  background-color: var(--bg-panel);
-  border-color: var(--border-subtle);
+  background-color: transparent;
+  border-color: transparent;
 }
 
 .deck-list__entrada--commander {
@@ -74,11 +90,16 @@
 
 .deck-list__entrada-info {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: var(--space-2);
   flex: 1;
   min-width: 0;
   cursor: default;
+  width: 100%;
+}
+
+.deck-list--editable .deck-list__entrada-info {
+  align-items: center;
 }
 
 .deck-list__entrada-info[role="button"] {
@@ -91,14 +112,33 @@
   border-radius: var(--radius-md);
 }
 
-/* Override MTGCard thumbnail size inside list */
+/* Modo lectura: imagen llena la celda respetando proporción real de carta MTG */
 .deck-list__entrada-info .mtg-card--thumbnail {
-  width: 40px;
-  height: 56px;
+  width: 100%;
+  height: auto;
   flex-shrink: 0;
 }
 
 .deck-list__entrada-info .mtg-card--thumbnail .mtg-card__image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 488 / 680;
+  object-fit: cover;
+}
+
+.deck-list__entrada-info .mtg-card--thumbnail .mtg-card__skeleton {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 488 / 680;
+}
+
+/* Modo edición: imagen compacta */
+.deck-list--editable .deck-list__entrada-info .mtg-card--thumbnail {
+  width: 40px;
+  height: 56px;
+}
+
+.deck-list--editable .deck-list__entrada-info .mtg-card--thumbnail .mtg-card__image {
   width: 40px;
   height: 56px;
 }
@@ -210,4 +250,13 @@
 
 .deck-list__btn-cmdr:hover {
   color: var(--gold);
+}
+
+/* Suprimir efectos hover de MTGCard dentro del DeckList sin afectar otros contextos */
+.deck-list .mtg-card__preview {
+  display: none !important;
+}
+
+.deck-list .mtg-card--thumbnail:hover .mtg-card__image {
+  border-color: var(--border-subtle);
 }

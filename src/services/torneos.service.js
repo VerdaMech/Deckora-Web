@@ -82,3 +82,19 @@ export async function listarMisInscripciones() {
     return [];
   }
 }
+
+export async function listarPendientes(torneoId) {
+  return apiGet(`/torneos/${torneoId}/inscripciones/pendientes`);
+}
+
+export async function aprobarInscripcion(torneoId, inscripcionId) {
+  return apiPatch(`/torneos/${torneoId}/inscripciones/${inscripcionId}/aprobar`, {});
+}
+
+export async function rechazarInscripcion(torneoId, inscripcionId) {
+  return apiDelete(`/torneos/${torneoId}/inscripciones/${inscripcionId}/rechazar`);
+}
+
+export async function eliminarJugadorDeTorneo(torneoId, inscripcionId) {
+  return apiDelete(`/torneos/${torneoId}/inscripciones/${inscripcionId}`);
+}

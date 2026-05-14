@@ -24,11 +24,11 @@ export default function ListaInscritos({ inscripciones = [], editable = false, o
         return (
           <li key={inscripcion.id} className={`lista-inscritos__item${esPropio ? ' lista-inscritos__item--propio' : ''}`}>
             <div className="lista-inscritos__avatar">
-              {(inscripcion.jugador?.nombre_usuario ?? inscripcion.usuario?.nombre_usuario ?? '?').substring(0, 2).toUpperCase()}
+              {(inscripcion.Jugador?.Usuario?.nombre_usuario ?? '?').substring(0, 2).toUpperCase()}
             </div>
             <div className="lista-inscritos__info">
               <span className="lista-inscritos__nombre">
-                {inscripcion.jugador?.nombre_usuario ?? inscripcion.usuario?.nombre_usuario ?? 'Jugador'}
+                {inscripcion.Jugador?.Usuario?.nombre_usuario ?? 'Jugador'}
               </span>
               {inscripcion.mazo?.nombre && (
                 <span className="lista-inscritos__mazo">

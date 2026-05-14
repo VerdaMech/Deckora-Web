@@ -55,7 +55,7 @@ export default function PanelInscripcion({
     setError(null);
     try {
       await inscribirseATorneo(torneo.id, { mazoId: mazoSeleccionado });
-      mostrarExito('Inscripción confirmada', `Te inscribiste al torneo "${torneo.nombre}".`);
+      mostrarExito('Solicitud enviada', `Tu solicitud para el torneo "${torneo.nombre}" está pendiente de aprobación.`);
       onInscribirse?.();
     } catch (e) {
       const msg = traducirError(e);
@@ -99,6 +99,7 @@ export default function PanelInscripcion({
 
   // Rol distinto de jugador
   if (!esJugador) {
+    if (usuario?.rol === 'organizador' || usuario?.rol === 'tienda') return null;
     return (
       <div className="panel-inscripcion panel-inscripcion--info">
         <p className="panel-inscripcion__mensaje">
@@ -108,13 +109,18 @@ export default function PanelInscripcion({
     );
   }
 
-  // Ya inscrito
+  // Ya inscrito (pendiente o confirmado)
   if (inscripcionPropia) {
+    const esPendiente = inscripcionPropia.confirmado === false;
     return (
-      <div className="panel-inscripcion panel-inscripcion--inscrito">
-        <p className="panel-inscripcion__mensaje panel-inscripcion__mensaje--ok">
-          Estás inscrito con{' '}
-          <strong>{inscripcionPropia.mazo?.nombre ?? 'tu mazo'}</strong>.
+      <div className={`panel-inscripcion panel-inscripcion--${esPendiente ? 'pendiente' : 'inscrito'}`}>
+        <p className={`panel-inscripcion__mensaje panel-inscripcion__mensaje--${esPendiente ? 'info' : 'ok'}`}>
+          {esPendiente ? (
+            <>Solicitud enviada con <strong>{inscripcionPropia.mazo?.nombre ?? 'tu mazo'}</strong>.{' '}
+            Esperando aprobación del organizador.</>
+          ) : (
+            <>Estás inscrito con <strong>{inscripcionPropia.mazo?.nombre ?? 'tu mazo'}</strong>.</>
+          )}
         </p>
         {error && <Alert variant="danger">{error}</Alert>}
         <Button
@@ -210,7 +216,7 @@ export default function PanelInscripcion({
             onClick={handleInscribirse}
             disabled={cargando || cargandoMazos || !mazoSeleccionado}
           >
-            {cargando ? <Spinner size="sm" /> : 'Inscribirme'}
+            {cargando ? <Spinner size="sm" /> : 'Solicitar inscripción'}
           </Button>
         </>
       )}

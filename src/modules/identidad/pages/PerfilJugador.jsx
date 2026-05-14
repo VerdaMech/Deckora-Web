@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Tabs, EmptyState, Skeleton } from '@/components/ui';
 import EstadisticasJugador from '@/components/domain/EstadisticasJugador';
 import RoleBadge from '@/components/domain/RoleBadge';
@@ -52,8 +53,10 @@ export default function PerfilJugador({ perfil }) {
             <ul className="profile-mazos-lista">
               {mazos.map((mazo) => (
                 <li key={mazo.id} className="profile-mazos-lista__item">
-                  <span className="profile-mazos-lista__nombre">{mazo.nombre}</span>
-                  <span className="profile-mazos-lista__formato">{mazo.formato}</span>
+                  <Link to={`/mazos/${mazo.id}`} className="profile-mazos-lista__link">
+                    <span className="profile-mazos-lista__nombre">{mazo.nombre}</span>
+                    <span className="profile-mazos-lista__formato">{mazo.formato}</span>
+                  </Link>
                 </li>
               ))}
             </ul>

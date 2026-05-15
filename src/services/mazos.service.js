@@ -48,3 +48,7 @@ export async function validarMazo(mazoId) {
 export async function actualizarMazo(mazoId, datos) {
   return apiPatch(`/mazos/${mazoId}`, datos);
 }
+
+export async function getRecomendaciones(mazoId) {
+  return apiGet(`/mazos/${mazoId}/recomendaciones`);
+}

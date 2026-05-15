@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { EstadoBadge } from './EstadoBadge';
 import { RESULTADO_ENFRENTAMIENTO } from '@/utils/constants';
 import { Button } from '@/components/ui';
@@ -23,6 +23,10 @@ function ResultadoLabel({ resultado }) {
 export function PodTable({ enfrentamiento, editable = false, onReportarResultado }) {
   const [modalAbierto, setModalAbierto] = useState(false);
   const [enfrentamientoLocal, setEnfrentamientoLocal] = useState(enfrentamiento);
+
+  useEffect(() => {
+    setEnfrentamientoLocal(enfrentamiento);
+  }, [enfrentamiento]);
 
   if (!enfrentamiento) return null;
 

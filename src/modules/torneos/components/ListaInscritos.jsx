@@ -30,15 +30,15 @@ export default function ListaInscritos({ inscripciones = [], editable = false, o
               <span className="lista-inscritos__nombre">
                 {inscripcion.Jugador?.Usuario?.nombre_usuario ?? 'Jugador'}
               </span>
-              {inscripcion.mazo?.nombre && (
+              {(inscripcion.Mazo ?? inscripcion.mazo)?.nombre && (
                 <span className="lista-inscritos__mazo">
-                  {inscripcion.mazo.nombre}
-                  {inscripcion.mazo.comandante && ` · ${inscripcion.mazo.comandante}`}
+                  {(inscripcion.Mazo ?? inscripcion.mazo).nombre}
+                  {(inscripcion.Mazo ?? inscripcion.mazo).comandante && ` · ${(inscripcion.Mazo ?? inscripcion.mazo).comandante}`}
                 </span>
               )}
-              {inscripcion.created_at && (
+              {(inscripcion.fecha_inscripcion ?? inscripcion.created_at) && (
                 <span className="lista-inscritos__fecha">
-                  Inscrito {relativeDate(inscripcion.created_at)}
+                  Inscrito {relativeDate(inscripcion.fecha_inscripcion ?? inscripcion.created_at)}
                 </span>
               )}
             </div>

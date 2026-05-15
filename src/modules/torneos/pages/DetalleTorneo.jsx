@@ -88,10 +88,10 @@ export default function DetalleTorneo() {
     }
   }
 
+  const inscritosConfirmados = inscripciones.filter((i) => i.confirmado);
+
   const inscripcionPropia = user
-    ? inscripciones.find(
-        (i) => i.usuario_id === user.id || i.jugador_id === user.id
-      )
+    ? inscripciones.find((i) => i.usuario_id === user.id)
     : null;
 
   if (cargando) {
@@ -119,7 +119,7 @@ export default function DetalleTorneo() {
 
   if (!torneo) return null;
 
-  const inscritos = torneo.inscritos_count ?? torneo.inscripciones_count ?? inscripciones.length;
+  const inscritos = torneo.inscritos_count ?? torneo.inscripciones_count ?? inscritosConfirmados.length;
   const estado = torneo.estado;
 
   const esOrganizador =
@@ -235,13 +235,13 @@ export default function DetalleTorneo() {
             {/* Inscripciones pendientes para el organizador */}
             <section className="detalle-torneo__section">
               <h2 className="detalle-torneo__section-title">
-                Inscritos ({inscripciones.length})
+                Inscritos ({inscritosConfirmados.length})
               </h2>
               {estado === ESTADO_TORNEO.PENDIENTE && (
                 <BandejaInscripciones torneos={[{ id: torneo.id, nombre: torneo.nombre }]} />
               )}
               <ListaInscritos
-                inscripciones={inscripciones}
+                inscripciones={inscritosConfirmados}
                 editable={false}
                 onCancelar={cargarDatos}
               />
@@ -292,10 +292,10 @@ export default function DetalleTorneo() {
 
             <section className="detalle-torneo__section">
               <h2 className="detalle-torneo__section-title">
-                Inscritos ({inscripciones.length})
+                Inscritos ({inscritosConfirmados.length})
               </h2>
               <ListaInscritos
-                inscripciones={inscripciones}
+                inscripciones={inscritosConfirmados}
                 editable={false}
                 onCancelar={cargarDatos}
               />

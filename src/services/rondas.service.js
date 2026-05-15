@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from './api';
+import { apiGet, apiPost, apiDelete } from './api';
 
 export async function listarRondas(torneoId) {
   return apiGet(`/torneos/${torneoId}/rondas`);
@@ -10,4 +10,8 @@ export async function obtenerRonda(torneoId, rondaId) {
 
 export async function crearRonda(torneoId, { tipo }) {
   return apiPost(`/torneos/${torneoId}/rondas`, { tipo_ronda: tipo });
+}
+
+export async function eliminarRonda(torneoId, rondaId) {
+  return apiDelete(`/torneos/${torneoId}/rondas/${rondaId}`);
 }

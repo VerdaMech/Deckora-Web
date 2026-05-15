@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { EstadoBadge } from './EstadoBadge';
 import { RESULTADO_ENFRENTAMIENTO } from '@/utils/constants';
 import { Button } from '@/components/ui';
@@ -24,9 +24,13 @@ export function PodTable({ enfrentamiento, editable = false, onReportarResultado
   const [modalAbierto, setModalAbierto] = useState(false);
   const [enfrentamientoLocal, setEnfrentamientoLocal] = useState(enfrentamiento);
 
+  useEffect(() => {
+    setEnfrentamientoLocal(enfrentamiento);
+  }, [enfrentamiento]);
+
   if (!enfrentamiento) return null;
 
-  const jugadores = enfrentamientoLocal.jugadores ?? enfrentamientoLocal.participantes ?? [];
+  const jugadores = enfrentamientoLocal.participantes ?? [];
   const numero = enfrentamientoLocal.numero_mesa ?? enfrentamientoLocal.mesa ?? enfrentamientoLocal.numero ?? '?';
 
   function abrirModal() {

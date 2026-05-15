@@ -2,16 +2,18 @@ import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
-import { obtenerTorneo, listarInscripciones } from '@/services/torneos.service';
+import { obtenerTorneo, listarInscripciones, cambiarEstadoTorneo } from '@/services/torneos.service';
 import { listarRondas } from '@/services/rondas.service';
 import { EstadoBadge } from '@/components/domain/EstadoBadge';
 import { FormatBadge } from '@/components/domain/FormatBadge';
 import { RoundView } from '@/components/domain/RoundView';
 import ListaInscritos from '../components/ListaInscritos';
 import PanelInscripcion from '../components/PanelInscripcion';
-import { Button, Alert, Skeleton } from '@/components/ui';
+import BandejaInscripciones from '../components/BandejaInscripciones';
+import ReportarResultadoModal from '../components/ReportarResultadoModal';
+import { Button, Alert, Skeleton, Modal, Spinner } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
-import { ESTADO_TORNEO } from '@/utils/constants';
+import { ESTADO_TORNEO, ROLES } from '@/utils/constants';
 import { formatFecha, formatHora, formatCupo } from '@/utils/formatters';
 import './DetalleTorneo.css';
 
@@ -25,6 +27,12 @@ export default function DetalleTorneo() {
   const [rondas, setRondas] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
+
+  const [cambiandoEstado, setCambiandoEstado] = useState(false);
+  const [confirmarEstado, setConfirmarEstado] = useState(null);
+  const [errorEstado, setErrorEstado] = useState(null);
+
+  const [enfrentamientoSeleccionado, setEnfrentamientoSeleccionado] = useState(null);
 
   const cargarDatos = useCallback(async () => {
     setCargando(true);
@@ -56,10 +64,34 @@ export default function DetalleTorneo() {
     cargarDatos();
   }, [cargarDatos]);
 
+  async function handleResultadoReportado() {
+    setEnfrentamientoSeleccionado(null);
+    const r = await listarRondas(id).catch(() => []);
+    setRondas(Array.isArray(r) ? r : r?.rondas ?? r?.data ?? []);
+  }
+
+  async function handleCambiarEstado(nuevoEstado) {
+    setCambiandoEstado(true);
+    setConfirmarEstado(null);
+    setErrorEstado(null);
+    try {
+      await cambiarEstadoTorneo(id, nuevoEstado);
+      setTorneo((prev) => ({ ...prev, estado: nuevoEstado }));
+      if (nuevoEstado === ESTADO_TORNEO.EN_CURSO || nuevoEstado === ESTADO_TORNEO.FINALIZADO) {
+        const r = await listarRondas(id).catch(() => []);
+        setRondas(Array.isArray(r) ? r : r?.rondas ?? r?.data ?? []);
+      }
+    } catch (e) {
+      setErrorEstado(e.message ?? 'Error al cambiar el estado del torneo');
+    } finally {
+      setCambiandoEstado(false);
+    }
+  }
+
+  const inscritosConfirmados = inscripciones.filter((i) => i.confirmado);
+
   const inscripcionPropia = user
-    ? inscripciones.find(
-        (i) => i.usuario_id === user.id || i.jugador_id === user.id
-      )
+    ? inscripciones.find((i) => i.usuario_id === user.id)
     : null;
 
   if (cargando) {
@@ -87,7 +119,13 @@ export default function DetalleTorneo() {
 
   if (!torneo) return null;
 
-  const inscritos = torneo.inscritos_count ?? torneo.inscripciones_count ?? inscripciones.length;
+  const inscritos = torneo.inscritos_count ?? torneo.inscripciones_count ?? inscritosConfirmados.length;
+  const estado = torneo.estado;
+
+  const esOrganizador =
+    user != null &&
+    (user.rol === ROLES.ORGANIZADOR || user.rol === ROLES.TIENDA) &&
+    user.id === torneo?.organizador_id;
 
   return (
     <div className="detalle-torneo-page">
@@ -101,7 +139,7 @@ export default function DetalleTorneo() {
 
           <div className="detalle-torneo__badges">
             <FormatBadge formato={torneo.formato} />
-            <EstadoBadge estado={torneo.estado} />
+            <EstadoBadge estado={estado} />
           </div>
 
           <h1 className="detalle-torneo__nombre">{torneo.nombre}</h1>
@@ -143,65 +181,195 @@ export default function DetalleTorneo() {
           </section>
         )}
 
-        {/* Inscripción */}
-        <section className="detalle-torneo__section" id="inscripcion">
-          <h2 className="detalle-torneo__section-title">Inscripción</h2>
-          <PanelInscripcion
-            torneo={torneo}
-            usuario={user}
-            inscripcionPropia={inscripcionPropia}
-            onInscribirse={cargarDatos}
-            onCancelar={cargarDatos}
-          />
-        </section>
+        {esOrganizador ? (
+          <>
+            {/* Panel de administración para organizador/tienda */}
+            <section className="detalle-torneo__section">
+              <h2 className="detalle-torneo__section-title">Administración</h2>
 
-        {/* Inscritos */}
-        <section className="detalle-torneo__section">
-          <h2 className="detalle-torneo__section-title">
-            Inscritos ({inscripciones.length})
-          </h2>
-          <ListaInscritos
-            inscripciones={inscripciones}
-            editable
-            onCancelar={cargarDatos}
-          />
-        </section>
+              {errorEstado && <Alert variant="danger">{errorEstado}</Alert>}
 
-        {/* Rondas */}
-        <section className="detalle-torneo__section detalle-torneo__section--rondas">
-          <h2 className="detalle-torneo__section-title">Rondas</h2>
-          {torneo.estado === ESTADO_TORNEO.PENDIENTE ? (
-            <div className="detalle-torneo__rondas-placeholder">
-              <p className="detalle-torneo__placeholder-text">
-                Las rondas aparecerán cuando el torneo inicie.
-              </p>
-            </div>
-          ) : rondas.length === 0 ? (
-            <div className="detalle-torneo__rondas-placeholder">
-              <p className="detalle-torneo__placeholder-text">
-                El torneo comenzó pero aún no hay rondas creadas.
-              </p>
-            </div>
-          ) : (
-            <div className="detalle-torneo__rondas-lista">
-              {rondas.map((ronda, idx) => (
-                <RoundView key={ronda.id ?? idx} ronda={ronda} editable={false} />
-              ))}
-            </div>
-          )}
-        </section>
+              <div className="detalle-torneo__admin-acciones">
+                <Button
+                  variant="secondary"
+                  onClick={() => navigate(`/organizador/torneos/${id}/gestion`)}
+                >
+                  Gestionar torneo
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => navigate(`/organizador/torneos/${id}/editar`)}
+                >
+                  Editar torneo
+                </Button>
+                {estado === ESTADO_TORNEO.PENDIENTE && (
+                  <Button
+                    variant="primary"
+                    onClick={() => setConfirmarEstado({ nuevo: ESTADO_TORNEO.EN_CURSO, label: 'publicar' })}
+                    disabled={cambiandoEstado}
+                  >
+                    {cambiandoEstado ? <Spinner size="sm" /> : 'Publicar torneo'}
+                  </Button>
+                )}
+                {estado === ESTADO_TORNEO.EN_CURSO && (
+                  <Button
+                    variant="secondary"
+                    onClick={() => setConfirmarEstado({ nuevo: ESTADO_TORNEO.FINALIZADO, label: 'finalizar' })}
+                    disabled={cambiandoEstado}
+                  >
+                    {cambiandoEstado ? <Spinner size="sm" /> : 'Finalizar torneo'}
+                  </Button>
+                )}
+                {(estado === ESTADO_TORNEO.PENDIENTE || estado === ESTADO_TORNEO.EN_CURSO) && (
+                  <Button
+                    variant="danger"
+                    onClick={() => setConfirmarEstado({ nuevo: ESTADO_TORNEO.CANCELADO, label: 'cancelar' })}
+                    disabled={cambiandoEstado}
+                  >
+                    Cancelar torneo
+                  </Button>
+                )}
+              </div>
+            </section>
+
+            {/* Inscripciones pendientes para el organizador */}
+            <section className="detalle-torneo__section">
+              <h2 className="detalle-torneo__section-title">
+                Inscritos ({inscritosConfirmados.length})
+              </h2>
+              {estado === ESTADO_TORNEO.PENDIENTE && (
+                <BandejaInscripciones torneos={[{ id: torneo.id, nombre: torneo.nombre }]} />
+              )}
+              <ListaInscritos
+                inscripciones={inscritosConfirmados}
+                editable={false}
+                onCancelar={cargarDatos}
+              />
+            </section>
+
+            {/* Rondas editables para el organizador cuando el torneo está en curso */}
+            <section className="detalle-torneo__section detalle-torneo__section--rondas">
+              <h2 className="detalle-torneo__section-title">Rondas</h2>
+              {estado === ESTADO_TORNEO.PENDIENTE ? (
+                <div className="detalle-torneo__rondas-placeholder">
+                  <p className="detalle-torneo__placeholder-text">
+                    Las rondas aparecerán cuando el torneo inicie.
+                  </p>
+                </div>
+              ) : rondas.length === 0 ? (
+                <div className="detalle-torneo__rondas-placeholder">
+                  <p className="detalle-torneo__placeholder-text">
+                    El torneo comenzó pero aún no hay rondas creadas.
+                  </p>
+                </div>
+              ) : (
+                <div className="detalle-torneo__rondas-lista">
+                  {rondas.map((ronda, idx) => (
+                    <RoundView
+                      key={ronda.id ?? idx}
+                      ronda={ronda}
+                      editable={estado === ESTADO_TORNEO.EN_CURSO}
+                      onReportarResultado={estado === ESTADO_TORNEO.EN_CURSO ? setEnfrentamientoSeleccionado : undefined}
+                    />
+                  ))}
+                </div>
+              )}
+            </section>
+          </>
+        ) : (
+          <>
+            {/* Vista para jugadores y anónimos */}
+            <section className="detalle-torneo__section" id="inscripcion">
+              <h2 className="detalle-torneo__section-title">Inscripción</h2>
+              <PanelInscripcion
+                torneo={torneo}
+                usuario={user}
+                inscripcionPropia={inscripcionPropia}
+                onInscribirse={cargarDatos}
+                onCancelar={cargarDatos}
+              />
+            </section>
+
+            <section className="detalle-torneo__section">
+              <h2 className="detalle-torneo__section-title">
+                Inscritos ({inscritosConfirmados.length})
+              </h2>
+              <ListaInscritos
+                inscripciones={inscritosConfirmados}
+                editable={false}
+                onCancelar={cargarDatos}
+              />
+            </section>
+
+            <section className="detalle-torneo__section detalle-torneo__section--rondas">
+              <h2 className="detalle-torneo__section-title">Rondas</h2>
+              {estado === ESTADO_TORNEO.PENDIENTE ? (
+                <div className="detalle-torneo__rondas-placeholder">
+                  <p className="detalle-torneo__placeholder-text">
+                    Las rondas aparecerán cuando el torneo inicie.
+                  </p>
+                </div>
+              ) : rondas.length === 0 ? (
+                <div className="detalle-torneo__rondas-placeholder">
+                  <p className="detalle-torneo__placeholder-text">
+                    El torneo comenzó pero aún no hay rondas creadas.
+                  </p>
+                </div>
+              ) : (
+                <div className="detalle-torneo__rondas-lista">
+                  {rondas.map((ronda, idx) => (
+                    <RoundView key={ronda.id ?? idx} ronda={ronda} editable={false} />
+                  ))}
+                </div>
+              )}
+            </section>
+          </>
+        )}
 
         <div className="detalle-torneo__footer-actions">
           <Button variant="ghost" onClick={() => navigate('/torneos')}>
             <ArrowLeft size={16} /> Volver a cartelera
           </Button>
-          {user?.id === torneo.organizador_id && torneo.estado === 'pendiente' && (
-            <Button variant="secondary" onClick={() => navigate(`/organizador/torneos/${id}/editar`)}>
-              Editar torneo
-            </Button>
-          )}
         </div>
       </div>
+
+      {/* Modal reportar resultado (organizador) */}
+      {enfrentamientoSeleccionado && (
+        <ReportarResultadoModal
+          enfrentamiento={enfrentamientoSeleccionado}
+          isOpen
+          onClose={() => setEnfrentamientoSeleccionado(null)}
+          onReportado={handleResultadoReportado}
+        />
+      )}
+
+      {/* Modal confirmación cambio de estado */}
+      {confirmarEstado && (
+        <Modal
+          show
+          onHide={() => setConfirmarEstado(null)}
+          title="Confirmar acción"
+          footer={
+            <>
+              <Button variant="ghost" onClick={() => setConfirmarEstado(null)} disabled={cambiandoEstado}>
+                Cancelar
+              </Button>
+              <Button
+                variant={confirmarEstado.nuevo === ESTADO_TORNEO.CANCELADO ? 'danger' : 'primary'}
+                onClick={() => handleCambiarEstado(confirmarEstado.nuevo)}
+                disabled={cambiandoEstado}
+              >
+                {cambiandoEstado ? <Spinner size="sm" /> : 'Confirmar'}
+              </Button>
+            </>
+          }
+        >
+          <p>
+            ¿Estás seguro de que querés <strong>{confirmarEstado.label}</strong> el torneo{' '}
+            <strong>{torneo?.nombre}</strong>?
+          </p>
+        </Modal>
+      )}
     </div>
   );
 }

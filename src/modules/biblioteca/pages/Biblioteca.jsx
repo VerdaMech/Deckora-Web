@@ -2,16 +2,23 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-import { MTGCard } from '@/components/domain';
+import { MTGCard, ManaCost } from '@/components/domain';
 import Modal from '@/components/ui/Modal';
 import Skeleton from '@/components/ui/Skeleton';
 import Alert from '@/components/ui/Alert';
 import EmptyState from '@/components/ui/EmptyState';
+import { useAuth } from '@/hooks/useAuth';
 import { listarCartas, listarSets } from '@/services/biblioteca.service';
+import { listarMisMazos, agregarCartaAMazo } from '@/services/mazos.service';
 
 import './Biblioteca.css';
 
 const LIMIT = 40;
+
+const FORMATOS_LEGALITIES = [
+  'standard', 'pioneer', 'modern', 'legacy', 'vintage',
+  'commander', 'pauper', 'historic', 'explorer', 'alchemy', 'brawl',
+];
 
 function adaptarCarta(carta) {
   return {
@@ -33,7 +40,19 @@ function getPaginas(actual, total) {
   return paginas;
 }
 
+function LegalityBadge({ status }) {
+  return (
+    <span className={`biblioteca__legality-badge biblioteca__legality-badge--${status ?? 'not_legal'}`}>
+      {status === 'legal' ? 'Legal'
+        : status === 'banned' ? 'Prohibida'
+        : status === 'restricted' ? 'Restringida'
+        : 'No legal'}
+    </span>
+  );
+}
+
 export default function Biblioteca() {
+  const { user, rol } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10));
   const setCodigo = searchParams.get('set_codigo') ?? '';
@@ -44,6 +63,12 @@ export default function Biblioteca() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [cartaZoom, setCartaZoom] = useState(null);
+
+  const [mazos, setMazos] = useState([]);
+  const [cargandoMazos, setCargandoMazos] = useState(false);
+  const [mazoSeleccionado, setMazoSeleccionado] = useState('');
+  const [agregando, setAgregando] = useState(false);
+  const [feedbackAgregar, setFeedbackAgregar] = useState(null);
 
   useEffect(() => {
     listarSets()
@@ -70,6 +95,21 @@ export default function Biblioteca() {
     cargarCartas();
   }, [cargarCartas]);
 
+  useEffect(() => {
+    if (!cartaZoom || !user || rol !== 'jugador') return;
+    setCargandoMazos(true);
+    setMazoSeleccionado('');
+    setFeedbackAgregar(null);
+    listarMisMazos()
+      .then((data) => {
+        const lista = Array.isArray(data) ? data : (data?.mazos ?? data?.data ?? []);
+        setMazos(lista);
+        if (lista.length > 0) setMazoSeleccionado(String(lista[0].id));
+      })
+      .catch(() => setMazos([]))
+      .finally(() => setCargandoMazos(false));
+  }, [cartaZoom, user, rol]);
+
   function handleSetChange(e) {
     const value = e.target.value;
     setSearchParams(value ? { set_codigo: value, page: '1' } : { page: '1' });
@@ -81,6 +121,21 @@ export default function Biblioteca() {
     params.page = String(nuevaPagina);
     setSearchParams(params);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async function handleAgregarCarta() {
+    if (!mazoSeleccionado) return;
+    setAgregando(true);
+    setFeedbackAgregar(null);
+    const scryfallId = cartaZoom.scryfall_id ?? cartaZoom.scryfallId ?? cartaZoom.id;
+    try {
+      await agregarCartaAMazo(mazoSeleccionado, { scryfallId, cantidad: 1, esComandante: false });
+      setFeedbackAgregar({ tipo: 'ok', msg: 'Carta agregada al mazo.' });
+    } catch (err) {
+      setFeedbackAgregar({ tipo: 'error', msg: err.message ?? 'No se pudo agregar la carta.' });
+    } finally {
+      setAgregando(false);
+    }
   }
 
   const inicio = pagination ? (page - 1) * LIMIT + 1 : 0;
@@ -193,19 +248,113 @@ export default function Biblioteca() {
         show={!!cartaZoom}
         onHide={() => setCartaZoom(null)}
         title={cartaZoom?.nombre ?? ''}
-        size="lg"
+        size="xl"
       >
-        <div className="biblioteca__zoom">
-          {cartaZoom?.imagen_url ? (
-            <img
-              src={cartaZoom.imagen_url}
-              alt={cartaZoom.nombre}
-              className="biblioteca__zoom-img"
-            />
-          ) : (
-            <div className="biblioteca__zoom-placeholder">{cartaZoom?.nombre}</div>
-          )}
-        </div>
+        {cartaZoom && (
+          <div className="biblioteca__zoom">
+            <div className="biblioteca__zoom-imagen">
+              {cartaZoom.imagen_url ? (
+                <img
+                  src={cartaZoom.imagen_url}
+                  alt={cartaZoom.nombre}
+                  className="biblioteca__zoom-img"
+                />
+              ) : (
+                <div className="biblioteca__zoom-placeholder">{cartaZoom.nombre}</div>
+              )}
+            </div>
+
+            <div className="biblioteca__zoom-info">
+              <div className="biblioteca__zoom-mana-tipo">
+                <span className="biblioteca__zoom-tipo">{cartaZoom.tipo}</span>
+                {cartaZoom.costo_mana && (
+                  <ManaCost cost={cartaZoom.costo_mana} />
+                )}
+              </div>
+
+              {cartaZoom.texto && (
+                <p className="biblioteca__zoom-texto">{cartaZoom.texto}</p>
+              )}
+
+              {cartaZoom.fuerza != null && cartaZoom.resistencia != null && (
+                <p className="biblioteca__zoom-pt">
+                  {cartaZoom.fuerza} / {cartaZoom.resistencia}
+                </p>
+              )}
+
+              {(cartaZoom.set_nombre || cartaZoom.set_fecha_lanzamiento) && (
+                <div className="biblioteca__zoom-set">
+                  {cartaZoom.set_nombre && <span>{cartaZoom.set_nombre}</span>}
+                  {cartaZoom.set_fecha_lanzamiento && (
+                    <span>
+                      {new Date(cartaZoom.set_fecha_lanzamiento).toLocaleDateString('es-CL', {
+                        year: 'numeric',
+                        month: 'long',
+                      })}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {cartaZoom.legalities && (
+                <div className="biblioteca__legalities">
+                  <p className="biblioteca__legalities-titulo">Legalidades</p>
+                  <div className="biblioteca__legalities-grid">
+                    {FORMATOS_LEGALITIES.map((formato) => (
+                      <div key={formato} className="biblioteca__legality-item">
+                        <LegalityBadge status={cartaZoom.legalities[formato]} />
+                        <span className="biblioteca__legality-formato">{formato}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {user && rol === 'jugador' && (
+                <div className="biblioteca__zoom-agregar">
+                  <p className="biblioteca__zoom-agregar-titulo">Agregar a mazo</p>
+                  {cargandoMazos ? (
+                    <p className="biblioteca__zoom-msg">Cargando mazos…</p>
+                  ) : mazos.length === 0 ? (
+                    <p className="biblioteca__zoom-msg">No tienes mazos creados.</p>
+                  ) : (
+                    <>
+                      <div className="biblioteca__zoom-agregar-row">
+                        <select
+                          className="biblioteca__zoom-select"
+                          value={mazoSeleccionado}
+                          onChange={(e) => {
+                            setMazoSeleccionado(e.target.value);
+                            setFeedbackAgregar(null);
+                          }}
+                          aria-label="Seleccionar mazo"
+                        >
+                          {mazos.map((m) => (
+                            <option key={m.id} value={String(m.id)}>
+                              {m.nombre}
+                            </option>
+                          ))}
+                        </select>
+                        <button
+                          className="btn btn--primary btn--sm"
+                          onClick={handleAgregarCarta}
+                          disabled={agregando || !mazoSeleccionado}
+                        >
+                          {agregando ? 'Agregando…' : 'Agregar'}
+                        </button>
+                      </div>
+                      {feedbackAgregar && (
+                        <p className={`biblioteca__zoom-feedback biblioteca__zoom-feedback--${feedbackAgregar.tipo}`}>
+                          {feedbackAgregar.msg}
+                        </p>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   );

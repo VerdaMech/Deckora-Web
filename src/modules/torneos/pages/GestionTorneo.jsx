@@ -3,9 +3,10 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ExternalLink, Swords } from 'lucide-react';
 
 import { obtenerTorneo, cambiarEstadoTorneo } from '@/services/torneos.service';
-import { listarRondas, crearRonda } from '@/services/rondas.service';
+import { listarRondas, crearRonda, eliminarRonda } from '@/services/rondas.service';
 import { EstadoBadge } from '@/components/domain/EstadoBadge';
 import { RoundView } from '@/components/domain/RoundView';
+import ReportarResultadoModal from '@/modules/torneos/components/ReportarResultadoModal';
 import { Button, Alert, Skeleton, Select, Spinner, Modal, EmptyState, Tabs } from '@/components/ui';
 import { TIPO_RONDA, ESTADO_TORNEO } from '@/utils/constants';
 import './GestionTorneo.css';
@@ -33,6 +34,11 @@ export default function GestionTorneo() {
   const [cambiandoEstado, setCambiandoEstado] = useState(false);
   const [confirmarEstado, setConfirmarEstado] = useState(null);
   const [errorEstado, setErrorEstado] = useState(null);
+
+  const [confirmarEliminar, setConfirmarEliminar] = useState(null);
+  const [eliminandoRonda, setEliminandoRonda] = useState(false);
+
+  const [enfrentamientoSeleccionado, setEnfrentamientoSeleccionado] = useState(null);
 
   const cargar = useCallback(async () => {
     setCargando(true);
@@ -73,6 +79,21 @@ export default function GestionTorneo() {
     }
   }
 
+  async function handleEliminarRonda(ronda) {
+    setEliminandoRonda(true);
+    try {
+      await eliminarRonda(id, ronda.id);
+      setRondas((prev) => prev.filter((r) => r.id !== ronda.id));
+      setTabActivo('crear');
+      setConfirmarEliminar(null);
+    } catch (err) {
+      setErrorRonda(err.message ?? 'Error al eliminar la ronda');
+      setConfirmarEliminar(null);
+    } finally {
+      setEliminandoRonda(false);
+    }
+  }
+
   async function handleCambiarEstado(nuevoEstado) {
     setCambiandoEstado(true);
     setConfirmarEstado(null);
@@ -85,6 +106,13 @@ export default function GestionTorneo() {
     } finally {
       setCambiandoEstado(false);
     }
+  }
+
+  async function handleResultadoReportado() {
+    setEnfrentamientoSeleccionado(null);
+    const r = await listarRondas(id).catch(() => []);
+    const lista = Array.isArray(r) ? r : r?.rondas ?? r?.data ?? [];
+    setRondas(lista);
   }
 
   if (cargando) {
@@ -189,7 +217,20 @@ export default function GestionTorneo() {
           {tabsRondas.map(({ key, label, ronda }) => (
             <Tabs.Tab key={key} eventKey={key} label={label}>
               <div className="gestion-torneo-page__ronda">
-                <RoundView ronda={ronda} editable />
+                <RoundView
+                  ronda={ronda}
+                  editable={estado === ESTADO_TORNEO.EN_CURSO}
+                  onReportarResultado={setEnfrentamientoSeleccionado}
+                />
+                <div className="gestion-torneo-page__ronda-footer">
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => setConfirmarEliminar(ronda)}
+                  >
+                    Eliminar ronda
+                  </Button>
+                </div>
               </div>
             </Tabs.Tab>
           ))}
@@ -214,6 +255,41 @@ export default function GestionTorneo() {
           </Tabs.Tab>
         </Tabs>
       </div>
+
+      {/* Modal reportar resultado */}
+      {enfrentamientoSeleccionado && (
+        <ReportarResultadoModal
+          enfrentamiento={enfrentamientoSeleccionado}
+          isOpen
+          onClose={() => setEnfrentamientoSeleccionado(null)}
+          onReportado={handleResultadoReportado}
+        />
+      )}
+
+      {/* Modal confirmación eliminar ronda */}
+      {confirmarEliminar && (
+        <Modal
+          show
+          onHide={() => setConfirmarEliminar(null)}
+          title="Eliminar ronda"
+          footer={
+            <>
+              <Button variant="ghost" onClick={() => setConfirmarEliminar(null)} disabled={eliminandoRonda}>
+                Cancelar
+              </Button>
+              <Button variant="danger" onClick={() => handleEliminarRonda(confirmarEliminar)} disabled={eliminandoRonda}>
+                {eliminandoRonda ? <Spinner size="sm" /> : 'Eliminar'}
+              </Button>
+            </>
+          }
+        >
+          <p className="gestion-torneo-page__modal-texto">
+            ¿Estás seguro de que querés eliminar la{' '}
+            <strong>Ronda {confirmarEliminar.numero_ronda ?? confirmarEliminar.numero}</strong>?
+            Esta acción no se puede deshacer.
+          </p>
+        </Modal>
+      )}
 
       {/* Modal confirmación cambio de estado */}
       {confirmarEstado && (

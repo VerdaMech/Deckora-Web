@@ -7,7 +7,7 @@ import { MTGCard } from '@/components/domain';
 
 import './BarraAgregarCarta.css';
 
-export function BarraAgregarCarta({ onAgregar }) {
+export function BarraAgregarCarta({ onAgregar, formato = null, modoPanel }) {
   const [query, setQuery] = useState('');
   const [resultados, setResultados] = useState([]);
   const [cargando, setCargando] = useState(false);
@@ -28,7 +28,7 @@ export function BarraAgregarCarta({ onAgregar }) {
     setCargando(true);
     setErrorBusqueda(false);
 
-    buscarCartas(debouncedQuery)
+    buscarCartas(debouncedQuery, 20, formato)
       .then((data) => {
         if (!activo) return;
         const lista = Array.isArray(data) ? data : (data?.cartas ?? data?.data ?? []);

@@ -2,6 +2,19 @@ import { supabase } from './supabase';
 
 const API_URL = import.meta.env.VITE_API_URL ?? '';
 
+// Token en memoria actualizado via onAuthStateChange — evita llamar
+// getSession() antes de cada request, lo que causaba race conditions con
+// el lock interno de Supabase cuando varios requests se disparaban juntos.
+let _token = null;
+
+supabase.auth.getSession().then(({ data }) => {
+  _token = data?.session?.access_token ?? null;
+});
+
+supabase.auth.onAuthStateChange((_event, session) => {
+  _token = session?.access_token ?? null;
+});
+
 async function limpiarSesionExpirada() {
   try {
     await supabase.auth.signOut();
@@ -10,20 +23,8 @@ async function limpiarSesionExpirada() {
   }
 }
 
-async function getAccessToken() {
-  try {
-    // Timeout como red de seguridad: getSession() puede bloquearse si Supabase
-    // está ejecutando un auto-refresh o manteniendo un lock interno durante signIn.
-    const timeout = new Promise((resolve) => setTimeout(() => resolve(null), 10000));
-    const tokenP = supabase.auth.getSession().then(({ data }) => data?.session?.access_token ?? null);
-    return await Promise.race([tokenP, timeout]);
-  } catch {
-    return null;
-  }
-}
-
 async function apiFetch(path, options = {}) {
-  const token = await getAccessToken();
+  const token = _token;
 
   const headers = { ...options.headers };
   if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -42,9 +43,8 @@ async function apiFetch(path, options = {}) {
       throw new Error('Sesión expirada');
     }
 
-    // Usar el token devuelto por refreshSession() directamente para evitar
-    // una segunda llamada a getSession() que podría bloquearse.
     const newToken = refreshData?.session?.access_token ?? null;
+    _token = newToken;
     const retryHeaders = { ...options.headers };
     if (newToken) retryHeaders['Authorization'] = `Bearer ${newToken}`;
     if (options.body && !retryHeaders['Content-Type']) {

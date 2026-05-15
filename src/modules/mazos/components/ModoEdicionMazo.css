@@ -1,0 +1,94 @@
+.modo-edicion {
+  position: relative;
+}
+
+.modo-edicion__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-5);
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.modo-edicion__toolbar-label {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+}
+
+.modo-edicion__toolbar-acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* El botón "Buscar carta" sólo aparece en mobile */
+.modo-edicion__btn-buscar-mobile {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Toast de notificación */
+.modo-edicion__toast {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-5);
+  z-index: var(--z-toast);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  font-size: 0.85rem;
+  max-width: 360px;
+  box-shadow: var(--shadow-md);
+  animation: toast-in 0.25s ease;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.modo-edicion__toast--danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid rgba(192, 57, 43, 0.4);
+}
+
+.modo-edicion__toast--success {
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid rgba(74, 140, 94, 0.4);
+}
+
+.modo-edicion__toast--info {
+  background: var(--info-bg);
+  color: var(--info);
+  border: 1px solid rgba(90, 127, 160, 0.4);
+}
+
+.modo-edicion__toast-cerrar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  padding: 0;
+  display: flex;
+  flex-shrink: 0;
+}
+
+@media (min-width: 992px) {
+  /* En desktop la columna del buscador está siempre visible; ocultamos el botón flotante */
+  .modo-edicion__btn-buscar-mobile {
+    display: none;
+  }
+}

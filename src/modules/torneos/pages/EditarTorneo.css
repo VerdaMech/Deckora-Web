@@ -1,0 +1,48 @@
+.editar-torneo-page {
+  padding: var(--space-6) var(--space-5);
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.editar-torneo-page--error {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.editar-torneo-page__skeleton-title {
+  margin-bottom: var(--space-5);
+}
+
+.editar-torneo-page__header {
+  margin-bottom: var(--space-6);
+}
+
+.editar-torneo-page__title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-2);
+}
+
+.editar-torneo-page__subtitle {
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.editar-torneo-page__body {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
+@media (max-width: 768px) {
+  .editar-torneo-page {
+    padding: var(--space-4);
+  }
+
+  .editar-torneo-page__body {
+    padding: var(--space-4);
+  }
+}

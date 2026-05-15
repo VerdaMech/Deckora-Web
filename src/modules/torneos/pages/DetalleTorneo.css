@@ -1,0 +1,189 @@
+.detalle-torneo-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-bottom: var(--space-8);
+}
+
+.detalle-torneo-page--error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-8) var(--space-6);
+}
+
+/* Header inmersivo */
+.detalle-torneo__header {
+  position: relative;
+  min-height: 320px;
+  background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-panel) 50%, var(--bg-elevated) 100%);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.detalle-torneo__header-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 6, 8, 0.3) 0%,
+    rgba(10, 6, 8, 0.75) 100%
+  );
+}
+
+.detalle-torneo__header-content {
+  position: relative;
+  z-index: 1;
+  padding: var(--space-7) var(--space-6) var(--space-6);
+  width: 100%;
+  max-width: 860px;
+}
+
+.detalle-torneo__volver {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-micro);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-bottom: var(--space-4);
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.detalle-torneo__volver:hover {
+  color: var(--gold);
+}
+
+.detalle-torneo__badges {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}
+
+.detalle-torneo__nombre {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.75rem, 4vw, var(--font-h1));
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-4);
+  line-height: 1.2;
+}
+
+.detalle-torneo__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.detalle-torneo__meta-item {
+  font-family: 'Crimson Pro', serif;
+  font-size: var(--font-body);
+  color: var(--text-muted);
+}
+
+.detalle-torneo__cupo {
+  color: var(--gold-dim);
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-micro);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.detalle-torneo__org-link {
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.detalle-torneo__org-link:hover {
+  text-decoration: underline;
+}
+
+/* Body */
+.detalle-torneo__body {
+  padding: var(--space-7) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+}
+
+@media (max-width: 768px) {
+  .detalle-torneo__body {
+    padding: var(--space-6) var(--space-4);
+  }
+}
+
+/* Secciones */
+.detalle-torneo__section-title {
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-h3);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.detalle-torneo__descripcion {
+  font-family: 'Crimson Pro', serif;
+  font-size: var(--font-body-lg);
+  color: var(--text-default);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Placeholders con altura reservada */
+.detalle-torneo__inscripcion-placeholder {
+  min-height: 200px;
+  background: var(--bg-panel);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detalle-torneo__rondas-placeholder {
+  min-height: 160px;
+  background: var(--bg-panel);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detalle-torneo__placeholder-text {
+  font-family: 'Crimson Pro', serif;
+  font-size: var(--font-body);
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 0;
+  text-align: center;
+  padding: var(--space-5);
+}
+
+/* Skeleton */
+.detalle-torneo__skeleton-header {
+  width: 100%;
+  border-radius: 0;
+}
+
+/* Footer */
+.detalle-torneo__footer-actions {
+  display: flex;
+  justify-content: flex-start;
+}

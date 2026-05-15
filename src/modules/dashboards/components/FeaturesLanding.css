@@ -1,0 +1,97 @@
+.features-landing {
+  padding: var(--space-8) var(--space-5);
+  text-align: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.features-landing__titulo {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-7);
+}
+
+.features-landing__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-5);
+}
+
+.features-landing__item {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.features-landing__item:hover {
+  border-color: var(--border-default);
+  transform: translateY(-2px);
+}
+
+.features-landing__icono-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
+  background: rgba(201, 168, 76, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.features-landing__icono {
+  color: var(--gold);
+}
+
+.features-landing__item-titulo {
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.features-landing__badge {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  padding: 2px 8px;
+}
+
+.features-landing__item-desc {
+  font-family: 'Crimson Pro', serif;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.55;
+}
+
+@media (max-width: 992px) {
+  .features-landing__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .features-landing__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .features-landing {
+    padding: var(--space-7) var(--space-4);
+  }
+}

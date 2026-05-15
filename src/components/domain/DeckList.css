@@ -1,0 +1,262 @@
+.deck-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.deck-list--empty {
+  padding: var(--space-5) 0;
+}
+
+.deck-list__empty-text {
+  font-family: 'Crimson Pro', Georgia, serif;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Group */
+.deck-list__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.deck-list__group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-1) 0;
+  border-bottom: 1px solid var(--border-subtle);
+  grid-column: 1 / -1;
+}
+
+.deck-list__group-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+}
+
+.deck-list__group-count {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.deck-list__group-entradas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.deck-list--editable .deck-list__group-entradas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* Entry */
+.deck-list__entrada {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  overflow: hidden;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.deck-list--editable .deck-list__entrada {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2);
+}
+
+.deck-list__entrada:hover {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.deck-list__entrada--commander {
+  border-color: var(--border-subtle);
+  background-color: rgba(201, 168, 76, 0.04);
+}
+
+.deck-list__entrada-info {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+  cursor: default;
+  width: 100%;
+}
+
+.deck-list--editable .deck-list__entrada-info {
+  align-items: center;
+}
+
+.deck-list__entrada-info[role="button"] {
+  cursor: pointer;
+}
+
+.deck-list__entrada-info[role="button"]:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
+}
+
+/* Modo lectura: imagen llena la celda respetando proporción real de carta MTG */
+.deck-list__entrada-info .mtg-card--thumbnail {
+  width: 100%;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.deck-list__entrada-info .mtg-card--thumbnail .mtg-card__image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 488 / 680;
+  object-fit: cover;
+}
+
+.deck-list__entrada-info .mtg-card--thumbnail .mtg-card__skeleton {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 488 / 680;
+}
+
+/* Modo edición: imagen compacta */
+.deck-list--editable .deck-list__entrada-info .mtg-card--thumbnail {
+  width: 40px;
+  height: 56px;
+}
+
+.deck-list--editable .deck-list__entrada-info .mtg-card--thumbnail .mtg-card__image {
+  width: 40px;
+  height: 56px;
+}
+
+.deck-list__entrada-texto {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.deck-list__carta-nombre {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.deck-list__cmdr-badge {
+  margin-top: var(--space-1);
+}
+
+/* Controls (editable mode) */
+.deck-list__controles {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.deck-list__stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.deck-list__stepper-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: none;
+  color: var(--text-default);
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.deck-list__stepper-btn:hover:not(:disabled) {
+  background-color: var(--bg-panel-2);
+  color: var(--gold);
+}
+
+.deck-list__stepper-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.deck-list__cantidad {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  min-width: 20px;
+  text-align: center;
+}
+
+.deck-list__cantidad-ro {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.deck-list__btn-eliminar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.deck-list__btn-eliminar:hover {
+  background-color: var(--danger-bg);
+  color: var(--danger);
+}
+
+.deck-list__btn-cmdr {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: var(--space-1);
+  transition: color 0.15s;
+}
+
+.deck-list__btn-cmdr:hover {
+  color: var(--gold);
+}
+
+/* Suprimir efectos hover de MTGCard dentro del DeckList sin afectar otros contextos */
+.deck-list .mtg-card__preview {
+  display: none !important;
+}
+
+.deck-list .mtg-card--thumbnail:hover .mtg-card__image {
+  border-color: var(--border-subtle);
+}

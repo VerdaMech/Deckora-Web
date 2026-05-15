@@ -1,0 +1,98 @@
+.dashboard-tienda {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-6) var(--space-5);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.dashboard-tienda__saludo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.dashboard-tienda__bienvenida {
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-h3);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.dashboard-tienda__nombre {
+  color: var(--role-tienda);
+}
+
+.dashboard-tienda__subtitulo {
+  font-family: 'Crimson Pro', serif;
+  font-size: var(--font-body-lg);
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Lista de torneos */
+.dashboard-tienda__torneo-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.dashboard-tienda__torneo-item {
+  border-radius: var(--radius-md);
+}
+
+.dashboard-tienda__torneo-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: background 0.15s ease;
+}
+
+.dashboard-tienda__torneo-link:hover {
+  background: var(--bg-panel-2);
+}
+
+.dashboard-tienda__torneo-nombre {
+  font-family: 'Crimson Pro', serif;
+  font-size: var(--font-body);
+  color: var(--text-default);
+}
+
+.dashboard-tienda__torneo-fecha {
+  font-family: 'Cinzel', serif;
+  font-size: var(--font-micro);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gold-dim);
+  white-space: nowrap;
+}
+
+/* Acciones rápidas */
+.dashboard-tienda__acciones {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .dashboard-tienda {
+    padding: var(--space-4);
+  }
+
+  .dashboard-tienda__bienvenida {
+    font-size: var(--font-h4);
+  }
+
+  .dashboard-tienda__acciones {
+    flex-direction: column;
+  }
+}

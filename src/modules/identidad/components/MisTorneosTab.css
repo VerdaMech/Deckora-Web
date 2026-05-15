@@ -1,0 +1,44 @@
+.mis-torneos {}
+
+.mis-torneos__acciones-top {
+  margin-bottom: var(--space-5);
+}
+
+.mis-torneos__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4);
+}
+
+.mis-torneos__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.mis-torneos__card-actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.mis-torneos__modal-texto {
+  color: var(--text-default);
+  margin: 0;
+}
+
+.mis-torneos__reintentar {
+  background: none;
+  border: none;
+  color: var(--gold);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font-size: inherit;
+}
+
+@media (max-width: 480px) {
+  .mis-torneos__card-actions {
+    flex-direction: column;
+  }
+}

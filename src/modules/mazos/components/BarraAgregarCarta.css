@@ -1,0 +1,104 @@
+.barra-agregar {
+  position: relative;
+  width: 100%;
+}
+
+.barra-agregar__input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.barra-agregar__icon {
+  position: absolute;
+  left: var(--space-3);
+  color: var(--text-muted);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.barra-agregar__input {
+  width: 100%;
+  padding: var(--space-3) var(--space-3) var(--space-3) calc(var(--space-3) * 2 + 16px);
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 1rem;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+
+.barra-agregar__input:focus {
+  border-color: var(--border-strong);
+  box-shadow: var(--glow-gold);
+}
+
+.barra-agregar__input::placeholder {
+  color: var(--text-muted);
+}
+
+.barra-agregar__spinner {
+  position: absolute;
+  right: var(--space-3);
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border-default);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: barra-spin 0.7s linear infinite;
+}
+
+@keyframes barra-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Dropdown */
+.barra-agregar__dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  right: 0;
+  background-color: var(--bg-panel-2);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  z-index: var(--z-dropdown);
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.barra-agregar__resultado {
+  display: block;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.15s;
+}
+
+.barra-agregar__resultado:hover,
+.barra-agregar__resultado:focus {
+  background-color: rgba(201, 168, 76, 0.06);
+  outline: none;
+}
+
+.barra-agregar__resultado + .barra-agregar__resultado {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.barra-agregar__sin-resultados {
+  padding: var(--space-4) var(--space-3);
+  color: var(--text-muted);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 0;
+}
+
+.barra-agregar__sin-resultados--error {
+  color: var(--danger);
+}

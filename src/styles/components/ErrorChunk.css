@@ -1,0 +1,19 @@
+.error-chunk {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  min-height: 50vh;
+  padding: var(--space-6);
+  text-align: center;
+}
+
+.error-chunk__mensaje {
+  font-family: 'Crimson Pro', serif;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin: 0;
+  max-width: 360px;
+  line-height: 1.5;
+}

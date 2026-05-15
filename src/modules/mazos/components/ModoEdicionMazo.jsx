@@ -207,7 +207,7 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
         onCantidadChange={handleCantidadChange}
         onEliminar={handleEliminar}
         onMarcarComandante={handleMarcarComandante}
-        onAplicarSugerencia={() => {}}
+        onAplicarSugerencia={handleAgregarCarta}
       />
 
       <Modal

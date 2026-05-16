@@ -34,6 +34,15 @@ export default function DetalleTorneo() {
 
   const [enfrentamientoSeleccionado, setEnfrentamientoSeleccionado] = useState(null);
 
+  const cargarInscripciones = useCallback(async () => {
+    try {
+      const ins = await listarInscripciones(id).catch(() => []);
+      setInscripciones(Array.isArray(ins) ? ins : ins?.inscripciones ?? ins?.data ?? []);
+    } catch {
+      // silently fail
+    }
+  }, [id]);
+
   const cargarDatos = useCallback(async () => {
     setCargando(true);
     setError(null);
@@ -238,7 +247,10 @@ export default function DetalleTorneo() {
                 Inscritos ({inscritosConfirmados.length})
               </h2>
               {estado === ESTADO_TORNEO.PENDIENTE && (
-                <BandejaInscripciones torneos={[{ id: torneo.id, nombre: torneo.nombre }]} />
+                <BandejaInscripciones
+                  torneos={[{ id: torneo.id, nombre: torneo.nombre }]}
+                  onCambio={cargarInscripciones}
+                />
               )}
               <ListaInscritos
                 inscripciones={inscritosConfirmados}

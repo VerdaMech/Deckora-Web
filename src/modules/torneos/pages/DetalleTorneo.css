@@ -182,6 +182,13 @@
   border-radius: 0;
 }
 
+/* Admin actions */
+.detalle-torneo__admin-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
 /* Footer */
 .detalle-torneo__footer-actions {
   display: flex;

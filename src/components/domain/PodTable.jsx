@@ -56,26 +56,30 @@ export function PodTable({ enfrentamiento, editable = false, onReportarResultado
       <table className="pod-table__tabla">
         <thead>
           <tr>
-            <th className="pod-table__th">Jugador</th>
-            <th className="pod-table__th">Mazo / Comandante</th>
-            <th className="pod-table__th">Resultado</th>
+            <th className="pod-table__th pod-table__th--jugador">Jugador</th>
+            <th className="pod-table__th pod-table__th--mazo">Mazo / Comandante</th>
+            <th className="pod-table__th pod-table__th--resultado">Resultado</th>
             <th className="pod-table__th pod-table__th--pts">Pts</th>
           </tr>
         </thead>
         <tbody>
           {jugadores.map((j, idx) => (
             <tr key={j.id ?? idx} className="pod-table__row">
-              <td className="pod-table__td pod-table__td--jugador">
-                <div className="pod-table__avatar">{getInitials(j.nombre_usuario ?? j.nombre)}</div>
-                <span className="pod-table__nombre">{j.nombre_usuario ?? j.nombre ?? '—'}</span>
-              </td>
-              <td className="pod-table__td pod-table__td--mazo">
-                <span className="pod-table__mazo-nombre">{j.mazo?.nombre ?? '—'}</span>
-                {j.mazo?.comandante && (
-                  <span className="pod-table__comandante">{j.mazo.comandante}</span>
-                )}
-              </td>
               <td className="pod-table__td">
+                <div className="pod-table__jugador-inner">
+                  <div className="pod-table__avatar">{getInitials(j.nombre_usuario ?? j.nombre)}</div>
+                  <span className="pod-table__nombre">{j.nombre_usuario ?? j.nombre ?? '—'}</span>
+                </div>
+              </td>
+              <td className="pod-table__td pod-table__td--mazo-col">
+                <div className="pod-table__mazo-inner">
+                  <span className="pod-table__mazo-nombre">{j.mazo?.nombre ?? '—'}</span>
+                  {j.mazo?.comandante && (
+                    <span className="pod-table__comandante">{j.mazo.comandante}</span>
+                  )}
+                </div>
+              </td>
+              <td className="pod-table__td pod-table__td--resultado">
                 <ResultadoLabel resultado={j.resultado} />
               </td>
               <td className="pod-table__td pod-table__td--pts">

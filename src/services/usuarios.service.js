@@ -9,7 +9,22 @@ export async function obtenerEstadisticas(usuarioId) {
 }
 
 export async function obtenerEstadisticasJugador(usuarioId) {
-  return apiGet(`/estadisticas/jugadores/${usuarioId}`);
+  const data = await apiGet(`/estadisticas/jugadores/${usuarioId}`);
+  const ganadas = data.partidas_ganadas ?? 0;
+  const perdidas = data.partidas_perdidas ?? 0;
+  const empatadas = data.partidas_empatadas ?? 0;
+  const total = data.total_partidas ?? ganadas + perdidas + empatadas;
+  return {
+    partidasGanadas: ganadas,
+    partidasPerdidas: perdidas,
+    partidasEmpatadas: empatadas,
+    torneosParticipados: data.torneos_participados ?? 0,
+    torneosGanados: data.torneos_ganados ?? 0,
+    winRate: total > 0 ? ganadas / total : null,
+    historialUltimosMeses: data.historialUltimosMeses ?? [],
+    mazoMasJugado: data.mazoMasJugado ?? null,
+    comandanteFavorito: data.comandanteFavorito ?? null,
+  };
 }
 
 export async function obtenerMisInscripciones() {

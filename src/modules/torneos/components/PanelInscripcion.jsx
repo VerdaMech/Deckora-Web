@@ -117,7 +117,7 @@ export default function PanelInscripcion({
         <p className={`panel-inscripcion__mensaje panel-inscripcion__mensaje--${esPendiente ? 'info' : 'ok'}`}>
           {esPendiente ? (
             <>Solicitud enviada con <strong>{inscripcionPropia.mazo?.nombre ?? 'tu mazo'}</strong>.{' '}
-            Esperando aprobación del organizador.</>
+            Esperando aprobación del organizador. Recibirás un correo cuando sea revisada.</>
           ) : (
             <>Estás inscrito con <strong>{inscripcionPropia.mazo?.nombre ?? 'tu mazo'}</strong>.</>
           )}

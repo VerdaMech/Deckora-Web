@@ -6,7 +6,7 @@ import { listarPendientes, aprobarInscripcion, rechazarInscripcion } from '@/ser
 import { traducirError } from '@/utils/errors';
 import './BandejaInscripciones.css';
 
-export default function BandejaInscripciones({ torneos = [] }) {
+export default function BandejaInscripciones({ torneos = [], onCambio }) {
   const { mostrarExito, mostrarError } = useToast();
   const [solicitudes, setSolicitudes] = useState([]);
   const [cargando, setCargando] = useState(false);
@@ -42,7 +42,8 @@ export default function BandejaInscripciones({ torneos = [] }) {
     try {
       await aprobarInscripcion(torneoId, inscripcionId);
       setSolicitudes((prev) => prev.filter((s) => s.id !== inscripcionId));
-      mostrarExito('Solicitud aprobada', `${nombreJugador} fue aprobado en el torneo.`);
+      mostrarExito('Solicitud aprobada', `${nombreJugador} fue aprobado. Se le notificará por correo.`);
+      onCambio?.();
     } catch (err) {
       mostrarError('No se pudo aprobar', traducirError(err));
     } finally {
@@ -55,7 +56,8 @@ export default function BandejaInscripciones({ torneos = [] }) {
     try {
       await rechazarInscripcion(torneoId, inscripcionId);
       setSolicitudes((prev) => prev.filter((s) => s.id !== inscripcionId));
-      mostrarExito('Solicitud rechazada', `La solicitud de ${nombreJugador} fue rechazada.`);
+      mostrarExito('Solicitud rechazada', `La solicitud de ${nombreJugador} fue rechazada. Se le notificará por correo.`);
+      onCambio?.();
     } catch (err) {
       mostrarError('No se pudo rechazar', traducirError(err));
     } finally {
@@ -105,7 +107,7 @@ export default function BandejaInscripciones({ torneos = [] }) {
                     onClick={() => handleRechazar(s.torneoId, s.id, nombreJugador)}
                     disabled={enProceso}
                   >
-                    Rechazar
+                    {enProceso ? <Spinner size="sm" /> : 'Rechazar'}
                   </Button>
                 </div>
               </li>

@@ -5,11 +5,14 @@ import { listarMisInscripciones, cancelarInscripcion } from '@/services/torneos.
 import { TournamentCard } from '@/components/domain/TournamentCard';
 import { Button, Alert, Skeleton, EmptyState } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/context/ToastContext';
+import { traducirError } from '@/utils/errors';
 import './MisInscripcionesTab.css';
 
 export default function MisInscripcionesTab() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { mostrarExito, mostrarError } = useToast();
   const [items, setItems] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -40,9 +43,12 @@ export default function MisInscripcionesTab() {
     setCancelando(inscripcionId);
     try {
       await cancelarInscripcion(torneoId, inscripcionId);
+      mostrarExito('Inscripción cancelada', 'Tu inscripción fue cancelada correctamente.');
       await cargar();
     } catch (e) {
-      setError(e.message ?? 'Error al cancelar la inscripción');
+      const msg = traducirError(e);
+      setError(msg);
+      mostrarError('No se pudo cancelar', msg);
     } finally {
       setCancelando(null);
     }

@@ -25,6 +25,7 @@
 .pod-table__tabla {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
 }
 
 .pod-table__th {
@@ -39,10 +40,10 @@
   background: var(--bg-elevated);
 }
 
-.pod-table__th--pts {
-  text-align: center;
-  width: 48px;
-}
+.pod-table__th--jugador   { width: 20%; }
+.pod-table__th--mazo      { width: 32%; }
+.pod-table__th--resultado { width: 40%; text-align: center; }
+.pod-table__th--pts       { width: 8%;  text-align: center; }
 
 .pod-table__row {
   border-bottom: 1px solid var(--border-subtle);
@@ -64,16 +65,19 @@
   vertical-align: middle;
 }
 
-.pod-table__td--jugador {
+.pod-table__jugador-inner {
   display: flex;
   align-items: center;
   gap: var(--space-2);
 }
 
-.pod-table__td--pts {
-  text-align: center;
-  color: var(--gold);
-  font-weight: 600;
+.pod-table__td--resultado { text-align: center; }
+.pod-table__td--pts       { text-align: center; color: var(--gold); font-weight: 600; }
+
+.pod-table__mazo-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .pod-table__avatar {
@@ -96,11 +100,6 @@
   color: var(--text-primary);
 }
 
-.pod-table__td--mazo {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
 
 .pod-table__mazo-nombre {
   font-size: 0.875rem;
@@ -149,7 +148,7 @@
 
 @media (max-width: 640px) {
   .pod-table__th--mazo,
-  .pod-table__td--mazo {
+  .pod-table__td--mazo-col {
     display: none;
   }
 }

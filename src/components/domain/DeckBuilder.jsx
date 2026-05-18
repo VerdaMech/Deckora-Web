@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { BarraAgregarCarta } from '@/modules/mazos/components/BarraAgregarCarta';
 import { PanelValidacion } from '@/modules/mazos/components/PanelValidacion';
 import { AsistenteIA } from '@/modules/mazos/components/AsistenteIA';
 import { DeckList } from './DeckList';
 import { DeckStats } from './DeckStats';
+import { CartaDetalleModal } from './CartaDetalleModal';
 import './DeckBuilder.css';
 
 export function DeckBuilder({
@@ -17,6 +19,8 @@ export function DeckBuilder({
   onMarcarComandante,
   onAplicarSugerencia,
 }) {
+  const [cartaDetalle, setCartaDetalle] = useState(null);
+
   return (
     <div className="deck-builder">
       <div className="deck-builder__col deck-builder__col--buscador">
@@ -34,6 +38,7 @@ export function DeckBuilder({
             comandanteId={comandanteId}
             formato={mazo?.formato}
             editable
+            onCartaClick={(entrada) => setCartaDetalle(entrada.carta ?? entrada)}
             onCantidadChange={onCantidadChange}
             onEliminar={onEliminar}
             onMarcarComandante={onMarcarComandante}
@@ -59,6 +64,8 @@ export function DeckBuilder({
           <AsistenteIA mazo={mazo} onAplicarSugerencia={onAplicarSugerencia} />
         </div>
       </div>
+
+      <CartaDetalleModal carta={cartaDetalle} onClose={() => setCartaDetalle(null)} />
     </div>
   );
 }

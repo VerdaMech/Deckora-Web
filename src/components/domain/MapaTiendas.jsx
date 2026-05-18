@@ -60,7 +60,7 @@ export default function MapaTiendas({
       if (lat == null || lng == null) return;
 
       const el = document.createElement('div');
-      el.className = `store-pin${tienda.id === pinActivoId ? ' store-pin--active' : ''}`;
+      el.className = `store-pin${tienda.id === pinActivoId ? ' store-pin--activo' : ''}`;
       el.style.cursor = 'pointer';
 
       const popup = new mapboxgl.Popup({ offset: 25, className: 'mapa-tiendas__popup-wrapper' })

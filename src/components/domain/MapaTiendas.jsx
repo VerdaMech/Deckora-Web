@@ -7,7 +7,7 @@ import { Crosshair, MapPin } from 'lucide-react';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { EmptyState } from '@/components/ui';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import '@/styles/components/StorePin.css';
+import '@/styles/components/mini-mapa.css';
 import '@/styles/components/MapaTiendas.css';
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -28,6 +28,7 @@ export default function MapaTiendas({
   const mapRef = useRef(null);
   const markersRef = useRef([]);
   const popupsRef = useRef([]);
+  const hasCenteredRef = useRef(false);
   const { coords, loading: geoLoading, requestLocation } = useGeolocation();
 
   useEffect(() => {
@@ -60,7 +61,7 @@ export default function MapaTiendas({
       if (lat == null || lng == null) return;
 
       const el = document.createElement('div');
-      el.className = `store-pin${tienda.id === pinActivoId ? ' store-pin--activo' : ''}`;
+      el.className = 'mini-mapa-pin';
       el.style.cursor = 'pointer';
 
       const popup = new mapboxgl.Popup({ offset: 25, className: 'mapa-tiendas__popup-wrapper' })
@@ -92,6 +93,14 @@ export default function MapaTiendas({
       markersRef.current.push(marker);
       popupsRef.current.push(popup);
     });
+
+    if (!hasCenteredRef.current && markersRef.current.length > 0) {
+      const conCoords = tiendas.filter((t) => (t.latitud ?? t.lat) != null && (t.longitud ?? t.lng) != null);
+      const centLat = conCoords.reduce((s, t) => s + (t.latitud ?? t.lat), 0) / conCoords.length;
+      const centLng = conCoords.reduce((s, t) => s + (t.longitud ?? t.lng), 0) / conCoords.length;
+      mapRef.current?.flyTo({ center: [centLng, centLat], zoom: 12 });
+      hasCenteredRef.current = true;
+    }
   }, [tiendas, pinActivoId, onPinClick]);
 
   useEffect(() => {

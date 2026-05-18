@@ -62,6 +62,7 @@ export default function Registro() {
         password,
         nombre_usuario: nombreUsuario,
         rol,
+        nombre_tienda: rol === 'tienda' ? nombreTienda : undefined,
       });
       const rolObtenido = data?.rol ?? data?.user?.rol ?? rol;
       mostrarExito('Cuenta creada', 'Bienvenido a Deckora. ¡A jugar!');

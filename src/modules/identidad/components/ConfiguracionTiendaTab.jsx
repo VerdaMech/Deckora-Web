@@ -78,6 +78,8 @@ export default function ConfiguracionTiendaTab() {
         direccion,
         numero_telefono: telefono,
         horario_apertura: horario,
+        latitud: lat,
+        longitud: lng,
       });
       setFeedbackGuardado({ tipo: 'success', mensaje: 'Los datos de tu tienda se guardaron correctamente.' });
       mostrarExito('Tienda actualizada', 'Los datos de tu tienda se guardaron correctamente.');

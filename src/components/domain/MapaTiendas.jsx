@@ -98,8 +98,13 @@ export default function MapaTiendas({
       const conCoords = tiendas.filter((t) => (t.latitud ?? t.lat) != null && (t.longitud ?? t.lng) != null);
       const centLat = conCoords.reduce((s, t) => s + (t.latitud ?? t.lat), 0) / conCoords.length;
       const centLng = conCoords.reduce((s, t) => s + (t.longitud ?? t.lng), 0) / conCoords.length;
-      mapRef.current?.flyTo({ center: [centLng, centLat], zoom: 12 });
       hasCenteredRef.current = true;
+      const doCenter = () => mapRef.current?.jumpTo({ center: [centLng, centLat], zoom: 14 });
+      if (mapRef.current?.loaded()) {
+        doCenter();
+      } else {
+        mapRef.current?.once('load', doCenter);
+      }
     }
   }, [tiendas, pinActivoId, onPinClick]);
 

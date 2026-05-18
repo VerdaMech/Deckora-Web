@@ -101,6 +101,10 @@ export default function GestionTorneo() {
     try {
       await cambiarEstadoTorneo(id, nuevoEstado);
       setTorneo((prev) => ({ ...prev, estado: nuevoEstado }));
+      const estadosSinRondas = [ESTADO_TORNEO.FINALIZADO, ESTADO_TORNEO.CANCELADO];
+      if (estadosSinRondas.includes(nuevoEstado) && tabActivo === 'crear') {
+        setTabActivo(rondas.length > 0 ? `ronda-${rondas[0].id ?? 0}` : null);
+      }
     } catch (e) {
       setErrorEstado(e.message ?? 'Error al cambiar el estado del torneo');
     } finally {
@@ -234,25 +238,27 @@ export default function GestionTorneo() {
               </div>
             </Tabs.Tab>
           ))}
-          <Tabs.Tab eventKey="crear" label="+ Nueva ronda">
-            <div className="gestion-torneo-page__crear-ronda">
-              <h3 className="gestion-torneo-page__crear-titulo">Crear nueva ronda</h3>
-              {errorRonda && <Alert variant="danger">{errorRonda}</Alert>}
-              <form className="gestion-torneo-page__crear-form" onSubmit={handleCrearRonda}>
-                <div className="form-field">
-                  <label className="form-label">Tipo de ronda</label>
-                  <Select
-                    value={tipoRonda}
-                    onChange={(e) => setTipoRonda(e.target.value)}
-                    options={TIPO_OPCIONES}
-                  />
-                </div>
-                <Button type="submit" variant="primary" disabled={creandoRonda}>
-                  {creandoRonda ? <Spinner size="sm" /> : 'Crear ronda'}
-                </Button>
-              </form>
-            </div>
-          </Tabs.Tab>
+          {estado !== ESTADO_TORNEO.FINALIZADO && estado !== ESTADO_TORNEO.CANCELADO && (
+            <Tabs.Tab eventKey="crear" label="+ Nueva ronda">
+              <div className="gestion-torneo-page__crear-ronda">
+                <h3 className="gestion-torneo-page__crear-titulo">Crear nueva ronda</h3>
+                {errorRonda && <Alert variant="danger">{errorRonda}</Alert>}
+                <form className="gestion-torneo-page__crear-form" onSubmit={handleCrearRonda}>
+                  <div className="form-field">
+                    <label className="form-label">Tipo de ronda</label>
+                    <Select
+                      value={tipoRonda}
+                      onChange={(e) => setTipoRonda(e.target.value)}
+                      options={TIPO_OPCIONES}
+                    />
+                  </div>
+                  <Button type="submit" variant="primary" disabled={creandoRonda}>
+                    {creandoRonda ? <Spinner size="sm" /> : 'Crear ronda'}
+                  </Button>
+                </form>
+              </div>
+            </Tabs.Tab>
+          )}
         </Tabs>
       </div>
 

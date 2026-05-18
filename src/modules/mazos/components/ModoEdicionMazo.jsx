@@ -216,7 +216,7 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
         title="Buscar carta"
         size="md"
       >
-        <BarraAgregarCarta onAgregar={handleAgregarCarta} />
+        <BarraAgregarCarta onAgregar={handleAgregarCarta} modoPanel />
       </Modal>
 
       {toast && (

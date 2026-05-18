@@ -98,3 +98,7 @@ export async function rechazarInscripcion(torneoId, inscripcionId) {
 export async function eliminarJugadorDeTorneo(torneoId, inscripcionId) {
   return apiDelete(`/torneos/${torneoId}/inscripciones/${inscripcionId}`);
 }
+
+export async function obtenerSnapshotInscripcion(torneoId, inscripcionId) {
+  return apiGet(`/torneos/${torneoId}/inscripciones/${inscripcionId}/snapshot`);
+}

@@ -27,8 +27,8 @@ const FORMATO_LIMITE = {
 
 const TIPO_LABELS = {
   comandante: 'Comandante', criaturas: 'Criaturas', tierras: 'Tierras',
-  instantaneos: 'Instants', conjuros: 'Conjuros', artefactos: 'Artefactos',
-  encantamientos: 'Encants', planeswalkers: 'PWalkers', otros: 'Otros',
+  instantaneos: 'Instantáneos', conjuros: 'Conjuros', artefactos: 'Artefactos',
+  encantamientos: 'Encantamientos', planeswalkers: 'Planeswalkers', otros: 'Otros',
 };
 
 const TIPO_COLORS = ['#e8c96a', '#4a8c5e', '#5a7fa0', '#c98c2c', '#a06fc4', '#c0392b', '#9bd3ae', '#7a6a58', '#c9a84c'];
@@ -151,9 +151,9 @@ export function DeckStats({ cartas = [], formato = 'COMMANDER', comandanteId }) 
         <div className="deck-stats__chart deck-stats__chart--identidad">
           <h4 className="deck-stats__chart-titulo">Identidad de color</h4>
           {colorData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={240}>
+            <ResponsiveContainer width="100%" height={280}>
               <PieChart>
-                <Pie data={colorData} dataKey="value" nameKey="name" cx="50%" cy="45%" outerRadius={80}>
+                <Pie data={colorData} dataKey="value" nameKey="name" cx="50%" cy="42%" outerRadius="70%">
                   {colorData.map((entry, i) => (
                     <Cell key={i} fill={entry.color} />
                   ))}
@@ -170,9 +170,9 @@ export function DeckStats({ cartas = [], formato = 'COMMANDER', comandanteId }) 
         <div className="deck-stats__chart deck-stats__chart--tipos">
           <h4 className="deck-stats__chart-titulo">Por tipos</h4>
           {tipoData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={240}>
+            <ResponsiveContainer width="100%" height={280}>
               <PieChart>
-                <Pie data={tipoData} dataKey="value" nameKey="name" cx="50%" cy="45%" outerRadius={80} innerRadius={36}>
+                <Pie data={tipoData} dataKey="value" nameKey="name" cx="50%" cy="42%" outerRadius="70%" innerRadius="28%">
                   {tipoData.map((entry, i) => (
                     <Cell key={i} fill={entry.color} />
                   ))}

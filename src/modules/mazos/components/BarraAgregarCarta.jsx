@@ -7,7 +7,7 @@ import { MTGCard } from '@/components/domain';
 
 import './BarraAgregarCarta.css';
 
-export function BarraAgregarCarta({ onAgregar }) {
+export function BarraAgregarCarta({ onAgregar, modoPanel = false }) {
   const [query, setQuery] = useState('');
   const [resultados, setResultados] = useState([]);
   const [cargando, setCargando] = useState(false);
@@ -94,7 +94,7 @@ export function BarraAgregarCarta({ onAgregar }) {
       </div>
 
       {abierto && (
-        <div className="barra-agregar__dropdown" role="listbox">
+        <div className={modoPanel ? 'barra-agregar__panel' : 'barra-agregar__dropdown'} role="listbox">
           {errorBusqueda ? (
             <p className="barra-agregar__sin-resultados barra-agregar__sin-resultados--error">
               No pudimos buscar cartas. Reintentá.

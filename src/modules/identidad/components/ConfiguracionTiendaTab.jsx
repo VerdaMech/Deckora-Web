@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import '@/styles/components/StorePin.css';
 
 import { Input, Button, Alert } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/context/ToastContext';
 import { traducirError } from '@/utils/errors';
-import { actualizarMiTienda } from '@/services/tiendas.service';
+import { actualizarMiTienda, listarTiendas } from '@/services/tiendas.service';
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -87,6 +88,7 @@ export default function ConfiguracionTiendaTab() {
 
   useEffect(() => {
     if (mapRef.current || !containerRef.current) return;
+    let mounted = true;
 
     const initLat = perfil?.latitud ?? DEFAULT_LAT;
     const initLng = perfil?.longitud ?? DEFAULT_LNG;
@@ -99,7 +101,7 @@ export default function ConfiguracionTiendaTab() {
     });
 
     const el = document.createElement('div');
-    el.className = 'mini-mapa-pin';
+    el.className = 'store-pin';
     markerRef.current = new mapboxgl.Marker({ element: el, draggable: true })
       .setLngLat([initLng, initLat])
       .addTo(mapRef.current);
@@ -113,7 +115,18 @@ export default function ConfiguracionTiendaTab() {
       reversGeocode(newLng, newLat);
     });
 
-    return () => { mapRef.current?.remove(); mapRef.current = null; };
+    if (!perfil?.latitud) {
+      listarTiendas().then(({ data }) => {
+        if (!mounted) return;
+        const conCoords = (data ?? []).filter((t) => t.latitud != null && t.longitud != null);
+        if (conCoords.length === 0) return;
+        const centLat = conCoords.reduce((s, t) => s + t.latitud, 0) / conCoords.length;
+        const centLng = conCoords.reduce((s, t) => s + t.longitud, 0) / conCoords.length;
+        mapRef.current?.flyTo({ center: [centLng, centLat], zoom: 12 });
+      });
+    }
+
+    return () => { mounted = false; mapRef.current?.remove(); mapRef.current = null; };
   }, []);
 
   async function handleGuardar(e) {

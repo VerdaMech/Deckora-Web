@@ -6,6 +6,23 @@ import { Menu, LogOut, User, Settings } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui';
 
+const DASHBOARD_ITEMS = {
+  jugador: [
+    { to: '/mazos', label: 'Mis mazos' },
+    { to: '/configuracion', label: 'Configuración' },
+  ],
+  organizador: [
+    { to: '/mis-torneos', label: 'Mis torneos' },
+    { to: '/organizador/torneos/nuevo', label: 'Crear torneo' },
+    { to: '/configuracion', label: 'Configuración' },
+  ],
+  tienda: [
+    { to: '/mis-torneos', label: 'Mis torneos' },
+    { to: '/organizador/torneos/nuevo', label: 'Crear torneo' },
+    { to: '/configuracion', label: 'Configuración' },
+  ],
+};
+
 function getInitials(user) {
   const name = user?.nombre_usuario ?? user?.email ?? '?';
   return name.slice(0, 2).toUpperCase();
@@ -78,9 +95,29 @@ export default function Navbar() {
         </Offcanvas.Header>
         <Offcanvas.Body>
           {!isHome && user && (
-            <ul className="offcanvas-nav">
-              {authLinks}
-            </ul>
+            <>
+              <ul className="offcanvas-nav">
+                {authLinks}
+              </ul>
+              {rol && DASHBOARD_ITEMS[rol]?.length > 0 && (
+                <>
+                  <hr className="offcanvas-separator" />
+                  <ul className="offcanvas-nav">
+                    {DASHBOARD_ITEMS[rol].map(item => (
+                      <li key={item.to}>
+                        <NavLink
+                          to={item.to}
+                          className={({ isActive }) => `navbar-link${isActive ? ' navbar-link--active' : ''}`}
+                          onClick={() => setShowOffcanvas(false)}
+                        >
+                          {item.label}
+                        </NavLink>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </>
           )}
           {!user && (
             <div className="offcanvas-nav-actions">

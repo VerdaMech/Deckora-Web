@@ -214,3 +214,17 @@
     grid-column: 2;
   }
 }
+
+@media (max-width: 480px) {
+  .estadisticas-jugador__grid {
+    gap: var(--space-2);
+  }
+
+  .estadisticas-jugador__card {
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .estadisticas-jugador__numero {
+    font-size: 1.25rem;
+  }
+}

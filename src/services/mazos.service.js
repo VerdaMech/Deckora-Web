@@ -52,3 +52,7 @@ export async function actualizarMazo(mazoId, datos) {
 export async function getRecomendaciones(mazoId) {
   return apiGet(`/mazos/${mazoId}/recomendaciones`);
 }
+
+export async function importarMazo(mazoId, lista) {
+  return apiPost(`/mazos/${mazoId}/importar`, { lista });
+}

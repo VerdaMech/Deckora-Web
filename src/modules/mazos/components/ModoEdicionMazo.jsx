@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Check, Search, X } from 'lucide-react';
+import { Check, Search, Upload, X } from 'lucide-react';
 
 import { Modal } from '@/components/ui';
 import { DeckBuilder } from '@/components/domain';
 import { BarraAgregarCarta } from './BarraAgregarCarta';
+import { ImportarMazoModal } from './ImportarMazoModal';
 import {
   agregarCartaAMazo,
   actualizarCartaEnMazo,
@@ -36,6 +37,7 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
   const [validacionCargando, setValidacionCargando] = useState(false);
   const [toast, setToast] = useState(null);
   const [modalBuscarAbierto, setModalBuscarAbierto] = useState(false);
+  const [modalImportarAbierto, setModalImportarAbierto] = useState(false);
   const validacionTimer = useRef(null);
 
   const mostrarToast = useCallback((mensaje, variant = 'danger') => {
@@ -179,6 +181,15 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
             Buscar carta
           </button>
           <button
+            className="btn btn--ghost btn--sm"
+            type="button"
+            onClick={() => setModalImportarAbierto(true)}
+            aria-label="Importar lista"
+          >
+            <Upload size={16} />
+            Importar lista
+          </button>
+          <button
             className="btn btn--primary btn--sm"
             type="button"
             onClick={onSalir}
@@ -218,6 +229,16 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
       >
         <BarraAgregarCarta onAgregar={handleAgregarCarta} modoPanel />
       </Modal>
+
+      <ImportarMazoModal
+        show={modalImportarAbierto}
+        mazoId={mazo.id}
+        onHide={() => setModalImportarAbierto(false)}
+        onImportado={() => {
+          setModalImportarAbierto(false);
+          onSalir();
+        }}
+      />
 
       {toast && (
         <Toast

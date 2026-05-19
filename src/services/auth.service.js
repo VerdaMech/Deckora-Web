@@ -1,8 +1,8 @@
 import { supabase } from './supabase';
 import apiFetch, { apiGet, apiPost } from './api';
 
-export async function signup({ email, password, nombre_usuario, rol }) {
-  await apiPost('/auth/signup', { correo: email, password, nombre_usuario, rol });
+export async function signup({ email, password, nombre_usuario, rol, nombre_tienda }) {
+  await apiPost('/auth/signup', { correo: email, password, nombre_usuario, rol, nombre_tienda });
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) throw error;
   // Usar el token devuelto directamente para evitar llamar a getSession() mientras

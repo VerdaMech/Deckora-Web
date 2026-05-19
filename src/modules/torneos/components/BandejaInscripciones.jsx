@@ -4,6 +4,7 @@ import { Button, Spinner } from '@/components/ui';
 import { useToast } from '@/context/ToastContext';
 import { listarPendientes, aprobarInscripcion, rechazarInscripcion } from '@/services/torneos.service';
 import { traducirError } from '@/utils/errors';
+import SnapshotMazoModal from './SnapshotMazoModal';
 import './BandejaInscripciones.css';
 
 export default function BandejaInscripciones({ torneos = [], onCambio }) {
@@ -11,6 +12,7 @@ export default function BandejaInscripciones({ torneos = [], onCambio }) {
   const [solicitudes, setSolicitudes] = useState([]);
   const [cargando, setCargando] = useState(false);
   const [procesando, setProcesando] = useState(null);
+  const [snapshotInscripcion, setSnapshotInscripcion] = useState(null);
 
   const cargar = useCallback(async () => {
     if (!torneos.length) {
@@ -94,6 +96,14 @@ export default function BandejaInscripciones({ torneos = [], onCambio }) {
                 </div>
                 <div className="bandeja-inscripciones__acciones">
                   <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSnapshotInscripcion(s)}
+                    disabled={enProceso}
+                  >
+                    Ver mazo
+                  </Button>
+                  <Button
                     variant="primary"
                     size="sm"
                     onClick={() => handleAprobar(s.torneoId, s.id, nombreJugador)}
@@ -114,6 +124,14 @@ export default function BandejaInscripciones({ torneos = [], onCambio }) {
             );
           })}
         </ul>
+      )}
+
+      {snapshotInscripcion && (
+        <SnapshotMazoModal
+          torneoId={snapshotInscripcion.torneoId}
+          inscripcion={snapshotInscripcion}
+          onClose={() => setSnapshotInscripcion(null)}
+        />
       )}
     </section>
   );

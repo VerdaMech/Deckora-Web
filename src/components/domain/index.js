@@ -15,3 +15,4 @@ export { default as EstadisticasJugador } from './EstadisticasJugador';
 export { default as MiniMapaTienda } from './MiniMapaTienda';
 export { default as MapaTiendas } from './MapaTiendas';
 export { StorePin } from './StorePin';
+export { CartaDetalleModal } from './CartaDetalleModal';

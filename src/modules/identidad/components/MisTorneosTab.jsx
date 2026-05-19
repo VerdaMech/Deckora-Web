@@ -36,6 +36,7 @@ export default function MisTorneosTab() {
     }
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { cargar(); }, [user?.id]);
 
   async function handleCancelar(torneo) {
@@ -98,7 +99,7 @@ export default function MisTorneosTab() {
       <div className="mis-torneos__grid">
         {torneos.map((torneo) => (
           <div key={torneo.id} className="mis-torneos__item">
-            <TournamentCard torneo={torneo} onClick={() => navigate(`/torneos/${torneo.id}`)} />
+            <TournamentCard torneo={torneo} onClick={() => navigate(`/torneos/${torneo.id}`)} ocultarCupo />
             <div className="mis-torneos__card-actions">
               <Button
                 variant="ghost"

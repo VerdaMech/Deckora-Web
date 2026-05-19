@@ -1,3 +1,7 @@
+export function getInitials(nombre) {
+  return (nombre ?? '?').substring(0, 2).toUpperCase();
+}
+
 export function relativeDate(dateString) {
   if (!dateString) return '';
 
@@ -20,20 +24,6 @@ export function relativeDate(dateString) {
   if (weeks < 4) return `hace ${weeks} semana${weeks !== 1 ? 's' : ''}`;
   if (months < 12) return `hace ${months} mes${months !== 1 ? 'es' : ''}`;
   return `hace ${years} año${years !== 1 ? 's' : ''}`;
-}
-
-export function formatDate(dateString, options = {}) {
-  if (!dateString) return '';
-  return new Date(dateString).toLocaleDateString('es-CL', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    ...options,
-  });
-}
-
-export function formatNumber(n) {
-  return new Intl.NumberFormat('es-CL').format(n);
 }
 
 export function formatFecha(date) {

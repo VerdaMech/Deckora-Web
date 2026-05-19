@@ -27,6 +27,10 @@ export async function obtenerEstadisticasJugador(usuarioId) {
   };
 }
 
+export async function obtenerHistorialDiario(usuarioId, mesKey) {
+  return apiGet(`/estadisticas/jugadores/${usuarioId}/historial-diario?mes=${mesKey}`);
+}
+
 export async function obtenerMisInscripciones() {
   return apiGet('/torneos?inscrito=me');
 }

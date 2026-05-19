@@ -5,15 +5,38 @@
 }
 
 .mis-torneos__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  display: flex;
   gap: var(--space-4);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: var(--space-3);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-default) transparent;
+}
+
+.mis-torneos__grid::-webkit-scrollbar {
+  height: 4px;
+}
+
+.mis-torneos__grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mis-torneos__grid::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 2px;
 }
 
 .mis-torneos__item {
+  flex: 0 0 340px;
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+}
+
+.mis-torneos__item .tournament-card:hover {
+  transform: translateY(-2px);
 }
 
 .mis-torneos__card-actions {

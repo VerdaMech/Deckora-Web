@@ -1,6 +1,5 @@
 import { EstadoBadge } from './EstadoBadge';
 import { PodTable } from './PodTable';
-import { EmptyState } from '@/components/ui';
 import { TIPO_RONDA } from '@/utils/constants';
 
 const TIPO_LABELS = {

@@ -2,7 +2,7 @@ import { FormatBadge } from './FormatBadge';
 import { EstadoBadge } from './EstadoBadge';
 import { formatFecha, formatCupo } from '@/utils/formatters';
 
-export function TournamentCard({ torneo, onClick }) {
+export function TournamentCard({ torneo, onClick, ocultarCupo = false }) {
   if (!torneo) return null;
 
   const inscritos = torneo.inscritos_count ?? torneo.inscripciones_count ?? 0;
@@ -32,7 +32,7 @@ export function TournamentCard({ torneo, onClick }) {
               {torneo.ubicacion}
             </span>
           )}
-          <span className="tournament-card__cupo">{cupoTexto}</span>
+          {!ocultarCupo && <span className="tournament-card__cupo">{cupoTexto}</span>}
         </div>
       </div>
     </article>

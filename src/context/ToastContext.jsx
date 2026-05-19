@@ -17,6 +17,7 @@ export function ToastProvider({ children }) {
       return siguiente.length > MAX_TOASTS ? siguiente.slice(siguiente.length - MAX_TOASTS) : siguiente;
     });
     return id;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [baseId]);
 
   const cerrarToast = useCallback((id) => {

@@ -11,7 +11,7 @@ import BandejaInscripciones from '@/modules/torneos/components/BandejaInscripcio
 import './DashboardOrganizador.css';
 
 export default function DashboardOrganizador() {
-  const { user, perfil } = useAuth();
+  const { user } = useAuth();
   const nombre = user?.nombre_usuario ?? user?.correo ?? 'Organizador';
   const username = user?.nombre_usuario ?? '';
 

@@ -118,11 +118,15 @@ export default function EstadisticasJugador({ usuarioId, variante = 'completo' }
               <LineChart data={historialFiltrado}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
                 <XAxis dataKey="mes" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} />
-                <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} />
+                <YAxis
+                  tick={{ fill: 'var(--text-muted)', fontSize: 11 }}
+                  allowDecimals={false}
+                  tickFormatter={(v) => Math.round(v)}
+                />
                 <Tooltip content={<TooltipMeses />} />
                 <Legend wrapperClassName="estadisticas-jugador__leyenda" />
                 <Line
-                  type="monotone"
+                  type="linear"
                   dataKey="ganadas"
                   stroke="var(--success)"
                   strokeWidth={2}
@@ -130,7 +134,7 @@ export default function EstadisticasJugador({ usuarioId, variante = 'completo' }
                   name="Ganadas"
                 />
                 <Line
-                  type="monotone"
+                  type="linear"
                   dataKey="perdidas"
                   stroke="var(--crimson-bright)"
                   strokeWidth={2}

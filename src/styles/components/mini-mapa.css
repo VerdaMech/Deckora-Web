@@ -25,3 +25,9 @@
     height: 200px;
   }
 }
+
+@media (max-width: 480px) {
+  .mini-mapa-tienda {
+    height: 150px;
+  }
+}

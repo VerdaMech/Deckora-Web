@@ -37,14 +37,27 @@ export default function EstadisticasJugador({ usuarioId, variante = 'completo' }
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [mesesSeleccionados, setMesesSeleccionados] = useState(new Set());
 
   useEffect(() => {
     setLoading(true);
     obtenerEstadisticasJugador(usuarioId)
-      .then(setStats)
+      .then((data) => {
+        setStats(data);
+        setMesesSeleccionados(new Set((data.historialUltimosMeses ?? []).map((m) => m.mes)));
+      })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, [usuarioId]);
+
+  function toggleMes(mes) {
+    setMesesSeleccionados((prev) => {
+      if (prev.has(mes) && prev.size === 1) return prev;
+      const next = new Set(prev);
+      next.has(mes) ? next.delete(mes) : next.add(mes);
+      return next;
+    });
+  }
 
   if (loading) {
     return (
@@ -60,6 +73,8 @@ export default function EstadisticasJugador({ usuarioId, variante = 'completo' }
 
   const esCompacto = variante === 'compacto';
   const winRatePct = stats.winRate != null ? (stats.winRate * 100).toFixed(1) : '—';
+  const historial = stats.historialUltimosMeses ?? [];
+  const historialFiltrado = historial.filter((m) => mesesSeleccionados.has(m.mes));
 
   return (
     <div className={`estadisticas-jugador estadisticas-jugador--${variante}`}>
@@ -83,9 +98,24 @@ export default function EstadisticasJugador({ usuarioId, variante = 'completo' }
       {!esCompacto && (
         <>
           <div className="estadisticas-jugador__chart">
-            <h4 className="estadisticas-jugador__chart-titulo">Historial últimos meses</h4>
+            <div className="estadisticas-jugador__chart-cabecera">
+              <h4 className="estadisticas-jugador__chart-titulo">Historial últimos meses</h4>
+              {historial.length > 1 && (
+                <div className="estadisticas-jugador__filtro-meses">
+                  {historial.map(({ mes }) => (
+                    <button
+                      key={mes}
+                      className={`estadisticas-jugador__mes-pill${mesesSeleccionados.has(mes) ? ' estadisticas-jugador__mes-pill--activo' : ''}`}
+                      onClick={() => toggleMes(mes)}
+                    >
+                      {mes}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={stats.historialUltimosMeses ?? []}>
+              <LineChart data={historialFiltrado}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
                 <XAxis dataKey="mes" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} />
                 <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} />

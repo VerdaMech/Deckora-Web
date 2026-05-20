@@ -23,7 +23,6 @@ export async function obtenerEstadisticasJugador(usuarioId) {
     winRate: total > 0 ? ganadas / total : null,
     historialUltimosMeses: data.historialUltimosMeses ?? [],
     mazoMasJugado: data.mazoMasJugado ?? null,
-    comandanteFavorito: data.comandanteFavorito ?? null,
   };
 }
 

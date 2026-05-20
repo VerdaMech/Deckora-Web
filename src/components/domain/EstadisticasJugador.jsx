@@ -169,13 +169,6 @@ export default function EstadisticasJugador({ usuarioId, variante = 'completo' }
               </span>
             </div>
             <div className="estadisticas-jugador__detalle-item">
-              <Trophy size={16} className="estadisticas-jugador__card-icono estadisticas-jugador__card-icono--gold" />
-              <span className="estadisticas-jugador__detalle-label">Comandante favorito</span>
-              <span className="estadisticas-jugador__detalle-valor">
-                {stats.comandanteFavorito ?? '—'}
-              </span>
-            </div>
-            <div className="estadisticas-jugador__detalle-item">
               <Swords size={16} className="estadisticas-jugador__card-icono estadisticas-jugador__card-icono--gold" />
               <span className="estadisticas-jugador__detalle-label">Torneos</span>
               <span className="estadisticas-jugador__detalle-valor">

@@ -18,6 +18,7 @@ export function DeckBuilder({
   onEliminar,
   onMarcarComandante,
   onAplicarSugerencia,
+  onAutocompletar,
 }) {
   const [cartaDetalle, setCartaDetalle] = useState(null);
 
@@ -61,7 +62,7 @@ export function DeckBuilder({
         </div>
 
         <div className="deck-builder__asistente">
-          <AsistenteIA mazo={mazo} onAplicarSugerencia={onAplicarSugerencia} />
+          <AsistenteIA mazo={mazo} onAplicarSugerencia={onAplicarSugerencia} onAutocompletar={onAutocompletar} />
         </div>
       </div>
 

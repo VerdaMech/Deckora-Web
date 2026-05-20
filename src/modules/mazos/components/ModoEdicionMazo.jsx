@@ -10,6 +10,8 @@ import {
   actualizarCartaEnMazo,
   eliminarCartaDeMazo,
   validarMazo,
+  autocompletarMazo,
+  obtenerMazo,
 } from '@/services/mazos.service';
 
 import './ModoEdicionMazo.css';
@@ -166,6 +168,24 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
     }
   }
 
+  async function handleAutocompletar() {
+    await autocompletarMazo(mazo.id);
+    const data = await obtenerMazo(mazo.id);
+    const raw = data?.mazo ?? data;
+    const nuevasCartas = (raw?.MazoCartas ?? raw?.cartas ?? []).map((mc) =>
+      mc.Carta
+        ? {
+            id: mc.Carta.id,
+            scryfallId: mc.Carta.scryfall_id,
+            cantidad: mc.cantidad,
+            esComandante: mc.es_comandante,
+            carta: mc.Carta,
+          }
+        : mc,
+    );
+    setCartas(nuevasCartas);
+  }
+
   return (
     <div className="modo-edicion">
       <div className="modo-edicion__toolbar">
@@ -219,6 +239,7 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
         onEliminar={handleEliminar}
         onMarcarComandante={handleMarcarComandante}
         onAplicarSugerencia={handleAgregarCarta}
+        onAutocompletar={handleAutocompletar}
       />
 
       <Modal

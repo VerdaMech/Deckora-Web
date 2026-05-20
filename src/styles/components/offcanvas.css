@@ -27,3 +27,8 @@
   flex-direction: column;
   gap: var(--space-3);
 }
+
+.offcanvas-separator {
+  border-color: var(--border-subtle);
+  margin: var(--space-4) 0;
+}

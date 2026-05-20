@@ -3,10 +3,7 @@ import { EstadoBadge } from './EstadoBadge';
 import { RESULTADO_ENFRENTAMIENTO } from '@/utils/constants';
 import { Button } from '@/components/ui';
 import ReportarResultadoModal from '@/modules/torneos/components/ReportarResultadoModal';
-
-function getInitials(nombre) {
-  return (nombre ?? '?').substring(0, 2).toUpperCase();
-}
+import { getInitials } from '@/utils/formatters';
 
 function ResultadoLabel({ resultado }) {
   if (!resultado) return <span className="pod-table__resultado pod-table__resultado--pendiente">—</span>;

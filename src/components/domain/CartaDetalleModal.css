@@ -155,3 +155,14 @@
     height: 252px;
   }
 }
+
+@media (max-width: 480px) {
+  .carta-detalle__img {
+    width: 140px;
+  }
+
+  .carta-detalle__placeholder {
+    width: 140px;
+    height: 196px;
+  }
+}

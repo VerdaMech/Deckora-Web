@@ -47,7 +47,7 @@ export default function ConfiguracionTiendaTab() {
       );
       const data = await res.json();
       if (data.features?.[0]) setDireccion(data.features[0].place_name);
-    } catch {}
+    } catch { /* el reverse-geocode es best-effort */ }
   }
 
   function usarMiUbicacion() {
@@ -114,6 +114,7 @@ export default function ConfiguracionTiendaTab() {
     });
 
     return () => { mapRef.current?.remove(); mapRef.current = null; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleGuardar(e) {

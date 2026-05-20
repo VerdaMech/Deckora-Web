@@ -5,8 +5,16 @@
   margin-bottom: var(--space-2);
 }
 
+@media (max-width: 768px) {
+  .selector-rol {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 576px) {
-  .selector-rol { grid-template-columns: 1fr; }
+  .selector-rol {
+    grid-template-columns: 1fr;
+  }
 }
 
 .selector-rol__option {

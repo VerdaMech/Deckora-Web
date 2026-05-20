@@ -2,15 +2,11 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Tabs, EmptyState, Skeleton } from '@/components/ui';
 import EstadisticasJugador from '@/components/domain/EstadisticasJugador';
-import RoleBadge from '@/components/domain/RoleBadge';
 import MisEstadisticasTab from '@/modules/identidad/components/MisEstadisticasTab';
 import MisInscripcionesTab from '../components/MisInscripcionesTab';
 import { useAuth } from '@/hooks/useAuth';
 import { apiGet } from '@/services/api';
-
-function getInitials(nombre) {
-  return (nombre ?? '?').substring(0, 2).toUpperCase();
-}
+import ProfileHeader from '../components/ProfileHeader';
 
 export default function PerfilJugador({ perfil }) {
   const { user } = useAuth();
@@ -27,15 +23,7 @@ export default function PerfilJugador({ perfil }) {
 
   return (
     <div className="profile-page">
-      <div className="profile-header">
-        <div className="profile-header__avatar">{getInitials(perfil.nombre_usuario)}</div>
-        <div className="profile-header__info">
-          <h1 className="profile-header__name">{perfil.nombre_usuario}</h1>
-          <div className="profile-header__role">
-            <RoleBadge rol={perfil.rol} />
-          </div>
-        </div>
-      </div>
+      <ProfileHeader nombre={perfil.nombre_usuario} rol={perfil.rol} />
 
       <div className="profile-body">
         <EstadisticasJugador usuarioId={perfil.id} variante="compacto" />

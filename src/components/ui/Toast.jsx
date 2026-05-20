@@ -32,6 +32,7 @@ export default function Toast({ id, variante = 'info', titulo, mensaje, duracion
   useEffect(() => {
     iniciarTimer();
     return () => clearTimeout(timerRef.current);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const ariaLive = variante === 'error' || variante === 'advertencia' ? 'assertive' : 'polite';

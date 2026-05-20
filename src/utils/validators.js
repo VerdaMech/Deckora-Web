@@ -7,20 +7,9 @@ export const validarPasswordMin = (min = 8) => (valor) =>
 export const validarRequerido = (valor) =>
   (valor?.toString().trim().length > 0) || 'Este campo es requerido.';
 
-export const validarLatLng = (valor) =>
-  (typeof valor === 'number' && !isNaN(valor)) || 'Coordenada inválida.';
-
 export const validarFechaFutura = (valor) =>
   (new Date(valor) > new Date()) || 'La fecha debe ser futura.';
 
 export const validarUrl = (valor) =>
   !valor || /^https?:\/\/.+/.test(valor) || 'URL inválida (debe empezar con http o https).';
 
-export const validarCupoMin = (min = 2) => (valor) =>
-  (Number(valor) >= min) || `El cupo mínimo es ${min}.`;
-
-export const validarLatitud = (valor) =>
-  (typeof valor === 'number' && valor >= -90 && valor <= 90) || 'Latitud debe estar entre -90 y 90.';
-
-export const validarLongitud = (valor) =>
-  (typeof valor === 'number' && valor >= -180 && valor <= 180) || 'Longitud debe estar entre -180 y 180.';

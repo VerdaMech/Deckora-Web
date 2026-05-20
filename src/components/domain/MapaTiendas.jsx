@@ -1,13 +1,11 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
-import { Link } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import { Crosshair, MapPin } from 'lucide-react';
 
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { EmptyState } from '@/components/ui';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import '@/styles/components/mini-mapa.css';
 import '@/styles/components/MapaTiendas.css';
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -46,6 +44,7 @@ export default function MapaTiendas({
     mapRef.current.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
 
     return () => { mapRef.current?.remove(); mapRef.current = null; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

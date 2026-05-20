@@ -138,8 +138,18 @@
   border: 1px solid var(--border-subtle);
 }
 
+@media (max-width: 768px) {
+  .formulario-torneo__mapa {
+    height: 220px;
+  }
+}
+
 @media (max-width: 480px) {
   .formulario-torneo__fila-2 {
     grid-template-columns: 1fr;
+  }
+
+  .formulario-torneo__mapa {
+    height: 180px;
   }
 }

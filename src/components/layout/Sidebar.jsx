@@ -29,7 +29,7 @@ const ITEMS = {
 };
 
 export default function Sidebar() {
-  const { user, rol } = useAuth();
+  const { rol } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
   const items = rol ? (ITEMS[rol]?.() ?? []) : [];

@@ -62,6 +62,15 @@
   border-top: 1px solid var(--border-subtle);
 }
 
+.estadisticas-jugador__chart-cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-4);
+}
+
 .estadisticas-jugador__chart-titulo {
   font-family: 'Cinzel', serif;
   font-size: 0.85rem;
@@ -69,7 +78,33 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text-muted);
-  margin-bottom: var(--space-4);
+  margin: 0;
+}
+
+/* Filtro de meses */
+.estadisticas-jugador__select-mes {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 28px 4px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-panel-2);
+  color: var(--text-muted);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.estadisticas-jugador__select-mes:hover,
+.estadisticas-jugador__select-mes:focus {
+  border-color: var(--gold);
+  color: var(--gold);
+  outline: none;
 }
 
 /* Tooltip custom */
@@ -177,5 +212,19 @@
   .estadisticas-jugador__detalle-valor {
     text-align: left;
     grid-column: 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .estadisticas-jugador__grid {
+    gap: var(--space-2);
+  }
+
+  .estadisticas-jugador__card {
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .estadisticas-jugador__numero {
+    font-size: 1.25rem;
   }
 }

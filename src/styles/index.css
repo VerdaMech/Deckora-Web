@@ -35,8 +35,7 @@
 @import './components/mini-mapa.css';
 @import './components/configuracion-cuenta.css';
 
-/* Demo dev */
-@import './components/DemoMapa.css';
+/* Domain components */
 @import './components/EstadoBadge.css';
 @import './components/TournamentCard.css';
 @import './components/PodTable.css';

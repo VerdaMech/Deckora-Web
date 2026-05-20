@@ -7,6 +7,7 @@ import { Button, Alert, Skeleton, EmptyState } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/context/ToastContext';
 import { traducirError } from '@/utils/errors';
+import { ESTADO_TORNEO } from '@/utils/constants';
 import './MisInscripcionesTab.css';
 
 export default function MisInscripcionesTab() {
@@ -37,6 +38,7 @@ export default function MisInscripcionesTab() {
 
   useEffect(() => {
     cargar();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
   async function handleCancelar(torneoId, inscripcionId) {
@@ -91,19 +93,22 @@ export default function MisInscripcionesTab() {
             <TournamentCard
               torneo={torneo}
               onClick={() => navigate(`/torneos/${torneo.id}`)}
+              ocultarCupo
             />
             <div className="mis-inscripciones__actions">
               <span className="mis-inscripciones__mazo">
                 {inscripcion.mazo?.nombre ? `Mazo: ${inscripcion.mazo.nombre}` : 'Inscrito'}
               </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => handleCancelar(torneo.id, inscripcion.id)}
-                disabled={cancelando === inscripcion.id}
-              >
-                {cancelando === inscripcion.id ? 'Cancelando...' : 'Cancelar inscripción'}
-              </Button>
+              {torneo.estado !== ESTADO_TORNEO.FINALIZADO && torneo.estado !== ESTADO_TORNEO.CANCELADO && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleCancelar(torneo.id, inscripcion.id)}
+                  disabled={cancelando === inscripcion.id}
+                >
+                  {cancelando === inscripcion.id ? 'Cancelando...' : 'Cancelar inscripción'}
+                </Button>
+              )}
             </div>
           </div>
         ))}

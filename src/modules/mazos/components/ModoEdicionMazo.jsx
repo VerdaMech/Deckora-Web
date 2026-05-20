@@ -1,14 +1,17 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Check, Search, X } from 'lucide-react';
+import { Check, Search, Upload, X } from 'lucide-react';
 
 import { Modal } from '@/components/ui';
 import { DeckBuilder } from '@/components/domain';
 import { BarraAgregarCarta } from './BarraAgregarCarta';
+import { ImportarMazoModal } from './ImportarMazoModal';
 import {
   agregarCartaAMazo,
   actualizarCartaEnMazo,
   eliminarCartaDeMazo,
   validarMazo,
+  autocompletarMazo,
+  obtenerMazo,
 } from '@/services/mazos.service';
 
 import './ModoEdicionMazo.css';
@@ -36,6 +39,7 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
   const [validacionCargando, setValidacionCargando] = useState(false);
   const [toast, setToast] = useState(null);
   const [modalBuscarAbierto, setModalBuscarAbierto] = useState(false);
+  const [modalImportarAbierto, setModalImportarAbierto] = useState(false);
   const validacionTimer = useRef(null);
 
   const mostrarToast = useCallback((mensaje, variant = 'danger') => {
@@ -164,6 +168,24 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
     }
   }
 
+  async function handleAutocompletar() {
+    await autocompletarMazo(mazo.id);
+    const data = await obtenerMazo(mazo.id);
+    const raw = data?.mazo ?? data;
+    const nuevasCartas = (raw?.MazoCartas ?? raw?.cartas ?? []).map((mc) =>
+      mc.Carta
+        ? {
+            id: mc.Carta.id,
+            scryfallId: mc.Carta.scryfall_id,
+            cantidad: mc.cantidad,
+            esComandante: mc.es_comandante,
+            carta: mc.Carta,
+          }
+        : mc,
+    );
+    setCartas(nuevasCartas);
+  }
+
   return (
     <div className="modo-edicion">
       <div className="modo-edicion__toolbar">
@@ -177,6 +199,15 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
           >
             <Search size={16} />
             Buscar carta
+          </button>
+          <button
+            className="btn btn--ghost btn--sm"
+            type="button"
+            onClick={() => setModalImportarAbierto(true)}
+            aria-label="Importar lista"
+          >
+            <Upload size={16} />
+            Importar lista
           </button>
           <button
             className="btn btn--primary btn--sm"
@@ -208,6 +239,7 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
         onEliminar={handleEliminar}
         onMarcarComandante={handleMarcarComandante}
         onAplicarSugerencia={handleAgregarCarta}
+        onAutocompletar={handleAutocompletar}
       />
 
       <Modal
@@ -218,6 +250,16 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
       >
         <BarraAgregarCarta onAgregar={handleAgregarCarta} modoPanel />
       </Modal>
+
+      <ImportarMazoModal
+        show={modalImportarAbierto}
+        mazoId={mazo.id}
+        onHide={() => setModalImportarAbierto(false)}
+        onImportado={() => {
+          setModalImportarAbierto(false);
+          onSalir();
+        }}
+      />
 
       {toast && (
         <Toast

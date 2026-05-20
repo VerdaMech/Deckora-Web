@@ -193,6 +193,12 @@
   100% { background-position: 200% 0; }
 }
 
+@media (max-width: 576px) {
+  .mtg-card--thumbnail:hover .mtg-card__preview {
+    display: none;
+  }
+}
+
 /* === Shared text === */
 .mtg-card__name {
   font-family: 'Crimson Pro', Georgia, serif;

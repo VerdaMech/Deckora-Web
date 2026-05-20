@@ -2,14 +2,10 @@ import { useEffect, useState } from 'react';
 import { Globe, Swords } from 'lucide-react';
 
 import { Card, EmptyState, Tabs } from '@/components/ui';
-import RoleBadge from '@/components/domain/RoleBadge';
 import MisTorneosTab from '../components/MisTorneosTab';
 import { useAuth } from '@/hooks/useAuth';
 import { obtenerTorneosDeUsuario } from '@/services/usuarios.service';
-
-function getInitials(nombre) {
-  return (nombre ?? '?').substring(0, 2).toUpperCase();
-}
+import ProfileHeader from '../components/ProfileHeader';
 
 export default function PerfilOrganizador({ perfil }) {
   const { user } = useAuth();
@@ -22,15 +18,7 @@ export default function PerfilOrganizador({ perfil }) {
 
   return (
     <div className="profile-page">
-      <div className="profile-header">
-        <div className="profile-header__avatar">{getInitials(perfil.nombre_usuario)}</div>
-        <div className="profile-header__info">
-          <h1 className="profile-header__name">{perfil.nombre_usuario}</h1>
-          <div className="profile-header__role">
-            <RoleBadge rol={perfil.rol} />
-          </div>
-        </div>
-      </div>
+      <ProfileHeader nombre={perfil.nombre_usuario} rol={perfil.rol} />
 
       <div className="profile-body">
         {esDueno && (

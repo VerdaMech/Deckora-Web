@@ -132,12 +132,13 @@
 .asistente-ia__explicacion {
   font-size: 0.8rem;
   color: var(--text-secondary);
-  line-height: 1.55;
+  line-height: 1.65;
   margin: 0 0 var(--space-4) 0;
   padding: var(--space-3);
   background: var(--bg-panel);
   border-radius: var(--radius-md);
   border-left: 3px solid var(--gold);
+  white-space: pre-line;
 }
 
 .asistente-ia__error {
@@ -160,6 +161,30 @@
   white-space: nowrap;
   animation: fade-in-up 0.2s ease;
   pointer-events: none;
+}
+
+.asistente-ia__separador {
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  margin: var(--space-4) 0;
+}
+
+.asistente-ia__autocompletar {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.asistente-ia__autocompletar-resultado {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.asistente-ia__autocompletar-ok {
+  font-size: 0.82rem;
+  color: var(--success);
+  margin: 0;
 }
 
 @keyframes fade-in-up {

@@ -38,9 +38,20 @@
 
 .confirm-dialog__acciones {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-3);
   justify-content: center;
   margin-top: var(--space-5);
   padding-top: var(--space-4);
   border-top: 1px solid var(--border-subtle);
+}
+
+@media (max-width: 480px) {
+  .confirm-dialog__acciones {
+    flex-direction: column;
+  }
+
+  .confirm-dialog__acciones .btn {
+    width: 100%;
+  }
 }

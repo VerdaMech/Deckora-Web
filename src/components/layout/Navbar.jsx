@@ -97,7 +97,9 @@ export default function Navbar() {
           {!isHome && user && (
             <>
               <ul className="offcanvas-nav">
-                {authLinks}
+                <li><NavLink to="/biblioteca" className="navbar-link" onClick={() => setShowOffcanvas(false)}>Biblioteca</NavLink></li>
+                <li><NavLink to="/torneos" className="navbar-link" onClick={() => setShowOffcanvas(false)}>Torneos</NavLink></li>
+                <li><NavLink to={`/${rol}`} className="navbar-link" onClick={() => setShowOffcanvas(false)}>Mi panel</NavLink></li>
               </ul>
               {rol && DASHBOARD_ITEMS[rol]?.length > 0 && (
                 <>

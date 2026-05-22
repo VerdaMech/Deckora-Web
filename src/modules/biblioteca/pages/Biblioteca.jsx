@@ -8,6 +8,7 @@ import Skeleton from '@/components/ui/Skeleton';
 import Alert from '@/components/ui/Alert';
 import EmptyState from '@/components/ui/EmptyState';
 import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/context/ToastContext';
 import { listarCartas, listarSets } from '@/services/biblioteca.service';
 import { listarMisMazos, agregarCartaAMazo } from '@/services/mazos.service';
 
@@ -53,6 +54,7 @@ function LegalityBadge({ status }) {
 
 export default function Biblioteca() {
   const { user, rol } = useAuth();
+  const { mostrarExito, mostrarError } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10));
   const setCodigo = searchParams.get('set_codigo') ?? '';
@@ -68,7 +70,6 @@ export default function Biblioteca() {
   const [cargandoMazos, setCargandoMazos] = useState(false);
   const [mazoSeleccionado, setMazoSeleccionado] = useState('');
   const [agregando, setAgregando] = useState(false);
-  const [feedbackAgregar, setFeedbackAgregar] = useState(null);
 
   useEffect(() => {
     listarSets()
@@ -96,10 +97,8 @@ export default function Biblioteca() {
   }, [cargarCartas]);
 
   useEffect(() => {
-    if (!cartaZoom || !user || rol !== 'jugador') return;
+    if (!user?.id || rol !== 'jugador') return;
     setCargandoMazos(true);
-    setMazoSeleccionado('');
-    setFeedbackAgregar(null);
     listarMisMazos()
       .then((data) => {
         const lista = Array.isArray(data) ? data : (data?.mazos ?? data?.data ?? []);
@@ -108,7 +107,8 @@ export default function Biblioteca() {
       })
       .catch(() => setMazos([]))
       .finally(() => setCargandoMazos(false));
-  }, [cartaZoom, user, rol]);
+  }, [user?.id, rol]);
+
 
   function handleSetChange(e) {
     const value = e.target.value;
@@ -126,13 +126,13 @@ export default function Biblioteca() {
   async function handleAgregarCarta() {
     if (!mazoSeleccionado) return;
     setAgregando(true);
-    setFeedbackAgregar(null);
     const scryfallId = cartaZoom.scryfall_id ?? cartaZoom.scryfallId ?? cartaZoom.id;
+    const mazoNombre = mazos.find((m) => String(m.id) === mazoSeleccionado)?.nombre ?? 'tu mazo';
     try {
       await agregarCartaAMazo(mazoSeleccionado, { scryfallId, cantidad: 1, esComandante: false });
-      setFeedbackAgregar({ tipo: 'ok', msg: 'Carta agregada al mazo.' });
+      mostrarExito('Carta agregada', `${cartaZoom.nombre} se agregó a ${mazoNombre}.`);
     } catch (err) {
-      setFeedbackAgregar({ tipo: 'error', msg: err.message ?? 'No se pudo agregar la carta.' });
+      mostrarError('Error al agregar', err.message ?? 'No se pudo agregar la carta.');
     } finally {
       setAgregando(false);
     }
@@ -323,10 +323,7 @@ export default function Biblioteca() {
                         <select
                           className="biblioteca__zoom-select"
                           value={mazoSeleccionado}
-                          onChange={(e) => {
-                            setMazoSeleccionado(e.target.value);
-                            setFeedbackAgregar(null);
-                          }}
+                          onChange={(e) => setMazoSeleccionado(e.target.value)}
                           aria-label="Seleccionar mazo"
                         >
                           {mazos.map((m) => (
@@ -343,11 +340,6 @@ export default function Biblioteca() {
                           {agregando ? 'Agregando…' : 'Agregar'}
                         </button>
                       </div>
-                      {feedbackAgregar && (
-                        <p className={`biblioteca__zoom-feedback biblioteca__zoom-feedback--${feedbackAgregar.tipo}`}>
-                          {feedbackAgregar.msg}
-                        </p>
-                      )}
                     </>
                   )}
                 </div>

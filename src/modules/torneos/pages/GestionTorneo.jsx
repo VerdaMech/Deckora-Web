@@ -59,6 +59,7 @@ export default function GestionTorneo() {
     } finally {
       setCargando(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => { cargar(); }, [cargar]);

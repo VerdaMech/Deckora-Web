@@ -27,7 +27,7 @@
 }
 
 .gestion-torneo-page__titulo {
-  font-size: 1.5rem;
+  font-size: clamp(1.1rem, 3.5vw, 1.5rem);
   font-weight: 700;
   color: var(--text-primary);
   margin: 0 0 var(--space-2);
@@ -124,5 +124,15 @@
 
   .gestion-torneo-page__header {
     flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .gestion-torneo-page {
+    padding: var(--space-3);
+  }
+
+  .gestion-torneo-page__estado-acciones {
+    padding: var(--space-3);
   }
 }

@@ -9,7 +9,7 @@
 }
 
 .crear-torneo-page__title {
-  font-size: 1.75rem;
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
   font-weight: 700;
   color: var(--text-primary);
   margin: 0 0 var(--space-2);

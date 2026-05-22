@@ -23,8 +23,11 @@ export async function obtenerEstadisticasJugador(usuarioId) {
     winRate: total > 0 ? ganadas / total : null,
     historialUltimosMeses: data.historialUltimosMeses ?? [],
     mazoMasJugado: data.mazoMasJugado ?? null,
-    comandanteFavorito: data.comandanteFavorito ?? null,
   };
+}
+
+export async function obtenerHistorialDiario(usuarioId, mesKey) {
+  return apiGet(`/estadisticas/jugadores/${usuarioId}/historial-diario?mes=${mesKey}`);
 }
 
 export async function obtenerMisInscripciones() {

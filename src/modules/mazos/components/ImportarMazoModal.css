@@ -1,0 +1,129 @@
+.importar-mazo__footer {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+}
+
+.importar-mazo__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.importar-mazo__desc {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.importar-mazo__ejemplo {
+  display: block;
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: var(--gold);
+  background: var(--bg-panel-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+}
+
+.importar-mazo__textarea {
+  font-family: monospace;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  width: 100%;
+  resize: vertical;
+  padding: var(--space-3);
+  background: var(--bg-panel-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.importar-mazo__textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.importar-mazo__textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+/* Resultado */
+.importar-mazo__resultado {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.importar-mazo__seccion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.importar-mazo__seccion-titulo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+
+.importar-mazo__seccion-titulo--ok   { color: var(--success); }
+.importar-mazo__seccion-titulo--error { color: var(--crimson-bright); }
+
+.importar-mazo__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.importar-mazo__item {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 0.9rem;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.importar-mazo__item--ok    { background: color-mix(in srgb, var(--success) 8%, transparent); }
+.importar-mazo__item--error { background: color-mix(in srgb, var(--crimson-bright) 8%, transparent); }
+
+.importar-mazo__cantidad {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  color: var(--gold);
+  min-width: 24px;
+}
+
+.importar-mazo__error-msg {
+  color: var(--crimson-bright);
+  font-size: 0.82rem;
+}
+
+.importar-mazo__linea-original {
+  color: var(--text-muted);
+  font-family: monospace;
+  font-size: 0.75rem;
+  margin-left: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}

@@ -5,27 +5,43 @@
 }
 
 .mis-inscripciones__grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-5);
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-4);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: var(--space-3);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-default) transparent;
 }
 
-@media (min-width: 768px) {
-  .mis-inscripciones__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.mis-inscripciones__grid::-webkit-scrollbar {
+  height: 4px;
 }
 
-@media (min-width: 1200px) {
-  .mis-inscripciones__grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.mis-inscripciones__grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mis-inscripciones__grid::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 2px;
 }
 
 .mis-inscripciones__item {
+  flex: 0 0 340px;
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+}
+
+.mis-inscripciones__item .tournament-card {
+  flex: 1;
+}
+
+.mis-inscripciones__item .tournament-card:hover {
+  transform: translateY(-2px);
 }
 
 .mis-inscripciones__actions {

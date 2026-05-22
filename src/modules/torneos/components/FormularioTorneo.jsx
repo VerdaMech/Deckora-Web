@@ -58,7 +58,7 @@ export default function FormularioTorneo({
         );
         const data = await res.json();
         if (data.features?.[0]) setUbicacion(data.features[0].place_name);
-      } catch {}
+      } catch { /* el reverse-geocode es best-effort */ }
     });
   }
 
@@ -124,6 +124,7 @@ export default function FormularioTorneo({
       mapRef.current?.remove();
       mapRef.current = null;
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function validar() {

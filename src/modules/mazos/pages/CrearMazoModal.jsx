@@ -5,7 +5,7 @@ import { Modal, Input, Select, Textarea, Alert, Spinner } from '@/components/ui'
 import { useToast } from '@/context/ToastContext';
 import { traducirError } from '@/utils/errors';
 import { FORMATOS, FORMATO_LABELS } from '@/utils/constants';
-import { crearMazo } from '@/services/mazos.service';
+import { crearMazo, autocompletarMazo } from '@/services/mazos.service';
 
 import './CrearMazoModal.css';
 
@@ -26,6 +26,7 @@ export function CrearMazoModal({ show, onHide, onCreado }) {
   const [errores, setErrores] = useState({});
   const [errorGlobal, setErrorGlobal] = useState(null);
   const [guardando, setGuardando] = useState(false);
+  const [guardandoTexto, setGuardandoTexto] = useState('');
 
   function handleChange(campo, valor) {
     setForm((prev) => ({ ...prev, [campo]: valor }));
@@ -42,8 +43,7 @@ export function CrearMazoModal({ show, onHide, onCreado }) {
     return errs;
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function crear(conAutocompletar = false) {
     const errs = validar();
     if (Object.keys(errs).length) {
       setErrores(errs);
@@ -51,6 +51,7 @@ export function CrearMazoModal({ show, onHide, onCreado }) {
     }
 
     setGuardando(true);
+    setGuardandoTexto(conAutocompletar ? 'Creando mazo...' : '');
     setErrorGlobal(null);
     try {
       const mazo = await crearMazo({
@@ -59,15 +60,30 @@ export function CrearMazoModal({ show, onHide, onCreado }) {
         descripcion: form.descripcion.trim() || undefined,
         publico: form.publico,
       });
-      mostrarExito('Mazo creado', `"${form.nombre.trim()}" está listo para armar.`);
+      const mazoId = mazo.id ?? mazo.mazo?.id;
+
+      if (conAutocompletar) {
+        setGuardandoTexto('La IA está generando tu mazo...');
+        await autocompletarMazo(mazoId);
+        mostrarExito('Mazo creado', `"${form.nombre.trim()}" fue completado con IA.`);
+      } else {
+        mostrarExito('Mazo creado', `"${form.nombre.trim()}" está listo para armar.`);
+      }
+
       onCreado?.();
-      navigate(`/mazos/${mazo.id ?? mazo.mazo?.id}`);
+      navigate(`/mazos/${mazoId}`);
     } catch (err) {
       mostrarError('No se pudo crear el mazo', traducirError(err));
       setErrorGlobal(traducirError(err));
     } finally {
       setGuardando(false);
+      setGuardandoTexto('');
     }
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    await crear(false);
   }
 
   function handleHide() {
@@ -95,12 +111,21 @@ export function CrearMazoModal({ show, onHide, onCreado }) {
             Cancelar
           </button>
           <button
+            className="btn btn--ghost btn--md"
+            type="button"
+            onClick={() => crear(true)}
+            disabled={guardando}
+          >
+            {guardando && guardandoTexto ? <Spinner size="sm" /> : null}
+            {guardando && guardandoTexto ? guardandoTexto : 'Autocompletar con IA'}
+          </button>
+          <button
             className="btn btn--primary btn--md"
             type="submit"
             form="form-crear-mazo"
             disabled={guardando}
           >
-            {guardando ? <Spinner size="sm" /> : null}
+            {guardando && !guardandoTexto ? <Spinner size="sm" /> : null}
             Crear mazo
           </button>
         </div>

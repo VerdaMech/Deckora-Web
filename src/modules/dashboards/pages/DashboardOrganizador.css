@@ -128,3 +128,14 @@
     flex-direction: column;
   }
 }
+
+@media (max-width: 480px) {
+  .dashboard-organizador__torneo-link {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+
+  .dashboard-organizador__torneo-estado {
+    justify-self: start;
+  }
+}

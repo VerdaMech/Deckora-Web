@@ -1,16 +1,39 @@
 import { useState, useCallback } from 'react';
-import { Sparkles, RefreshCw, CheckCircle, PlusCircle } from 'lucide-react';
+import { Sparkles, RefreshCw, CheckCircle, PlusCircle, Wand2 } from 'lucide-react';
 import { Spinner } from '@/components/ui';
-import { getRecomendaciones } from '@/services/mazos.service';
+import { getRecomendaciones, autocompletarMazo } from '@/services/mazos.service';
 import './AsistenteIA.css';
 
-export function AsistenteIA({ mazo, onAplicarSugerencia }) {
-  const [estado, setEstado] = useState('inicial'); // 'inicial' | 'cargando' | 'resultado'
+function ExplicacionFormateada({ texto }) {
+  return (
+    <p className="asistente-ia__explicacion">
+      {texto.split('\n').map((linea, i) => {
+        const segmentos = linea.split(/\*\*([^*]+)\*\*/g);
+        return (
+          <span key={i} style={{ display: 'block' }}>
+            {segmentos.map((seg, j) =>
+              j % 2 === 1
+                ? <span key={j} className="asistente-ia__carta-ref">{seg}</span>
+                : seg
+            )}
+          </span>
+        );
+      })}
+    </p>
+  );
+}
+
+export function AsistenteIA({ mazo, onAplicarSugerencia, onAutocompletar }) {
+  const [estado, setEstado] = useState('inicial');
   const [recomendaciones, setRecomendaciones] = useState([]);
   const [explicacion, setExplicacion] = useState(null);
   const [error, setError] = useState(null);
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMensaje, setToastMensaje] = useState('');
+
+  const [estadoAutocompletar, setEstadoAutocompletar] = useState('inicial');
+  const [resultadoAutocompletar, setResultadoAutocompletar] = useState(null);
+  const [errorAutocompletar, setErrorAutocompletar] = useState(null);
 
   const mostrarToastIA = useCallback((msg) => {
     setToastMensaje(msg);
@@ -42,6 +65,24 @@ export function AsistenteIA({ mazo, onAplicarSugerencia }) {
   function aplicar(carta) {
     if (onAplicarSugerencia) onAplicarSugerencia(carta);
     mostrarToastIA('Carta agregada al mazo');
+  }
+
+  async function handleAutocompletar() {
+    setEstadoAutocompletar('cargando');
+    setErrorAutocompletar(null);
+    try {
+      await onAutocompletar();
+      setEstadoAutocompletar('resultado');
+    } catch (err) {
+      setErrorAutocompletar(err.message ?? 'No se pudo autocompletar el mazo.');
+      setEstadoAutocompletar('inicial');
+    }
+  }
+
+  function limpiarAutocompletar() {
+    setEstadoAutocompletar('inicial');
+    setResultadoAutocompletar(null);
+    setErrorAutocompletar(null);
   }
 
   return (
@@ -77,9 +118,7 @@ export function AsistenteIA({ mazo, onAplicarSugerencia }) {
 
       {estado === 'resultado' && (
         <div className="asistente-ia__resultado">
-          {explicacion && (
-            <p className="asistente-ia__explicacion">{explicacion}</p>
-          )}
+          {explicacion && <ExplicacionFormateada texto={explicacion} />}
 
           <ul className="asistente-ia__lista">
             {recomendaciones.map((carta) => (
@@ -115,6 +154,52 @@ export function AsistenteIA({ mazo, onAplicarSugerencia }) {
             Nueva búsqueda
           </button>
         </div>
+      )}
+
+      {onAutocompletar && (
+        <>
+          <div className="asistente-ia__separador" />
+
+          {estadoAutocompletar === 'inicial' && (
+            <div className="asistente-ia__autocompletar">
+              <p className="asistente-ia__descripcion">
+                Deja que la IA complete tu mazo automáticamente con cartas compatibles hasta el límite del formato.
+              </p>
+              {errorAutocompletar && <p className="asistente-ia__error">{errorAutocompletar}</p>}
+              <button
+                className="btn btn--secondary btn--sm asistente-ia__btn-pedir"
+                type="button"
+                onClick={handleAutocompletar}
+              >
+                <Wand2 size={14} />
+                Autocompletar mazo
+              </button>
+            </div>
+          )}
+
+          {estadoAutocompletar === 'cargando' && (
+            <div className="asistente-ia__cargando">
+              <Spinner size="sm" />
+              <span className="asistente-ia__cargando-texto">La IA está completando tu mazo...</span>
+            </div>
+          )}
+
+          {estadoAutocompletar === 'resultado' && (
+            <div className="asistente-ia__autocompletar-resultado">
+              <p className="asistente-ia__autocompletar-ok">
+                Mazo completado con éxito.
+              </p>
+              <button
+                className="btn btn--ghost btn--sm asistente-ia__btn-limpiar"
+                type="button"
+                onClick={limpiarAutocompletar}
+              >
+                <RefreshCw size={13} />
+                Volver a autocompletar
+              </button>
+            </div>
+          )}
+        </>
       )}
 
       {toastVisible && (

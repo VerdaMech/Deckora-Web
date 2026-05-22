@@ -42,7 +42,7 @@ export default function ProfilesLanding() {
     <section className="profiles-landing">
       <h2 className="profiles-landing__titulo">¿Cuál es tu rol?</h2>
       <p className="profiles-landing__subtitulo">
-        Deckora se adapta a cómo participas en la comunidad de Commander.
+        Deckora se adapta a cómo participas en la comunidad de Magic: The Gathering.
       </p>
       <div className="profiles-landing__grid">
         {ROLES.map(({ icono: Icono, nombre, clase, bullets }) => (

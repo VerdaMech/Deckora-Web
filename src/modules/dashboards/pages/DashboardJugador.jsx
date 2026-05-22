@@ -7,7 +7,7 @@ import { EmptyState } from '@/components/ui';
 import EstadisticasJugador from '@/components/domain/EstadisticasJugador';
 import BloqueResumen from '../components/BloqueResumen';
 import StatsRapidas from '../components/StatsRapidas';
-import { listarMisMazos, listarMazosRecientes } from '@/services/mazos.service';
+import { listarMisMazos } from '@/services/mazos.service';
 import { listarTorneosDelJugador } from '@/services/torneos.service';
 import './DashboardJugador.css';
 
@@ -22,14 +22,15 @@ export default function DashboardJugador() {
   const [loadingTorneos, setLoadingTorneos] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      listarMisMazos(),
-      listarMazosRecientes(3),
-    ])
-      .then(([todos, recientes]) => {
-        const listaTodos = Array.isArray(todos) ? todos : [];
-        setTotalMazos(listaTodos.length);
-        setMazosRecientes(Array.isArray(recientes) ? recientes : []);
+    listarMisMazos()
+      .then((todos) => {
+        const lista = Array.isArray(todos) ? todos : [];
+        setTotalMazos(lista.length);
+        const recientes = lista
+          .slice()
+          .sort((a, b) => new Date(b.updated_at ?? b.createdAt ?? 0) - new Date(a.updated_at ?? a.createdAt ?? 0))
+          .slice(0, 3);
+        setMazosRecientes(recientes);
       })
       .catch(() => {
         setTotalMazos(0);

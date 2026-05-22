@@ -96,10 +96,8 @@ export default function Biblioteca() {
   }, [cargarCartas]);
 
   useEffect(() => {
-    if (!cartaZoom || !user || rol !== 'jugador') return;
+    if (!user || rol !== 'jugador') return;
     setCargandoMazos(true);
-    setMazoSeleccionado('');
-    setFeedbackAgregar(null);
     listarMisMazos()
       .then((data) => {
         const lista = Array.isArray(data) ? data : (data?.mazos ?? data?.data ?? []);
@@ -108,7 +106,11 @@ export default function Biblioteca() {
       })
       .catch(() => setMazos([]))
       .finally(() => setCargandoMazos(false));
-  }, [cartaZoom, user, rol]);
+  }, [user, rol]);
+
+  useEffect(() => {
+    if (cartaZoom) setFeedbackAgregar(null);
+  }, [cartaZoom]);
 
   function handleSetChange(e) {
     const value = e.target.value;

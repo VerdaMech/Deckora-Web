@@ -35,4 +35,35 @@ export function ManaCost({ cost = '' }) {
   );
 }
 
+export function OracleText({ text = '', className }) {
+  if (!text) return null;
+
+  const parts = text.split(/(\{[^}]+\})/);
+
+  return (
+    <p className={className}>
+      {parts.map((part, i) => {
+        const match = part.match(/^\{([^}]+)\}$/);
+        if (match) {
+          const sym = match[1];
+          return (
+            <i
+              key={i}
+              className={`ms ms-cost ${symbolToClass(sym)}`}
+              aria-label={sym}
+              title={sym}
+            />
+          );
+        }
+        return part.split('\n').map((line, j, arr) => (
+          <span key={`${i}-${j}`}>
+            {line}
+            {j < arr.length - 1 && <br />}
+          </span>
+        ));
+      })}
+    </p>
+  );
+}
+
 export default ManaCost;

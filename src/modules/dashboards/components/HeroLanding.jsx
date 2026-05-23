@@ -20,7 +20,7 @@ export default function HeroLanding() {
       <div className="hero-landing__content">
         <h1 className="hero-landing__wordmark">DECKORA</h1>
         <p className="hero-landing__tagline">
-          La plataforma de Magic: The Gathering para la comunidad Commander.
+          La plataforma de Magic: The Gathering para la comunidad.
           Gestiona tus mazos, compite en torneos y conecta con tiendas locales.
         </p>
         <div className="hero-landing__acciones">

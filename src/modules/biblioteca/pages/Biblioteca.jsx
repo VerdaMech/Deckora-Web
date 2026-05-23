@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-import { MTGCard, ManaCost } from '@/components/domain';
+import { MTGCard, ManaCost, OracleText } from '@/components/domain';
 import Modal from '@/components/ui/Modal';
 import Skeleton from '@/components/ui/Skeleton';
 import Alert from '@/components/ui/Alert';
@@ -273,7 +273,7 @@ export default function Biblioteca() {
               </div>
 
               {cartaZoom.texto && (
-                <p className="biblioteca__zoom-texto">{cartaZoom.texto}</p>
+                <OracleText text={cartaZoom.texto} className="biblioteca__zoom-texto" />
               )}
 
               {cartaZoom.fuerza != null && cartaZoom.resistencia != null && (

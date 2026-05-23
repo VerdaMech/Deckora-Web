@@ -17,6 +17,7 @@ export function DeckBuilder({
   onCantidadChange,
   onEliminar,
   onMarcarComandante,
+  onDesmarcarComandante,
   onAplicarSugerencia,
   onAutocompletar,
 }) {
@@ -43,14 +44,12 @@ export function DeckBuilder({
             onCantidadChange={onCantidadChange}
             onEliminar={onEliminar}
             onMarcarComandante={onMarcarComandante}
+            onDesmarcarComandante={onDesmarcarComandante}
           />
         )}
       </div>
 
       <div className="deck-builder__col deck-builder__col--stats">
-        <h3 className="deck-builder__col-titulo">Estadísticas</h3>
-        <DeckStats cartas={cartas} formato={mazo?.formato} comandanteId={comandanteId} />
-
         <div className="deck-builder__validacion">
           <h3 className="deck-builder__col-titulo">Validación</h3>
           <PanelValidacion
@@ -60,6 +59,9 @@ export function DeckBuilder({
             totalCartas={cartas.reduce((s, c) => s + (c.cantidad ?? 1), 0)}
           />
         </div>
+
+        <h3 className="deck-builder__col-titulo">Estadísticas</h3>
+        <DeckStats cartas={cartas} formato={mazo?.formato} />
 
         <div className="deck-builder__asistente">
           <AsistenteIA mazo={mazo} onAplicarSugerencia={onAplicarSugerencia} onAutocompletar={onAutocompletar} />

@@ -12,7 +12,6 @@ import {
   validarMazo,
   autocompletarMazo,
   obtenerMazo,
-  getRecomendaciones,
 } from '@/services/mazos.service';
 
 import './ModoEdicionMazo.css';
@@ -181,30 +180,11 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
     }
   }
 
-  async function handleDesmarcarComandante(entrada) {
-    const entradaId = entrada.scryfallId ?? entrada.id;
-
-    setComandanteId(null);
-    setCartas((prev) =>
-      prev.map((e) => ({ ...e, esComandante: false })),
-    );
-
-    try {
-      await actualizarCartaEnMazo(mazo.id, entradaId, { esComandante: false });
-    } catch {
-      setComandanteId(entradaId);
-      setCartas((prev) =>
-        prev.map((e) => ({
-          ...e,
-          esComandante: (e.scryfallId ?? e.id) === entradaId,
-        })),
-      );
-      mostrarToast('No se pudo quitar el comandante. Verifica tu conexión.');
-    }
-  }
-
-  function parsearCartas(raw) {
-    return (raw?.MazoCartas ?? raw?.cartas ?? []).map((mc) =>
+  async function handleAutocompletar() {
+    await autocompletarMazo(mazo.id);
+    const data = await obtenerMazo(mazo.id);
+    const raw = data?.mazo ?? data;
+    const nuevasCartas = (raw?.MazoCartas ?? raw?.cartas ?? []).map((mc) =>
       mc.Carta
         ? {
             id: mc.Carta.id,
@@ -215,83 +195,7 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
           }
         : mc,
     );
-  }
-
-  function contarTotal(lista) {
-    return lista.reduce((s, c) => s + (c.cantidad ?? 1), 0);
-  }
-
-  async function handleAutocompletar() {
-    const limite = mazo?.formato?.toUpperCase() === 'COMMANDER' ? 100 : 60;
-
-    // Fase 1: llamar a autocompletar hasta 5 veces en segundo plano
-    let nuevasCartas = cartas;
-    for (let intento = 0; intento < 5; intento++) {
-      await autocompletarMazo(mazo.id);
-      const data = await obtenerMazo(mazo.id);
-      nuevasCartas = parsearCartas(data?.mazo ?? data);
-      if (contarTotal(nuevasCartas) >= limite) break;
-    }
-
-    // Fase 2: recortar sobrantes hasta el límite exacto
-    let exceso = contarTotal(nuevasCartas) - limite;
-    if (exceso > 0) {
-      const candidatas = [...nuevasCartas].filter((c) => !c.esComandante).reverse();
-      for (const carta of candidatas) {
-        if (exceso <= 0) break;
-        const id = carta.scryfallId ?? carta.id;
-        const cantidad = carta.cantidad ?? 1;
-        if (cantidad <= exceso) {
-          await eliminarCartaDeMazo(mazo.id, id);
-          nuevasCartas = nuevasCartas.filter((c) => (c.scryfallId ?? c.id) !== id);
-          exceso -= cantidad;
-        } else {
-          const nuevaCantidad = cantidad - exceso;
-          await actualizarCartaEnMazo(mazo.id, id, { cantidad: nuevaCantidad });
-          nuevasCartas = nuevasCartas.map((c) =>
-            (c.scryfallId ?? c.id) === id ? { ...c, cantidad: nuevaCantidad } : c,
-          );
-          exceso = 0;
-        }
-      }
-    }
-
-    // Fase 3: si aún faltan cartas, completar con recomendaciones
-    let faltantes = limite - contarTotal(nuevasCartas);
-    if (faltantes > 0) {
-      try {
-        const recsData = await getRecomendaciones(mazo.id);
-        const recs = recsData.recomendaciones ?? [];
-        const idsEnMazo = new Set(nuevasCartas.map((c) => c.scryfallId ?? c.id));
-
-        for (const rec of recs) {
-          if (faltantes <= 0) break;
-          const recId = rec.scryfall_id ?? rec.id;
-          if (idsEnMazo.has(recId)) continue;
-
-          await agregarCartaAMazo(mazo.id, { scryfallId: recId, cantidad: 1, esComandante: false });
-          nuevasCartas = [
-            ...nuevasCartas,
-            { id: rec.id, scryfallId: recId, cantidad: 1, esComandante: false, carta: rec },
-          ];
-          idsEnMazo.add(recId);
-          faltantes--;
-        }
-      } catch {
-        // best-effort: si las recomendaciones fallan, se queda con lo que tiene
-      }
-    }
-
-    // Actualizar la UI una sola vez con el resultado final
     setCartas(nuevasCartas);
-
-    const totalFinal = contarTotal(nuevasCartas);
-    if (totalFinal !== limite) {
-      mostrarToast(
-        `El mazo quedó con ${totalFinal}/${limite} cartas. Intenta autocompletar de nuevo.`,
-        'warning',
-      );
-    }
   }
 
   return (

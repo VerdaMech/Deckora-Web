@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { BarChart3 } from 'lucide-react';
-import { CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
 import {
   BarChart,
   Bar,
@@ -15,6 +14,7 @@ import {
 } from 'recharts';
 
 import { calcularCurva, calcularDistribucionColor, agruparPorTipo, contarCartasMazo } from '@/utils/deck-helpers';
+
 import { EmptyState } from '@/components/ui';
 import './DeckStats.css';
 
@@ -39,42 +39,12 @@ const TOOLTIP_STYLE = {
   itemStyle: { color: '#c9a84c' },
 };
 
-function validarLocal(cartas, formato, comandanteId) {
-  const total = contarCartasMazo(cartas);
-  const limite = FORMATO_LIMITE[formato?.toUpperCase()] ?? 60;
-  const esCommander = formato?.toUpperCase() === 'COMMANDER';
-  const tieneComandante = !!comandanteId || cartas.some((c) => c.esComandante);
 
-  const problemas = [];
-
-  if (total < limite) {
-    const diff = limite - total;
-    problemas.push(`Faltan ${diff} carta${diff !== 1 ? 's' : ''} para llegar a ${limite}.`);
-  } else if (total > limite) {
-    const diff = total - limite;
-    problemas.push(`El mazo tiene ${diff} carta${diff !== 1 ? 's' : ''} de más (máximo ${limite}).`);
-  }
-
-  if (esCommander && !tieneComandante) {
-    problemas.push('Falta asignar un comandante.');
-  }
-
-  if (problemas.length === 0) return { variant: 'success', texto: 'Mazo válido', problemas };
-
-  const cercaDelLimite = total >= limite - 5 && total <= limite + 5;
-  if (cercaDelLimite && (!esCommander || tieneComandante)) {
-    return { variant: 'warning', texto: 'Con observaciones', problemas };
-  }
-
-  return { variant: 'danger', texto: 'Mazo inválido', problemas };
-}
-
-export function DeckStats({ cartas = [], formato = 'COMMANDER', comandanteId }) {
+export function DeckStats({ cartas = [], formato = 'COMMANDER' }) {
   const curva = useMemo(() => calcularCurva(cartas), [cartas]);
   const distColor = useMemo(() => calcularDistribucionColor(cartas), [cartas]);
   const grupos = useMemo(() => agruparPorTipo(cartas), [cartas]);
   const total = useMemo(() => contarCartasMazo(cartas), [cartas]);
-  const estado = useMemo(() => validarLocal(cartas, formato, comandanteId), [cartas, formato, comandanteId]);
 
   const limite = FORMATO_LIMITE[formato?.toUpperCase()] ?? 60;
 
@@ -110,29 +80,12 @@ export function DeckStats({ cartas = [], formato = 'COMMANDER', comandanteId }) 
     );
   }
 
-  const EstadoIcon =
-    estado.variant === 'success' ? CheckCircle2 : estado.variant === 'warning' ? AlertTriangle : XCircle;
-
   return (
     <div className="deck-stats">
       <div className="deck-stats__total">
         <span className="deck-stats__total-numero">{total}</span>
         <span className="deck-stats__total-limite">/ {limite}</span>
         <span className="deck-stats__total-label">cartas</span>
-      </div>
-
-      <div className="deck-stats__estado">
-        <div className={`deck-stats__estado-badge deck-stats__estado-badge--${estado.variant}`}>
-          <EstadoIcon size={14} />
-          <span>{estado.texto}</span>
-        </div>
-        {estado.problemas.length > 0 && (
-          <ul className="deck-stats__problemas">
-            {estado.problemas.map((p, i) => (
-              <li key={i}>{p}</li>
-            ))}
-          </ul>
-        )}
       </div>
 
       <div className="deck-stats__grid">

@@ -48,6 +48,7 @@ function EntradaCarta({
   onCantidadChange,
   onEliminar,
   onMarcarComandante,
+  onDesmarcarComandante,
   formato,
 }) {
   const carta = entrada.carta ?? entrada;
@@ -92,6 +93,17 @@ function EntradaCarta({
               title="Marcar como comandante"
               type="button"
               aria-label="Marcar como comandante"
+            >
+              <Crown size={13} />
+            </button>
+          )}
+          {esComandante && onDesmarcarComandante && (
+            <button
+              className="deck-list__btn-cmdr deck-list__btn-cmdr--activo"
+              onClick={() => onDesmarcarComandante(entrada)}
+              title="Quitar como comandante"
+              type="button"
+              aria-label="Quitar como comandante"
             >
               <Crown size={13} />
             </button>
@@ -141,6 +153,7 @@ export function DeckList({
   onCantidadChange,
   onEliminar,
   onMarcarComandante,
+  onDesmarcarComandante,
 }) {
   if (!cartas.length) {
     return (
@@ -181,6 +194,7 @@ export function DeckList({
                     onCantidadChange={onCantidadChange}
                     onEliminar={onEliminar}
                     onMarcarComandante={onMarcarComandante}
+                    onDesmarcarComandante={onDesmarcarComandante}
                   />
                 );
               })}

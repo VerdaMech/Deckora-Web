@@ -252,6 +252,14 @@
   color: var(--gold);
 }
 
+.deck-list__btn-cmdr--activo {
+  color: var(--gold);
+}
+
+.deck-list__btn-cmdr--activo:hover {
+  color: var(--text-muted);
+}
+
 /* Suprimir efectos hover de MTGCard dentro del DeckList sin afectar otros contextos */
 .deck-list .mtg-card__preview {
   display: none !important;

@@ -75,6 +75,18 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
       carta,
     };
 
+    const esCommander = mazo?.formato?.toUpperCase() === 'COMMANDER';
+    const typeLine = (carta?.type_line ?? carta?.tipo ?? '').toLowerCase();
+    const esTierraBasica = typeLine.includes('basic') && typeLine.includes('land');
+
+    if (esCommander && !esTierraBasica) {
+      const existente = cartas.find((e) => (e.scryfallId ?? e.id) === entrada.scryfallId);
+      if (existente) {
+        mostrarToast('En Commander cada carta solo puede aparecer una vez.');
+        return;
+      }
+    }
+
     setCartas((prev) => {
       const existente = prev.find((e) => (e.scryfallId ?? e.id) === entrada.scryfallId);
       if (existente) {
@@ -238,6 +250,7 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
         onCantidadChange={handleCantidadChange}
         onEliminar={handleEliminar}
         onMarcarComandante={handleMarcarComandante}
+        onDesmarcarComandante={handleDesmarcarComandante}
         onAplicarSugerencia={handleAgregarCarta}
         onAutocompletar={handleAutocompletar}
       />

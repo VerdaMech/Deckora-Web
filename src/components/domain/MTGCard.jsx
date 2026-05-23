@@ -54,11 +54,6 @@ export function MTGCard({ carta, variant = 'thumbnail', onClick, esComandante, p
         onKeyDown={handleKeyDown}
         aria-label={altText}
       >
-        {esComandante && (
-          <span className="mtg-card__commander-badge">
-            <CommanderBadge />
-          </span>
-        )}
         {imgError || (!small && !normal) ? (
           <div className="mtg-card__image mtg-card__image--placeholder" aria-label={altText} />
         ) : (

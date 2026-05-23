@@ -1,5 +1,5 @@
 import { Modal } from '@/components/ui';
-import { ManaCost } from './ManaCost';
+import { ManaCost, OracleText } from './ManaCost';
 import './CartaDetalleModal.css';
 
 const FORMATOS_LEGALITIES = [
@@ -45,7 +45,7 @@ export function CartaDetalleModal({ carta, onClose }) {
           </div>
 
           {texto && (
-            <p className="carta-detalle__texto">{texto}</p>
+            <OracleText text={texto} className="carta-detalle__texto" />
           )}
 
           {carta.fuerza != null && carta.resistencia != null && (

@@ -1,4 +1,4 @@
-export { ManaCost } from './ManaCost';
+export { ManaCost, OracleText } from './ManaCost';
 export { MTGCard } from './MTGCard';
 export { FormatBadge } from './FormatBadge';
 export { CommanderBadge } from './CommanderBadge';

@@ -40,10 +40,10 @@
   background: var(--bg-elevated);
 }
 
-.pod-table__th--jugador   { width: 20%; }
-.pod-table__th--mazo      { width: 32%; }
-.pod-table__th--resultado { width: 40%; text-align: center; }
-.pod-table__th--pts       { width: 8%;  text-align: center; }
+.pod-table__th--jugador   { width: 28%; }
+.pod-table__th--mazo      { width: 42%; }
+.pod-table__th--resultado { width: 20%; text-align: center; }
+.pod-table__th--pts       { width: 10%; text-align: center; }
 
 .pod-table__row {
   border-bottom: 1px solid var(--border-subtle);

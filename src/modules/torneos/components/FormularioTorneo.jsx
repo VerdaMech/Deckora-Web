@@ -131,7 +131,11 @@ export default function FormularioTorneo({
     const e = {};
     if (!nombre.trim()) e.nombre = 'El nombre es requerido';
     else if (nombre.trim().length > 80) e.nombre = 'Máximo 80 caracteres';
-    if (!fechaInicio) e.fechaInicio = 'La fecha de inicio es requerida';
+    if (!fechaInicio) {
+      e.fechaInicio = 'La fecha de inicio es requerida';
+    } else if (new Date(fechaInicio) <= new Date()) {
+      e.fechaInicio = 'La fecha de inicio debe ser en el futuro';
+    }
     if (!ubicacion.trim()) e.ubicacion = 'La ubicación es requerida';
     const cupoNum = Number(cupoMax);
     if (cupoMax !== '' && (isNaN(cupoNum) || cupoNum < 4)) e.cupoMax = 'El cupo mínimo es 4 jugadores';

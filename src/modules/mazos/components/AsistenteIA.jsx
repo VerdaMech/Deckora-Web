@@ -72,6 +72,11 @@ export function AsistenteIA({ mazo, onAplicarSugerencia, onAutocompletar, onMazo
   }
 
   async function handleAutocompletar() {
+    if (mazoVacio && plantillas.length > 0) {
+      const aleatoria = plantillas[Math.floor(Math.random() * plantillas.length)];
+      return handleUsarPlantilla(aleatoria);
+    }
+
     setEstadoAutocompletar('cargando');
     setErrorAutocompletar(null);
     try {

@@ -1,19 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Layers, Plus, Calendar } from 'lucide-react';
+import { Layers, Plus, Calendar, Trash2 } from 'lucide-react';
 
 import { Spinner, Alert, EmptyState } from '@/components/ui';
 import { FormatBadge } from '@/components/domain';
-import { listarMisMazos } from '@/services/mazos.service';
+import { listarMisMazos, eliminarMazo } from '@/services/mazos.service';
 import { relativeDate } from '@/utils/formatters';
 import { CrearMazoModal } from './CrearMazoModal';
 
 import './MisMazos.css';
 
-function MazoCard({ mazo, onClick }) {
+function MazoCard({ mazo, onClick, onEliminar }) {
   const totalCartas = Number(mazo.total_cartas ?? mazo.totalCartas ?? mazo.cartas?.length ?? 0);
   const comandante = mazo.comandante ?? null;
   const updatedAt = mazo.updatedAt ?? mazo.updated_at ?? mazo.createdAt ?? mazo.created_at;
+
+  function handleEliminar(e) {
+    e.stopPropagation();
+    onEliminar(mazo);
+  }
 
   return (
     <article
@@ -48,8 +53,47 @@ function MazoCard({ mazo, onClick }) {
             {relativeDate(updatedAt)}
           </span>
         )}
+        <button
+          className="btn btn--ghost btn--sm mazo-card__btn-eliminar"
+          type="button"
+          onClick={handleEliminar}
+          aria-label={`Eliminar mazo ${mazo.nombre}`}
+        >
+          <Trash2 size={14} />
+        </button>
       </div>
     </article>
+  );
+}
+
+function ModalConfirmarEliminar({ mazo, onConfirmar, onCancelar, cargando }) {
+  return (
+    <div className="mis-mazos__overlay" role="dialog" aria-modal="true">
+      <div className="mis-mazos__confirmar-modal">
+        <h2 className="mis-mazos__confirmar-titulo">¿Eliminar mazo?</h2>
+        <p className="mis-mazos__confirmar-desc">
+          Vas a eliminar <strong>{mazo.nombre}</strong>. Esta acción no se puede deshacer.
+        </p>
+        <div className="mis-mazos__confirmar-acciones">
+          <button
+            className="btn btn--ghost btn--md"
+            type="button"
+            onClick={onCancelar}
+            disabled={cargando}
+          >
+            Cancelar
+          </button>
+          <button
+            className="btn btn--danger btn--md"
+            type="button"
+            onClick={onConfirmar}
+            disabled={cargando}
+          >
+            {cargando ? 'Eliminando…' : 'Eliminar'}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -60,6 +104,8 @@ export default function MisMazos() {
   const [coldStart, setColdStart] = useState(false);
   const [error, setError] = useState(null);
   const [modalAbierto, setModalAbierto] = useState(false);
+  const [mazoAEliminar, setMazoAEliminar] = useState(null);
+  const [eliminando, setEliminando] = useState(false);
   const coldTimer = useRef(null);
 
   function cargar() {
@@ -82,6 +128,21 @@ export default function MisMazos() {
   function handleMazoCreado() {
     setModalAbierto(false);
     cargar();
+  }
+
+  async function handleConfirmarEliminar() {
+    if (!mazoAEliminar) return;
+    setEliminando(true);
+    try {
+      await eliminarMazo(mazoAEliminar.id);
+      setMazos((prev) => prev.filter((m) => m.id !== mazoAEliminar.id));
+      setMazoAEliminar(null);
+    } catch {
+      setError('No se pudo eliminar el mazo. Intenta de nuevo.');
+      setMazoAEliminar(null);
+    } finally {
+      setEliminando(false);
+    }
   }
 
   return (
@@ -141,6 +202,7 @@ export default function MisMazos() {
               key={mazo.id}
               mazo={mazo}
               onClick={() => navigate(`/mazos/${mazo.id}`)}
+              onEliminar={setMazoAEliminar}
             />
           ))}
         </div>
@@ -151,6 +213,15 @@ export default function MisMazos() {
         onHide={() => setModalAbierto(false)}
         onCreado={handleMazoCreado}
       />
+
+      {mazoAEliminar && (
+        <ModalConfirmarEliminar
+          mazo={mazoAEliminar}
+          onConfirmar={handleConfirmarEliminar}
+          onCancelar={() => setMazoAEliminar(null)}
+          cargando={eliminando}
+        />
+      )}
     </div>
   );
 }

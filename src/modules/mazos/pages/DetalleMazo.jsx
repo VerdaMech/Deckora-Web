@@ -46,7 +46,8 @@ export default function DetalleMazo() {
               }
             : mc,
         );
-        setMazo({ ...raw, cartas });
+        const comandanteId = cartas.find((c) => c.esComandante)?.scryfallId ?? null;
+        setMazo({ ...raw, cartas, comandanteId });
         setNombreEdit(raw?.nombre ?? '');
         setPublicoEdit(raw?.publico ?? false);
         if ((raw?.MazoCartas ?? raw?.cartas ?? []).length > 0) {

@@ -35,7 +35,12 @@ function Toast({ mensaje, variant = 'danger', onClose }) {
 
 export function ModoEdicionMazo({ mazo, onSalir }) {
   const [cartas, setCartas] = useState(mazo?.cartas ?? []);
-  const [comandanteId, setComandanteId] = useState(mazo?.comandanteId ?? mazo?.comandante_id ?? null);
+  const [comandanteId, setComandanteId] = useState(
+    mazo?.comandanteId ??
+    mazo?.comandante_id ??
+    (mazo?.cartas ?? []).find((c) => c.esComandante)?.scryfallId ??
+    null,
+  );
   const [validacion, setValidacion] = useState(null);
   const [validacionCargando, setValidacionCargando] = useState(false);
   const [toast, setToast] = useState(null);

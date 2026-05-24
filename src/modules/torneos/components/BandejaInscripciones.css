@@ -58,6 +58,18 @@
   font-size: var(--font-micro);
   font-weight: 600;
   color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.bandeja-inscripciones__correo {
+  font-family: 'Crimson Pro', serif;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 .bandeja-inscripciones__torneo {

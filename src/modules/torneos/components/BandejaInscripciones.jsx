@@ -83,12 +83,18 @@ export default function BandejaInscripciones({ torneos = [], onCambio }) {
         <ul className="bandeja-inscripciones__lista">
           {solicitudes.map((s) => {
             const nombreJugador = s.Jugador?.Usuario?.nombre_usuario ?? s.Jugador?.Usuario?.correo ?? 'Jugador';
+            const correoJugador = s.Jugador?.Usuario?.correo ?? null;
             const nombreMazo = s.Mazo?.nombre ?? 'Sin mazo';
             const enProceso = procesando === s.id;
             return (
               <li key={s.id} className="bandeja-inscripciones__item">
                 <div className="bandeja-inscripciones__info">
-                  <span className="bandeja-inscripciones__jugador">{nombreJugador}</span>
+                  <span className="bandeja-inscripciones__jugador">
+                    {nombreJugador}
+                    {correoJugador && correoJugador !== nombreJugador && (
+                      <span className="bandeja-inscripciones__correo">{correoJugador}</span>
+                    )}
+                  </span>
                   <span className="bandeja-inscripciones__separador">·</span>
                   <span className="bandeja-inscripciones__torneo">{s.torneoNombre}</span>
                   <span className="bandeja-inscripciones__separador">·</span>

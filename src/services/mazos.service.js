@@ -60,3 +60,7 @@ export async function importarMazo(mazoId, lista) {
 export async function autocompletarMazo(mazoId) {
   return apiPost(`/mazos/${mazoId}/autocompletar`, {});
 }
+
+export async function eliminarMazo(mazoId) {
+  return apiDelete(`/mazos/${mazoId}`);
+}

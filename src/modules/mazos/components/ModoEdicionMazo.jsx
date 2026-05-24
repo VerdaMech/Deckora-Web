@@ -349,6 +349,7 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
         onDesmarcarComandante={handleDesmarcarComandante}
         onAplicarSugerencia={handleAgregarCarta}
         onAutocompletar={handleAutocompletar}
+        onMazoImportado={onSalir}
       />
 
       <Modal

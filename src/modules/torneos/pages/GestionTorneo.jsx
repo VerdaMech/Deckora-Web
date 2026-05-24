@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ExternalLink, Swords } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Swords } from 'lucide-react';
 
 import { obtenerTorneo, cambiarEstadoTorneo } from '@/services/torneos.service';
 import { listarRondas, crearRonda, eliminarRonda } from '@/services/rondas.service';
@@ -8,6 +8,7 @@ import { EstadoBadge } from '@/components/domain/EstadoBadge';
 import { RoundView } from '@/components/domain/RoundView';
 import ReportarResultadoModal from '@/modules/torneos/components/ReportarResultadoModal';
 import { Button, Alert, Skeleton, Select, Spinner, Modal, EmptyState, Tabs } from '@/components/ui';
+import { useToast } from '@/context/ToastContext';
 import { TIPO_RONDA, ESTADO_TORNEO } from '@/utils/constants';
 import './GestionTorneo.css';
 
@@ -20,6 +21,7 @@ const TIPO_OPCIONES = Object.entries({
 export default function GestionTorneo() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { mostrarExito } = useToast();
 
   const [torneo, setTorneo] = useState(null);
   const [rondas, setRondas] = useState([]);
@@ -73,6 +75,7 @@ export default function GestionTorneo() {
       const rondaNueva = nueva?.ronda ?? nueva;
       setRondas((prev) => [...prev, rondaNueva]);
       setTabActivo(`ronda-${rondaNueva.id ?? rondas.length}`);
+      mostrarExito('Ronda creada', 'La ronda fue creada exitosamente.');
     } catch (err) {
       setErrorRonda(err.message ?? 'Error al crear la ronda');
     } finally {
@@ -158,6 +161,14 @@ export default function GestionTorneo() {
           </div>
         </div>
         <div className="gestion-torneo-page__header-acciones">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate(`/torneos/${id}`)}
+            className="gestion-torneo-page__btn-volver"
+          >
+            <ArrowLeft size={14} /> Volver al torneo
+          </Button>
           <Link
             to={`/torneos/${id}`}
             target="_blank"

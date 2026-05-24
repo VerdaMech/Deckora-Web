@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react';
-import { Sparkles, RefreshCw, CheckCircle, PlusCircle, Wand2 } from 'lucide-react';
+import { Sparkles, RefreshCw, CheckCircle, PlusCircle, Wand2, Zap } from 'lucide-react';
 import { Spinner } from '@/components/ui';
-import { getRecomendaciones, autocompletarMazo } from '@/services/mazos.service';
+import { getRecomendaciones, importarMazo } from '@/services/mazos.service';
+import mazosPlantilla from '@/data/mazosPlantilla.json';
 import './AsistenteIA.css';
 
 function ExplicacionFormateada({ texto }) {
@@ -23,7 +24,7 @@ function ExplicacionFormateada({ texto }) {
   );
 }
 
-export function AsistenteIA({ mazo, onAplicarSugerencia, onAutocompletar }) {
+export function AsistenteIA({ mazo, onAplicarSugerencia, onAutocompletar, onMazoImportado }) {
   const [estado, setEstado] = useState('inicial');
   const [recomendaciones, setRecomendaciones] = useState([]);
   const [explicacion, setExplicacion] = useState(null);
@@ -34,6 +35,9 @@ export function AsistenteIA({ mazo, onAplicarSugerencia, onAutocompletar }) {
   const [estadoAutocompletar, setEstadoAutocompletar] = useState('inicial');
   const [resultadoAutocompletar, setResultadoAutocompletar] = useState(null);
   const [errorAutocompletar, setErrorAutocompletar] = useState(null);
+
+  const plantillas = mazosPlantilla[mazo?.formato?.toUpperCase()] ?? [];
+  const mazoVacio = (mazo?.cartas?.length ?? 0) === 0;
 
   const mostrarToastIA = useCallback((msg) => {
     setToastMensaje(msg);
@@ -75,6 +79,19 @@ export function AsistenteIA({ mazo, onAplicarSugerencia, onAutocompletar }) {
       setEstadoAutocompletar('resultado');
     } catch (err) {
       setErrorAutocompletar(err.message ?? 'No se pudo autocompletar el mazo.');
+      setEstadoAutocompletar('inicial');
+    }
+  }
+
+  async function handleUsarPlantilla(plantilla) {
+    setEstadoAutocompletar('cargando');
+    setErrorAutocompletar(null);
+    try {
+      await importarMazo(mazo.id, plantilla.lista);
+      if (onMazoImportado) onMazoImportado();
+      setEstadoAutocompletar('resultado');
+    } catch (err) {
+      setErrorAutocompletar(err.message ?? 'No se pudo importar la plantilla.');
       setEstadoAutocompletar('inicial');
     }
   }
@@ -162,17 +179,45 @@ export function AsistenteIA({ mazo, onAplicarSugerencia, onAutocompletar }) {
 
           {estadoAutocompletar === 'inicial' && (
             <div className="asistente-ia__autocompletar">
-              <p className="asistente-ia__descripcion">
-                Deja que la IA complete tu mazo automáticamente con cartas compatibles hasta el límite del formato.
-              </p>
-              {errorAutocompletar && <p className="asistente-ia__error">{errorAutocompletar}</p>}
+              {mazoVacio && plantillas.length > 0 ? (
+                <>
+                  <p className="asistente-ia__descripcion">
+                    Tu mazo está vacío. Elige una plantilla para empezar rápido o deja que la IA lo genere desde cero.
+                  </p>
+                  {errorAutocompletar && <p className="asistente-ia__error">{errorAutocompletar}</p>}
+                  <div className="asistente-ia__plantillas">
+                    {plantillas.map((p) => (
+                      <div key={p.id} className="asistente-ia__plantilla">
+                        <div className="asistente-ia__plantilla-info">
+                          <span className="asistente-ia__plantilla-nombre">{p.nombre}</span>
+                          <span className="asistente-ia__plantilla-desc">{p.descripcion}</span>
+                        </div>
+                        <button
+                          className="btn btn--secondary btn--sm"
+                          type="button"
+                          onClick={() => handleUsarPlantilla(p)}
+                        >
+                          <Zap size={13} />
+                          Usar
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="asistente-ia__separador-plantilla" />
+                </>
+              ) : (
+                <p className="asistente-ia__descripcion">
+                  Deja que la IA complete tu mazo automáticamente con cartas compatibles hasta el límite del formato.
+                </p>
+              )}
+              {errorAutocompletar && !mazoVacio && <p className="asistente-ia__error">{errorAutocompletar}</p>}
               <button
                 className="btn btn--secondary btn--sm asistente-ia__btn-pedir"
                 type="button"
                 onClick={handleAutocompletar}
               >
                 <Wand2 size={14} />
-                Autocompletar mazo
+                Autocompletar con IA
               </button>
             </div>
           )}

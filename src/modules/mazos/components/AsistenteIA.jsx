@@ -167,7 +167,7 @@ export function AsistenteIA({ mazo, onAplicarSugerencia, onAutocompletar }) {
               </p>
               {errorAutocompletar && <p className="asistente-ia__error">{errorAutocompletar}</p>}
               <button
-                className="btn btn--secondary btn--sm asistente-ia__btn-pedir"
+                className="btn btn--ghost btn--sm asistente-ia__btn-pedir"
                 type="button"
                 onClick={handleAutocompletar}
               >

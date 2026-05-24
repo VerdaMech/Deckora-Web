@@ -1,7 +1,8 @@
 import { apiGet } from './api';
 
-export async function buscarCartas(q, limit = 20) {
+export async function buscarCartas(q, limit = 20, formato = null) {
   const params = new URLSearchParams({ q, limit });
+  if (formato) params.set('formato', formato);
   return apiGet(`/cartas/buscar?${params}`);
 }
 

@@ -92,7 +92,7 @@ export function AsistenteIA({ mazo, onAplicarSugerencia, onAutocompletar, onMazo
     setEstadoAutocompletar('cargando');
     setErrorAutocompletar(null);
     try {
-      await importarMazo(mazo.id, plantilla.lista);
+      await importarMazo(mazo.id, plantilla.lista, plantilla.comandante ?? null);
       if (onMazoImportado) onMazoImportado();
       setEstadoAutocompletar('resultado');
     } catch (err) {

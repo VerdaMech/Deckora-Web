@@ -28,7 +28,7 @@ export function DeckBuilder({
     <div className="deck-builder">
       <div className="deck-builder__col deck-builder__col--buscador">
         <h3 className="deck-builder__col-titulo">Agregar cartas</h3>
-        <BarraAgregarCarta onAgregar={onAgregarCarta} modoPanel />
+        <BarraAgregarCarta onAgregar={onAgregarCarta} modoPanel formato={mazo?.formato} />
       </div>
 
       <div className="deck-builder__col deck-builder__col--lista">

@@ -8,7 +8,6 @@ import { EstadoBadge } from '@/components/domain/EstadoBadge';
 import { RoundView } from '@/components/domain/RoundView';
 import ReportarResultadoModal from '@/modules/torneos/components/ReportarResultadoModal';
 import { Button, Alert, Skeleton, Select, Spinner, Modal, EmptyState, Tabs } from '@/components/ui';
-import { useToast } from '@/context/ToastContext';
 import { TIPO_RONDA, ESTADO_TORNEO } from '@/utils/constants';
 import './GestionTorneo.css';
 
@@ -21,8 +20,6 @@ const TIPO_OPCIONES = Object.entries({
 export default function GestionTorneo() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { mostrarExito } = useToast();
-
   const [torneo, setTorneo] = useState(null);
   const [rondas, setRondas] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -41,6 +38,7 @@ export default function GestionTorneo() {
   const [eliminandoRonda, setEliminandoRonda] = useState(false);
 
   const [enfrentamientoSeleccionado, setEnfrentamientoSeleccionado] = useState(null);
+  const [exitoRondaCreada, setExitoRondaCreada] = useState(null);
 
   const cargar = useCallback(async () => {
     setCargando(true);
@@ -75,7 +73,7 @@ export default function GestionTorneo() {
       const rondaNueva = nueva?.ronda ?? nueva;
       setRondas((prev) => [...prev, rondaNueva]);
       setTabActivo(`ronda-${rondaNueva.id ?? rondas.length}`);
-      mostrarExito('Ronda creada', 'La ronda fue creada exitosamente.');
+      setExitoRondaCreada(rondaNueva.numero_ronda ?? rondas.length + 1);
     } catch (err) {
       setErrorRonda(err.message ?? 'Error al crear la ronda');
     } finally {
@@ -305,6 +303,24 @@ export default function GestionTorneo() {
             ¿Estás seguro de que querés eliminar la{' '}
             <strong>Ronda {confirmarEliminar.numero_ronda ?? confirmarEliminar.numero}</strong>?
             Esta acción no se puede deshacer.
+          </p>
+        </Modal>
+      )}
+
+      {/* Modal éxito ronda creada */}
+      {exitoRondaCreada && (
+        <Modal
+          show
+          onHide={() => setExitoRondaCreada(null)}
+          title="Ronda creada"
+          footer={
+            <Button variant="primary" onClick={() => setExitoRondaCreada(null)}>
+              Aceptar
+            </Button>
+          }
+        >
+          <p className="gestion-torneo-page__modal-texto">
+            La <strong>Ronda {exitoRondaCreada}</strong> fue creada exitosamente.
           </p>
         </Modal>
       )}

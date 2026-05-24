@@ -90,7 +90,21 @@
 }
 
 .gestion-torneo-page__ronda {
-  padding: var(--space-5);
+  padding: var(--space-5) var(--space-6);
+}
+
+.gestion-torneo-page__ronda-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: var(--space-4);
+  margin-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.gestion-torneo-page__btn-volver {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
 }
 
 /* Crear ronda */

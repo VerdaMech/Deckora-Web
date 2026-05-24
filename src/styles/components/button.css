@@ -87,7 +87,9 @@
 
 .btn--secondary:hover:not(:disabled) {
   background: var(--bg-panel-2);
-  border-color: var(--border-default);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+  box-shadow: var(--glow-gold);
 }
 
 /* Variant: danger */

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layers, Plus, Calendar, Trash2 } from 'lucide-react';
 
-import { Spinner, Alert, EmptyState } from '@/components/ui';
+import { Spinner, Alert, EmptyState, Modal } from '@/components/ui';
 import { FormatBadge } from '@/components/domain';
 import { listarMisMazos, eliminarMazo } from '@/services/mazos.service';
 import { relativeDate } from '@/utils/formatters';
@@ -38,7 +38,7 @@ function MazoCard({ mazo, onClick, onEliminar }) {
         <div className="mazo-card__comandante">
           <Layers size={14} className="mazo-card__cmdr-icon" />
           <span className="mazo-card__cmdr-nombre">
-            {comandante.name ?? comandante.nombre ?? '—'}
+            {typeof comandante === 'string' ? comandante : (comandante.name ?? comandante.nombre ?? '—')}
           </span>
         </div>
       )}
@@ -68,12 +68,12 @@ function MazoCard({ mazo, onClick, onEliminar }) {
 
 function ModalConfirmarEliminar({ mazo, onConfirmar, onCancelar, cargando }) {
   return (
-    <div className="mis-mazos__overlay" role="dialog" aria-modal="true">
-      <div className="mis-mazos__confirmar-modal">
-        <h2 className="mis-mazos__confirmar-titulo">¿Eliminar mazo?</h2>
-        <p className="mis-mazos__confirmar-desc">
-          Vas a eliminar <strong>{mazo.nombre}</strong>. Esta acción no se puede deshacer.
-        </p>
+    <Modal
+      show={!!mazo}
+      onHide={onCancelar}
+      title="¿Eliminar mazo?"
+      size="sm"
+      footer={
         <div className="mis-mazos__confirmar-acciones">
           <button
             className="btn btn--ghost btn--md"
@@ -92,8 +92,12 @@ function ModalConfirmarEliminar({ mazo, onConfirmar, onCancelar, cargando }) {
             {cargando ? 'Eliminando…' : 'Eliminar'}
           </button>
         </div>
-      </div>
-    </div>
+      }
+    >
+      <p className="mis-mazos__confirmar-desc">
+        Vas a eliminar <strong>{mazo?.nombre}</strong>. Esta acción no se puede deshacer.
+      </p>
+    </Modal>
   );
 }
 
@@ -214,14 +218,12 @@ export default function MisMazos() {
         onCreado={handleMazoCreado}
       />
 
-      {mazoAEliminar && (
-        <ModalConfirmarEliminar
-          mazo={mazoAEliminar}
-          onConfirmar={handleConfirmarEliminar}
-          onCancelar={() => setMazoAEliminar(null)}
-          cargando={eliminando}
-        />
-      )}
+      <ModalConfirmarEliminar
+        mazo={mazoAEliminar}
+        onConfirmar={handleConfirmarEliminar}
+        onCancelar={() => setMazoAEliminar(null)}
+        cargando={eliminando}
+      />
     </div>
   );
 }

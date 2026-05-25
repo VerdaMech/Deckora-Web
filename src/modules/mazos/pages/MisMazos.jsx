@@ -38,7 +38,7 @@ function MazoCard({ mazo, onClick, onEliminar }) {
         <div className="mazo-card__comandante">
           <Layers size={14} className="mazo-card__cmdr-icon" />
           <span className="mazo-card__cmdr-nombre">
-            {comandante.name ?? comandante.nombre ?? '—'}
+            {typeof comandante === 'string' ? comandante : (comandante.name ?? comandante.nombre ?? '—')}
           </span>
         </div>
       )}

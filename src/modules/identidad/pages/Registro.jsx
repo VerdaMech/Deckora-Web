@@ -87,11 +87,11 @@ export default function Registro() {
         <div className="auth-card card">
           <div className="auth-card__logo">DECKORA</div>
           <h2 className="auth-card__title">Verifica tu correo</h2>
-          <p className="auth-card__subtitle">
+          <p className="auth-form__lead">
             Te enviamos un enlace de verificación a <strong>{correo}</strong>.
             Revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.
           </p>
-          <p className="auth-form__footer" style={{ marginTop: '1.5rem' }}>
+          <p className="auth-form__footer">
             ¿Ya verificaste?{' '}
             <Link to="/login">Inicia sesión</Link>
           </p>

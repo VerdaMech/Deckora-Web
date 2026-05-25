@@ -65,7 +65,7 @@ export function DeckBuilder({
         <DeckStats cartas={cartas} formato={mazo?.formato} />
 
         <div className="deck-builder__asistente">
-          <AsistenteIA mazo={mazo} onAplicarSugerencia={onAplicarSugerencia} onAutocompletar={onAutocompletar} onMazoImportado={onMazoImportado} />
+          <AsistenteIA mazo={mazo} cartas={cartas} onAplicarSugerencia={onAplicarSugerencia} onAutocompletar={onAutocompletar} onMazoImportado={onMazoImportado} />
         </div>
       </div>
 

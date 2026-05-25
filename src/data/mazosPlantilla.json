@@ -1,58 +1,34 @@
 {
   "STANDARD": [
     {
-      "id": "standard-aggro",
-      "nombre": "Rojo Aggro",
-      "descripcion": "Mazo agresivo de criaturas pequeñas y hechizos de daño directo.",
-      "lista": "4 Monastery Swiftspear\n4 Goblin Guide\n4 Eidolon of the Great Revel\n4 Lightning Bolt\n4 Shard Volley\n4 Rift Bolt\n4 Searing Blaze\n4 Skullcrack\n4 Light Up the Stage\n4 Inspiring Vantage\n4 Sacred Foundry\n4 Sunbaked Canyon\n4 Fiery Islet\n4 Mountain\n4 Swiftfoot Boots"
-    },
-    {
-      "id": "standard-control",
-      "nombre": "Azul-Blanco Control",
-      "descripcion": "Control con contramagias y destrucción de hechizos para dominar la partida.",
-      "lista": "4 Counterspell\n4 Memory Lapse\n4 Archmage's Charm\n4 Absorb\n4 Wrath of God\n4 Teferi, Hero of Dominaria\n4 Hallowed Fountain\n4 Glacial Fortress\n4 Field of Ruin\n4 Island\n4 Plains\n4 Narset, Parter of Veils\n4 Opt\n4 Negate\n2 Castle Vantress"
+      "id": "standard-faeries",
+      "nombre": "Hadas Azul-Negro",
+      "descripcion": "Control con criaturas Hada de bajo coste, contramagias baratas y sinergias de tribu para dominar el tempo.",
+      "lista": "2 Agna Qel'a (TLA) 264\n4 Eclipsed Realms (ECL) 263\n4 Ego Drain (WOE) 86\n4 Faerie Fencing (WOE) 90\n2 Faerie Slumber Party (WOE) 311\n4 Glamer Gifter (ECL) 49\n2 Harmonized Crescendo (ECL) 54\n6 Island (SOS) 268\n2 Nightmare Sower (ECL) 114\n3 Obyra, Dreaming Duelist (WOE) 210\n4 Picklock Prankster (WOE) 64\n2 Run Away Together (ECL) 67\n2 Secluded Courtyard (FDN) 267\n4 Spell Stutter (WOE) 69\n4 Spellscorn Coven (WOE) 237\n5 Swamp (HOB) 196\n4 Temple of Deceit (FDN) 697\n2 Voracious Tome-Skimmer (ECL) 250"
     }
   ],
   "MODERN": [
     {
-      "id": "modern-burn",
-      "nombre": "Burn Moderno",
-      "descripcion": "El mazo más rápido de Modern: reduce la vida del rival a 0 en pocos turnos.",
-      "lista": "4 Goblin Guide\n4 Monastery Swiftspear\n4 Eidolon of the Great Revel\n4 Lightning Bolt\n4 Lava Spike\n4 Rift Bolt\n4 Searing Blaze\n4 Skullcrack\n4 Shard Volley\n4 Light Up the Stage\n4 Sacred Foundry\n4 Sunbaked Canyon\n4 Inspiring Vantage\n4 Mountain\n4 Fiery Islet"
-    },
-    {
-      "id": "modern-spirits",
-      "nombre": "Espíritus Azul-Blanco",
-      "descripcion": "Criaturas con flash y vuelo que generan sinergias al entrar al campo.",
-      "lista": "4 Mausoleum Wanderer\n4 Rattlechains\n4 Spell Queller\n4 Supreme Phantom\n4 Selfless Spirit\n4 Spectral Sailor\n4 Brainstorm\n4 Curious Obsession\n4 Sejiri Shelter\n4 Hallowed Fountain\n4 Glacial Fortress\n4 Island\n4 Plains\n4 Aether Vial\n4 Path to Exile"
+      "id": "modern-eldrazi-tron",
+      "nombre": "Eldrazi Tron",
+      "descripcion": "Combo de tierras Tron con criaturas Eldrazi para desplegar amenazas masivas desde el turno 3.",
+      "lista": "1 All Is Dust (PLST) MM2-1\n2 Devourer of Destiny (MH3) 2\n2 Dismember (SOA) 28\n4 Eldrazi Temple (MM2) 240\n4 Expedition Map (M3C) 292\n3 Glaring Fleshraker (MH3) 7\n4 Karn, the Great Creator (WAR) 1\n4 Kozilek's Command (MH3) 11\n4 Mind Stone (IMA) 219\n1 Relic of Progenitus (MD1) 21\n1 Sire of Seven Deaths (FDN) 1\n1 Swamp (J25) 89\n3 Thought-Knot Seer (OGW) 9\n3 Ugin, Eye of the Storms (TDM) 1\n4 Ugin's Labyrinth (MH3) 233\n2 Ulamog, the Ceaseless Hunger (CMM) 5\n4 Urza's Mine (5ED) 427\n4 Urza's Power Plant (M3C) 402\n1 Urza's Saga (MH2) 259\n4 Urza's Tower (M3C) 403\n1 Vexing Bauble (MH3) 212\n2 Warping Wail (OGW) 12\n1 Wastes (CMM) 1055"
     }
   ],
   "PIONEER": [
     {
-      "id": "pioneer-mono-red",
-      "nombre": "Rojo Mono Agresivo",
-      "descripcion": "Criaturas rápidas con hechizos de daño para terminar partidas antes del turno 5.",
-      "lista": "4 Kumano Faces Kakkazan\n4 Monastery Swiftspear\n4 Soul-Scar Mage\n4 Viashino Pyromancer\n4 Lightning Strike\n4 Wild Slash\n4 Ramunap Ruins\n4 Inspiring Vantage\n4 Sacred Foundry\n4 Mountain\n4 Eidolon of the Great Revel\n4 Fiery Impulse\n4 Skullcrack\n4 Searing Blood\n2 Hazoret the Fervent"
-    },
-    {
-      "id": "pioneer-azorius-heroic",
-      "nombre": "Heroic Azul-Blanco",
-      "descripcion": "Criaturas heroicas que crecen con hechizos de mejora y protección.",
-      "lista": "4 Favored Hoplite\n4 Lagonna-Band Trailblazer\n4 Tenth District Legionnaire\n4 Gods Willing\n4 Defiant Strike\n4 Karametra's Blessing\n4 Aqueous Form\n4 Phalanx Leader\n4 Emerge Unscathed\n4 Hallowed Fountain\n4 Glacial Fortress\n4 Island\n4 Plains\n4 Sentinel's Eyes\n2 Ethereal Armor"
+      "id": "pioneer-enchantments",
+      "nombre": "Enchantments Verde-Blanco",
+      "descripcion": "Encantamientos de bajo coste con sinergias Espíritu y Aura para ganar ventaja y presionar desde el turno 1.",
+      "lista": "4 Blossoming Sands (DFT) 252\n1 Boseiju, Who Endures (PNEO) 266s\n2 Commune with Spirits (NEO) 180\n1 Eiganjo, Seat of the Empire (PNEO) 268p\n9 Forest (BRO) 277\n4 Generous Visitor (NEO) 185\n4 Jukai Naturalist (NEO) 225\n4 Kami of Transience (PNEO) 197p\n2 March of Otherworldly Light (PNEO) 28p\n4 Michiko's Reign of Truth (NEO) 29\n8 Plains (BFZ) 252a\n4 Spirited Companion (PLST) NEO-38\n1 Tamiyo's Safekeeping (NEO) 211\n3 Teachings of the Kirin (NEO) 482\n2 The Restoration of Eiganjo (NEO) 34\n3 Touch the Spirit Realm (NEO) 40\n4 Weaver of Harmony (NEO) 213"
     }
   ],
   "LEGACY": [
     {
-      "id": "legacy-delver",
-      "nombre": "Delver Azul-Rojo",
-      "descripcion": "Aggro-control con criaturas baratas y hechizos de coste 0 para presionar desde el turno 1.",
-      "lista": "4 Delver of Secrets\n4 Dragon's Rage Channeler\n4 Murktide Regent\n4 Brainstorm\n4 Ponder\n4 Daze\n4 Force of Will\n4 Lightning Bolt\n4 Expressive Iteration\n4 Volcanic Island\n4 Scalding Tarn\n4 Wasteland\n4 Island\n2 Mountain\n2 Misty Rainforest"
-    },
-    {
-      "id": "legacy-death-and-taxes",
-      "nombre": "Death and Taxes",
-      "descripcion": "Criaturas blancas que bloquean los recursos del rival mientras atacas con ímpetu.",
-      "lista": "4 Thalia, Guardian of Thraben\n4 Leonin Arbiter\n4 Flickerwisp\n4 Mother of Runes\n4 Recruiter of the Guard\n4 Stoneforge Mystic\n4 Aether Vial\n4 Swords to Plowshares\n4 Wasteland\n4 Rishadan Port\n4 Karakas\n4 Plains\n2 Serra Avenger\n2 Sanctum Prelate\n2 Umezawa's Jitte"
+      "id": "legacy-lands",
+      "nombre": "Lands",
+      "descripcion": "Combo-control basado en tierras: genera ventaja con Loam, bloquea con Tabernacle y cierra con Grindstone + Painter's Servant.",
+      "lista": "4 Ancient Tomb (ZNE) 21\n4 Boseiju, Who Endures (NEO) 266\n4 Disruptor Flute (MH3) 209\n1 Expedition Map (2XM) 255\n4 Exploration (DMR) 159\n1 Forest (J25) 95\n3 Ghost Quarter (PLST) CM2-253\n4 Life from the Loam (DDJ) 69\n4 Malevolent Rumble (MH3) 161\n4 Maze of Ith (2XM) 322\n4 Once Upon a Time (MB2) 71\n4 Painter's Servant (SPG) 147\n1 Pithing Needle (MID) 257\n4 Six (MH3) 169\n2 Soul-Guide Lantern (FDN) 680\n4 Urza's Saga (MH2) 259\n4 Wasteland (SLC) 23\n4 Yavimaya, Cradle of Growth (MH2) 261"
     }
   ],
   "COMMANDER": [
@@ -61,7 +37,7 @@
       "nombre": "Krenko - Goblins",
       "descripcion": "Genera ejércitos de Goblins exponencialmente y arrasa con sinergias de tribu y daño directo.",
       "comandante": "Krenko, Mob Boss",
-      "lista": "1 Krenko, Mob Boss (PLST) DDT-52\n1 Agate Instigator (BLC) 21\n1 Arcane Signet (ECC) 55\n1 Blasphemous Act (TMC) 47\n1 Bloodmark Mentor (PLST) DPA-40\n1 Bravado (USG) 177\n1 Brightstone Ritual (ONS) 191\n1 Burst of Speed (M10) 129\n1 Chaos Warp (DRC) 48\n1 Conspicuous Snoop (M21) 139\n1 Crash Through (FDN) 620\n1 Dark-Dweller Oracle (PLST) 2X2-106\n1 Devilish Valet (BLC) 195\n1 Dragon Fodder (DTK) 135\n1 Expedite (OGW) 108\n1 Faithless Looting (TDC) 213\n1 Foundry Street Denizen (DDT) 38\n1 General Kreat, the Boltbringer (J25) 48\n1 Gleeful Demolition (ONE) 134\n1 Goblin Bombardment (MH2) 279\n1 Goblin Bushwhacker (ZEN) 125\n1 Goblin Chieftain (PLST) DDT-41\n1 Goblin Chirurgeon (FEM) 54a\n1 Goblin Cratermaker (PLST) GRN-103\n1 Goblin Grenade (J22) 542\n1 Goblin Lookout (LGN) 101\n1 Goblin Matron (DMR) 123\n1 Goblin Recruiter (MB2) 193\n1 Goblin Sledder (ONS) 209\n1 Goblin Surprise (FDN) 200\n1 Goblin Warchief (DOM) 130\n1 Grenzo, Havoc Raiser (TDC) 216\n1 Herald's Horn (CMM) 953\n1 Hordeling Outburst (PLST) A25-134\n1 Howlsquad Heavy (DFT) 134\n1 Impact Tremors (FDN) 717\n1 Impending Disaster (PLST) ULG-82\n1 Impulsive Pilferer (CMR) 185\n1 Kari Zev's Expertise (AER) 88\n1 Kiki-Jiki, Mirror Breaker (SLD) 1659\n1 Krenko, Tin Street Kingpin (NEC) 107\n1 Krenko's Command (J25) 140\n1 Lightning Greaves (WHO) 243\n1 Mob Justice (STH) 90\n1 Mogg Fanatic (PLST) DD1-44\n1 Molten Gatekeeper (MH3) 128\n34 Mountain (DFT) 286\n1 Ogre Battledriver (TDC) 227\n1 Outnumber (J22) 578\n1 Pashalik Mons (DMR) 328\n1 Pyroblast (MB2) 198\n1 Quest for the Goblin Lord (WWK) 86\n1 Raid Bombardment (WOT) 47\n1 Reckless Lackey (OTJ) 140\n1 Rising of the Day (LTR) 427\n1 Shared Animosity (LTC) 226\n1 Skirk Prospector (PLST) DOM-144\n1 Skullclamp (FIC) 355\n1 Sol Ring (SOC) 128\n1 Sting, the Glinting Dagger (LTR) 409\n1 Thrill of Possibility (FDN) 210\n1 Torch Courier (J22) 614\n1 Treasure Nabber (CMM) 265\n1 Umbral Mantle (MB2) 101\n1 Witty Roastmaster (SNC) 131\n1 Wrangle (AER) 101\n1 You See a Pair of Goblins (AFR) 170"
+      "lista": "1 Krenko, Mob Boss (PLST) DDT-52\n1 Agate Instigator (BLC) 21\n1 Arcane Signet (ECC) 55\n1 Blasphemous Act (TMC) 47\n1 Bloodmark Mentor (PLST) DPA-40\n1 Bravado (USG) 177\n1 Brightstone Ritual (ONS) 191\n1 Burst of Speed (M10) 129\n1 Chaos Warp (DRC) 48\n1 Conspicuous Snoop (M21) 139\n1 Crash Through (FDN) 620\n1 Dark-Dweller Oracle (PLST) 2X2-106\n1 Devilish Valet (BLC) 195\n1 Dragon Fodder (DTK) 135\n1 Expedite (OGW) 108\n1 Faithless Looting (TDC) 213\n1 Foundry Street Denizen (DDT) 38\n1 General Kreat, the Boltbringer (J25) 48\n1 Gleeful Demolition (ONE) 134\n1 Goblin Bombardment (MH2) 279\n1 Goblin Bushwhacker (ZEN) 125\n1 Goblin Chieftain (PLST) DDT-41\n1 Goblin Cratermaker (PLST) GRN-103\n1 Goblin Grenade (J22) 542\n1 Goblin Lookout (LGN) 101\n1 Goblin Matron (DMR) 123\n1 Goblin Recruiter (MB2) 193\n1 Goblin Sledder (ONS) 209\n1 Goblin Surprise (FDN) 200\n1 Goblin Warchief (DOM) 130\n1 Grenzo, Havoc Raiser (TDC) 216\n1 Herald's Horn (CMM) 953\n1 Hordeling Outburst (PLST) A25-134\n1 Howlsquad Heavy (DFT) 134\n1 Impact Tremors (FDN) 717\n1 Impending Disaster (PLST) ULG-82\n1 Impulsive Pilferer (CMR) 185\n1 Kari Zev's Expertise (AER) 88\n1 Kiki-Jiki, Mirror Breaker (SLD) 1659\n1 Krenko, Tin Street Kingpin (NEC) 107\n1 Krenko's Command (J25) 140\n1 Lightning Greaves (WHO) 243\n1 Mob Justice (STH) 90\n1 Mogg Fanatic (PLST) DD1-44\n1 Molten Gatekeeper (MH3) 128\n35 Mountain (DFT) 286\n1 Ogre Battledriver (TDC) 227\n1 Outnumber (J22) 578\n1 Pashalik Mons (DMR) 328\n1 Pyroblast (MB2) 198\n1 Quest for the Goblin Lord (WWK) 86\n1 Raid Bombardment (WOT) 47\n1 Reckless Lackey (OTJ) 140\n1 Rising of the Day (LTR) 427\n1 Shared Animosity (LTC) 226\n1 Skirk Prospector (PLST) DOM-144\n1 Skullclamp (FIC) 355\n1 Sol Ring (SOC) 128\n1 Sting, the Glinting Dagger (LTR) 409\n1 Thrill of Possibility (FDN) 210\n1 Torch Courier (J22) 614\n1 Treasure Nabber (CMM) 265\n1 Umbral Mantle (MB2) 101\n1 Witty Roastmaster (SNC) 131\n1 Wrangle (AER) 101\n1 You See a Pair of Goblins (AFR) 170"
     },
     {
       "id": "commander-sephiroth",

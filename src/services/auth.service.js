@@ -4,7 +4,12 @@ import apiFetch, { apiGet, apiPost } from './api';
 export async function signup({ email, password, nombre_usuario, rol, nombre_tienda }) {
   await apiPost('/auth/signup', { correo: email, password, nombre_usuario, rol, nombre_tienda });
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) throw error;
+  if (error) {
+    if (error.message?.includes('Email not confirmed')) {
+      return { requiresEmailVerification: true };
+    }
+    throw error;
+  }
   // Usar el token devuelto directamente para evitar llamar a getSession() mientras
   // Supabase mantiene su lock interno después de signInWithPassword.
   return apiFetch('/auth/me', { method: 'GET', headers: { 'Authorization': `Bearer ${data.session.access_token}` } });

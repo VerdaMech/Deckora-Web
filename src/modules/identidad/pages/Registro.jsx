@@ -31,6 +31,7 @@ export default function Registro() {
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
   const [registroError, setRegistroError] = useState('');
+  const [emailPendiente, setEmailPendiente] = useState(false);
 
   function validar() {
     const errs = {};
@@ -64,6 +65,10 @@ export default function Registro() {
         rol,
         nombre_tienda: rol === 'tienda' ? nombreTienda : undefined,
       });
+      if (data?.requiresEmailVerification) {
+        setEmailPendiente(true);
+        return;
+      }
       const rolObtenido = data?.rol ?? data?.user?.rol ?? rol;
       mostrarExito('Cuenta creada', 'Bienvenido a Deckora. ¡A jugar!');
       navigate(rolADestino(rolObtenido), { replace: true });
@@ -74,6 +79,25 @@ export default function Registro() {
     } finally {
       setLoading(false);
     }
+  }
+
+  if (emailPendiente) {
+    return (
+      <div className="auth-page">
+        <div className="auth-card card">
+          <div className="auth-card__logo">DECKORA</div>
+          <h2 className="auth-card__title">Verifica tu correo</h2>
+          <p className="auth-card__subtitle">
+            Te enviamos un enlace de verificación a <strong>{correo}</strong>.
+            Revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.
+          </p>
+          <p className="auth-form__footer" style={{ marginTop: '1.5rem' }}>
+            ¿Ya verificaste?{' '}
+            <Link to="/login">Inicia sesión</Link>
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (

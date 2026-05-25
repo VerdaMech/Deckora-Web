@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 
 import AppLayout from '@/components/layout/AppLayout';
 import ProtectedRoute from '@/routes/ProtectedRoute';
+import AuthCallbackHandler from '@/components/AuthCallbackHandler';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import ErrorChunk from '@/components/ui/ErrorChunk';
 import Spinner from '@/components/ui/Spinner';
@@ -60,6 +61,8 @@ function ConSuspense({ children }) {
 
 export default function AppRoutes() {
   return (
+    <>
+    <AuthCallbackHandler />
     <Routes>
       {/* ── Rutas con sidebar (pantallas operativas autenticadas) ── */}
       <Route element={<AppLayout withSidebar />}>
@@ -97,5 +100,6 @@ export default function AppRoutes() {
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
+    </>
   );
 }

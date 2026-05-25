@@ -28,7 +28,7 @@ export function DeckBuilder({
     <div className="deck-builder">
       <div className="deck-builder__col deck-builder__col--buscador">
         <h3 className="deck-builder__col-titulo">Agregar cartas</h3>
-        <BarraAgregarCarta onAgregar={onAgregarCarta} modoPanel />
+        <BarraAgregarCarta onAgregar={onAgregarCarta} modoPanel formato={mazo?.formato} />
       </div>
 
       <div className="deck-builder__col deck-builder__col--lista">
@@ -65,7 +65,7 @@ export function DeckBuilder({
         <DeckStats cartas={cartas} formato={mazo?.formato} />
 
         <div className="deck-builder__asistente">
-          <AsistenteIA mazo={mazo} onAplicarSugerencia={onAplicarSugerencia} onAutocompletar={onAutocompletar} onMazoImportado={onMazoImportado} />
+          <AsistenteIA mazo={mazo} cartas={cartas} onAplicarSugerencia={onAplicarSugerencia} onAutocompletar={onAutocompletar} onMazoImportado={onMazoImportado} />
         </div>
       </div>
 

@@ -35,7 +35,12 @@ function Toast({ mensaje, variant = 'danger', onClose }) {
 
 export function ModoEdicionMazo({ mazo, onSalir }) {
   const [cartas, setCartas] = useState(mazo?.cartas ?? []);
-  const [comandanteId, setComandanteId] = useState(mazo?.comandanteId ?? mazo?.comandante_id ?? null);
+  const [comandanteId, setComandanteId] = useState(
+    mazo?.comandanteId ??
+    mazo?.comandante_id ??
+    (mazo?.cartas ?? []).find((c) => c.esComandante)?.scryfallId ??
+    null,
+  );
   const [validacion, setValidacion] = useState(null);
   const [validacionCargando, setValidacionCargando] = useState(false);
   const [toast, setToast] = useState(null);
@@ -285,6 +290,11 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
     // Actualizar la UI una sola vez con el resultado final
     setCartas(nuevasCartas);
 
+    const cartaComandante = nuevasCartas.find((c) => c.esComandante);
+    if (cartaComandante) {
+      setComandanteId(cartaComandante.scryfallId ?? cartaComandante.id);
+    }
+
     const totalFinal = contarTotal(nuevasCartas);
     if (totalFinal !== limite) {
       mostrarToast(
@@ -358,7 +368,7 @@ export function ModoEdicionMazo({ mazo, onSalir }) {
         title="Buscar carta"
         size="md"
       >
-        <BarraAgregarCarta onAgregar={handleAgregarCarta} modoPanel />
+        <BarraAgregarCarta onAgregar={handleAgregarCarta} modoPanel formato={mazo?.formato} />
       </Modal>
 
       <ImportarMazoModal

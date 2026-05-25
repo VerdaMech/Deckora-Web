@@ -53,8 +53,10 @@ export async function getRecomendaciones(mazoId) {
   return apiGet(`/mazos/${mazoId}/recomendaciones`);
 }
 
-export async function importarMazo(mazoId, lista) {
-  return apiPost(`/mazos/${mazoId}/importar`, { lista });
+export async function importarMazo(mazoId, lista, comandante = null) {
+  const body = { lista };
+  if (comandante) body.comandante = comandante;
+  return apiPost(`/mazos/${mazoId}/importar`, body);
 }
 
 export async function autocompletarMazo(mazoId) {

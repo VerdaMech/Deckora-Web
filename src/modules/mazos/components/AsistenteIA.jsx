@@ -24,7 +24,7 @@ function ExplicacionFormateada({ texto }) {
   );
 }
 
-export function AsistenteIA({ mazo, onAplicarSugerencia, onAutocompletar, onMazoImportado }) {
+export function AsistenteIA({ mazo, cartas, onAplicarSugerencia, onAutocompletar, onMazoImportado }) {
   const [estado, setEstado] = useState('inicial');
   const [recomendaciones, setRecomendaciones] = useState([]);
   const [explicacion, setExplicacion] = useState(null);
@@ -37,7 +37,7 @@ export function AsistenteIA({ mazo, onAplicarSugerencia, onAutocompletar, onMazo
   const [errorAutocompletar, setErrorAutocompletar] = useState(null);
 
   const plantillas = mazosPlantilla[mazo?.formato?.toUpperCase()] ?? [];
-  const mazoVacio = (mazo?.cartas?.length ?? 0) === 0;
+  const mazoVacio = (cartas?.length ?? mazo?.cartas?.length ?? 0) === 0;
 
   const mostrarToastIA = useCallback((msg) => {
     setToastMensaje(msg);
@@ -92,7 +92,7 @@ export function AsistenteIA({ mazo, onAplicarSugerencia, onAutocompletar, onMazo
     setEstadoAutocompletar('cargando');
     setErrorAutocompletar(null);
     try {
-      await importarMazo(mazo.id, plantilla.lista);
+      await importarMazo(mazo.id, plantilla.lista, plantilla.comandante ?? null);
       if (onMazoImportado) onMazoImportado();
       setEstadoAutocompletar('resultado');
     } catch (err) {

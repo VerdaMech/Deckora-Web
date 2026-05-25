@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Pencil, Calendar, Layers } from 'lucide-react';
 
 import { Spinner, Alert, Tooltip, EmptyState, Modal } from '@/components/ui';
-import { FormatBadge, DeckList, DeckStats, ManaCost } from '@/components/domain';
+import { FormatBadge, DeckList, DeckStats, ManaCost, OracleText } from '@/components/domain';
 import { ModoEdicionMazo } from '@/modules/mazos/components/ModoEdicionMazo';
 import { obtenerMazo, validarMazo, actualizarMazo } from '@/services/mazos.service';
 import { relativeDate } from '@/utils/formatters';
@@ -46,7 +46,8 @@ export default function DetalleMazo() {
               }
             : mc,
         );
-        setMazo({ ...raw, cartas });
+        const comandanteId = cartas.find((c) => c.esComandante)?.scryfallId ?? null;
+        setMazo({ ...raw, cartas, comandanteId });
         setNombreEdit(raw?.nombre ?? '');
         setPublicoEdit(raw?.publico ?? false);
         if ((raw?.MazoCartas ?? raw?.cartas ?? []).length > 0) {
@@ -279,7 +280,7 @@ export default function DetalleMazo() {
                   </div>
                 )}
                 {texto && (
-                  <p className="detalle-mazo__zoom-texto">{texto}</p>
+                  <OracleText text={texto} className="detalle-mazo__zoom-texto" />
                 )}
                 {tienePT && (
                   <p className="detalle-mazo__zoom-pt">{carta.fuerza} / {carta.resistencia}</p>

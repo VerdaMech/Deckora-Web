@@ -20,7 +20,24 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
-      include: ['src/utils/**', 'src/hooks/**', 'src/components/domain/**'],
+      include: [
+        'src/utils/validators.js',
+        'src/utils/formatters.js',
+        'src/utils/deck-helpers.js',
+        'src/utils/torneos-helpers.js',
+        'src/hooks/useDebounce.js',
+        'src/components/domain/CommanderBadge.jsx',
+        'src/components/domain/EstadoBadge.jsx',
+        'src/components/domain/FormatBadge.jsx',
+        'src/components/domain/RoleBadge.jsx',
+        'src/modules/mazos/components/PanelValidacion.jsx',
+      ],
+      thresholds: {
+        statements: 95,
+        branches: 80,
+        functions: 95,
+        lines: 95,
+      },
     },
   },
   resolve: {

@@ -35,10 +35,10 @@ export default defineConfig({
       // por debajo por los componentes con mucho estado/UI. Subir a medida que
       // se agreguen más tests.
       thresholds: {
-        statements: 80,
-        branches: 68,
-        functions: 72,
-        lines: 80,
+        statements: 89,
+        branches: 76,
+        functions: 83,
+        lines: 91,
       },
     },
   },

@@ -101,6 +101,52 @@ describe('CuentaTab', () => {
     await waitFor(() => expect(api.apiDelete).toHaveBeenCalledWith('/auth/me'));
     expect(logout).toHaveBeenCalled();
   });
+
+  it('valida que la contraseña tenga al menos 6 caracteres', async () => {
+    render(<CuentaTab />);
+    await userEvent.type(screen.getByLabelText('Nueva contraseña'), 'abc');
+    await userEvent.type(screen.getByLabelText('Confirmar nueva contraseña'), 'abc');
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar cambios' }));
+    expect(screen.getByText('La contraseña debe tener al menos 6 caracteres.')).toBeInTheDocument();
+    expect(supa.updateUser).not.toHaveBeenCalled();
+  });
+
+  it('muestra error cuando no hay cambios para guardar', async () => {
+    render(<CuentaTab />);
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar cambios' }));
+    expect(screen.getByText('No hay cambios para guardar.')).toBeInTheDocument();
+    expect(supa.updateUser).not.toHaveBeenCalled();
+  });
+
+  it('muestra error cuando supabase falla al actualizar', async () => {
+    supa.updateUser.mockResolvedValue({ error: { message: 'Token expired' } });
+    render(<CuentaTab />);
+    await userEvent.type(screen.getByLabelText('Nueva contraseña'), 'abcdefgh');
+    await userEvent.type(screen.getByLabelText('Confirmar nueva contraseña'), 'abcdefgh');
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar cambios' }));
+    await waitFor(() => expect(toast.mostrarError).toHaveBeenCalled());
+  });
+
+  it('permite cambiar el correo electrónico', async () => {
+    supa.updateUser.mockResolvedValue({ error: null });
+    render(<CuentaTab />);
+    await userEvent.type(screen.getByLabelText('Nuevo correo'), 'nuevo@test.cl');
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar cambios' }));
+    await waitFor(() => expect(supa.updateUser).toHaveBeenCalledWith({ email: 'nuevo@test.cl' }));
+    expect(toast.mostrarExito).toHaveBeenCalled();
+  });
+
+  it('muestra error cuando falla la eliminación de la cuenta', async () => {
+    api.apiDelete.mockRejectedValue(new Error('Server error'));
+    const logout = vi.fn();
+    authState.value = { user: { id: 1, email: 'a@a.cl' }, logout };
+    render(<CuentaTab />);
+    await userEvent.click(screen.getByRole('button', { name: 'Eliminar mi cuenta' }));
+    fireEvent.change(await screen.findByPlaceholderText('ELIMINAR'), { target: { value: 'ELIMINAR' } });
+    await userEvent.click(screen.getByRole('button', { name: 'Eliminar definitivamente' }));
+    await waitFor(() => expect(toast.mostrarError).toHaveBeenCalled());
+    expect(logout).not.toHaveBeenCalled();
+  });
 });
 
 describe('ConfiguracionOrganizadorTab', () => {
@@ -142,6 +188,58 @@ describe('MisInscripcionesTab', () => {
     await waitFor(() => expect(torneosSvc.cancelarInscripcion).toHaveBeenCalledWith(5, 9));
     expect(toast.mostrarExito).toHaveBeenCalled();
   });
+
+  it('oculta el botón cancelar si el torneo está finalizado', async () => {
+    torneosSvc.listarMisInscripciones.mockResolvedValue([
+      { torneo: { id: 10, nombre: 'Torneo Final', estado: 'finalizado' }, inscripcion: { id: 20, mazo: null } },
+    ]);
+    wrap(<MisInscripcionesTab />);
+    await waitFor(() => expect(screen.getByText('Torneo Final')).toBeInTheDocument());
+    expect(screen.queryByRole('button', { name: 'Cancelar inscripción' })).not.toBeInTheDocument();
+  });
+
+  it('oculta el botón cancelar si el torneo está cancelado', async () => {
+    torneosSvc.listarMisInscripciones.mockResolvedValue([
+      { torneo: { id: 11, nombre: 'Torneo Anulado', estado: 'cancelado' }, inscripcion: { id: 21, mazo: null } },
+    ]);
+    wrap(<MisInscripcionesTab />);
+    await waitFor(() => expect(screen.getByText('Torneo Anulado')).toBeInTheDocument());
+    expect(screen.queryByRole('button', { name: 'Cancelar inscripción' })).not.toBeInTheDocument();
+  });
+
+  it('muestra alerta de error cuando falla la carga', async () => {
+    torneosSvc.listarMisInscripciones.mockRejectedValue(new Error('Conexión perdida'));
+    wrap(<MisInscripcionesTab />);
+    await waitFor(() => expect(screen.getByText('Conexión perdida')).toBeInTheDocument());
+  });
+
+  it('normaliza datos cuando el item no tiene .torneo', async () => {
+    torneosSvc.listarMisInscripciones.mockResolvedValue([
+      { id: 30, nombre: 'Liga Directa', estado: 'pendiente' },
+    ]);
+    wrap(<MisInscripcionesTab />);
+    await waitFor(() => expect(screen.getByText('Liga Directa')).toBeInTheDocument());
+    expect(screen.getByText('Inscrito')).toBeInTheDocument();
+  });
+
+  it('muestra el nombre del mazo cuando está presente', async () => {
+    torneosSvc.listarMisInscripciones.mockResolvedValue([
+      { torneo: { id: 5, nombre: 'Liga', estado: 'pendiente' }, inscripcion: { id: 9, mazo: { nombre: 'Atraxa' } } },
+    ]);
+    wrap(<MisInscripcionesTab />);
+    await waitFor(() => expect(screen.getByText('Mazo: Atraxa')).toBeInTheDocument());
+  });
+
+  it('muestra error y toast cuando falla la cancelación', async () => {
+    torneosSvc.listarMisInscripciones.mockResolvedValue([
+      { torneo: { id: 5, nombre: 'Liga', estado: 'pendiente' }, inscripcion: { id: 9, mazo: null } },
+    ]);
+    torneosSvc.cancelarInscripcion.mockRejectedValue(new Error('No autorizado'));
+    wrap(<MisInscripcionesTab />);
+    await waitFor(() => expect(screen.getByText('Liga')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Cancelar inscripción' }));
+    await waitFor(() => expect(toast.mostrarError).toHaveBeenCalled());
+  });
 });
 
 describe('MisTorneosTab', () => {
@@ -159,5 +257,52 @@ describe('MisTorneosTab', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Cancelar' }));
     await userEvent.click(await screen.findByRole('button', { name: 'Confirmar cancelación' }));
     await waitFor(() => expect(torneosSvc.cambiarEstadoTorneo).toHaveBeenCalledWith(7, 'cancelado'));
+  });
+
+  it('navega a editar al pulsar Editar', async () => {
+    torneosSvc.listarTorneos.mockResolvedValue([{ id: 7, nombre: 'Mi Liga', estado: 'pendiente', organizador_id: 1 }]);
+    wrap(<MisTorneosTab />);
+    await waitFor(() => expect(screen.getByText('Mi Liga')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Editar' }));
+    expect(navigate).toHaveBeenCalledWith('/organizador/torneos/7/editar');
+  });
+
+  it('navega a gestionar al pulsar Gestionar', async () => {
+    torneosSvc.listarTorneos.mockResolvedValue([{ id: 7, nombre: 'Mi Liga', estado: 'pendiente', organizador_id: 1 }]);
+    wrap(<MisTorneosTab />);
+    await waitFor(() => expect(screen.getByText('Mi Liga')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Gestionar' }));
+    expect(navigate).toHaveBeenCalledWith('/organizador/torneos/7/gestion');
+  });
+
+  it('muestra error y botón reintentar cuando falla la carga', async () => {
+    torneosSvc.listarTorneos.mockRejectedValue(new Error('Error de red'));
+    wrap(<MisTorneosTab />);
+    await waitFor(() => expect(screen.getByText(/Error de red/)).toBeInTheDocument());
+    expect(screen.getByText('Reintentar')).toBeInTheDocument();
+  });
+
+  it('oculta botón cancelar si el torneo está finalizado', async () => {
+    torneosSvc.listarTorneos.mockResolvedValue([{ id: 8, nombre: 'Torneo Cerrado', estado: 'finalizado', organizador_id: 1 }]);
+    wrap(<MisTorneosTab />);
+    await waitFor(() => expect(screen.getByText('Torneo Cerrado')).toBeInTheDocument());
+    expect(screen.getByRole('button', { name: 'Editar' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Gestionar' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Cancelar' })).not.toBeInTheDocument();
+  });
+
+  it('oculta botón cancelar si el torneo está cancelado', async () => {
+    torneosSvc.listarTorneos.mockResolvedValue([{ id: 9, nombre: 'Torneo Anulado', estado: 'cancelado', organizador_id: 1 }]);
+    wrap(<MisTorneosTab />);
+    await waitFor(() => expect(screen.getByText('Torneo Anulado')).toBeInTheDocument());
+    expect(screen.queryByRole('button', { name: 'Cancelar' })).not.toBeInTheDocument();
+  });
+
+  it('navega a crear torneo nuevo desde el botón superior', async () => {
+    torneosSvc.listarTorneos.mockResolvedValue([{ id: 7, nombre: 'Mi Liga', estado: 'pendiente', organizador_id: 1 }]);
+    wrap(<MisTorneosTab />);
+    await waitFor(() => expect(screen.getByText('Mi Liga')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Crear torneo nuevo' }));
+    expect(navigate).toHaveBeenCalledWith('/organizador/torneos/nuevo');
   });
 });

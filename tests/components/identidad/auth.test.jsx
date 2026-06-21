@@ -43,6 +43,24 @@ describe('Login', () => {
     expect(toast.mostrarExito).toHaveBeenCalled();
   });
 
+  it('navega al panel de organizador con rol organizador', async () => {
+    auth.login.mockResolvedValue({ rol: 'organizador' });
+    wrap(<Login />);
+    await userEvent.type(screen.getByLabelText(/^Correo/), 'org@org.cl');
+    await userEvent.type(screen.getByLabelText(/^Contraseña/), 'secret1');
+    await userEvent.click(screen.getByRole('button', { name: 'Iniciar sesión' }));
+    await waitFor(() => expect(navigate).toHaveBeenCalledWith('/organizador', { replace: true }));
+  });
+
+  it('navega al panel de tienda con rol tienda', async () => {
+    auth.login.mockResolvedValue({ rol: 'tienda' });
+    wrap(<Login />);
+    await userEvent.type(screen.getByLabelText(/^Correo/), 'shop@shop.cl');
+    await userEvent.type(screen.getByLabelText(/^Contraseña/), 'secret1');
+    await userEvent.click(screen.getByRole('button', { name: 'Iniciar sesión' }));
+    await waitFor(() => expect(navigate).toHaveBeenCalledWith('/tienda', { replace: true }));
+  });
+
   it('muestra error cuando el login falla', async () => {
     auth.login.mockRejectedValue(new Error('Invalid login credentials'));
     wrap(<Login />);
@@ -99,6 +117,92 @@ describe('Registro', () => {
     await userEvent.type(screen.getByLabelText(/^Confirmar contraseña/), 'secret123');
     await userEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }));
     expect(await screen.findByText('Verifica tu correo')).toBeInTheDocument();
+  });
+
+  it('valida formato invalido de nombre de usuario', async () => {
+    wrap(<Registro />);
+    await userEvent.type(screen.getByLabelText(/^Nombre de usuario/), 'a b');
+    await userEvent.type(screen.getByLabelText(/^Correo/), 'a@a.cl');
+    await userEvent.type(screen.getByLabelText(/^Contraseña/), 'secret123');
+    await userEvent.type(screen.getByLabelText(/^Confirmar contraseña/), 'secret123');
+    await userEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }));
+    expect(await screen.findByText(/Solo letras, números/)).toBeInTheDocument();
+    expect(auth.signup).not.toHaveBeenCalled();
+  });
+
+  it('valida contraseña demasiado corta', async () => {
+    wrap(<Registro />);
+    await userEvent.type(screen.getByLabelText(/^Nombre de usuario/), 'usuario1');
+    await userEvent.type(screen.getByLabelText(/^Correo/), 'a@a.cl');
+    await userEvent.type(screen.getByLabelText(/^Contraseña/), '1234');
+    await userEvent.type(screen.getByLabelText(/^Confirmar contraseña/), '1234');
+    await userEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }));
+    expect(await screen.findByText(/al menos 8 caracteres/)).toBeInTheDocument();
+    expect(auth.signup).not.toHaveBeenCalled();
+  });
+
+  it('valida correo invalido', async () => {
+    wrap(<Registro />);
+    await userEvent.type(screen.getByLabelText(/^Nombre de usuario/), 'usuario1');
+    await userEvent.type(screen.getByLabelText(/^Correo/), 'no-email');
+    await userEvent.type(screen.getByLabelText(/^Contraseña/), 'secret123');
+    await userEvent.type(screen.getByLabelText(/^Confirmar contraseña/), 'secret123');
+    await userEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }));
+    expect(await screen.findByText('Ingresa un correo válido.')).toBeInTheDocument();
+  });
+
+  it('muestra error cuando signup falla', async () => {
+    auth.signup.mockRejectedValue(new Error('Email already exists'));
+    wrap(<Registro />);
+    await userEvent.type(screen.getByLabelText(/^Nombre de usuario/), 'usuario1');
+    await userEvent.type(screen.getByLabelText(/^Correo/), 'a@a.cl');
+    await userEvent.type(screen.getByLabelText(/^Contraseña/), 'secret123');
+    await userEvent.type(screen.getByLabelText(/^Confirmar contraseña/), 'secret123');
+    await userEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }));
+    await waitFor(() => expect(toast.mostrarError).toHaveBeenCalled());
+    expect(screen.getByRole('alert')).toBeInTheDocument();
+  });
+
+  it('valida nombre de tienda obligatorio para rol tienda', async () => {
+    wrap(<Registro />);
+    await userEvent.click(screen.getByRole('button', { name: /Tienda/ }));
+    await userEvent.type(screen.getByLabelText(/^Nombre de usuario/), 'tienda1');
+    await userEvent.type(screen.getByLabelText(/^Correo/), 'a@a.cl');
+    await userEvent.type(screen.getByLabelText(/^Contraseña/), 'secret123');
+    await userEvent.type(screen.getByLabelText(/^Confirmar contraseña/), 'secret123');
+    await userEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }));
+    expect(await screen.findByText('El nombre de la tienda es obligatorio.')).toBeInTheDocument();
+    expect(auth.signup).not.toHaveBeenCalled();
+  });
+
+  it('registra como organizador y navega al panel correcto', async () => {
+    auth.signup.mockResolvedValue({ rol: 'organizador' });
+    wrap(<Registro />);
+    await userEvent.click(screen.getByRole('button', { name: /Organizador/ }));
+    await userEvent.type(screen.getByLabelText(/^Nombre de usuario/), 'org1');
+    await userEvent.type(screen.getByLabelText(/^Correo/), 'org@org.cl');
+    await userEvent.type(screen.getByLabelText(/^Contraseña/), 'secret123');
+    await userEvent.type(screen.getByLabelText(/^Confirmar contraseña/), 'secret123');
+    await userEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }));
+    await waitFor(() => expect(auth.signup).toHaveBeenCalled());
+    expect(navigate).toHaveBeenCalledWith('/organizador', { replace: true });
+  });
+
+  it('registra como tienda y navega al panel correcto', async () => {
+    auth.signup.mockResolvedValue({ rol: 'tienda' });
+    wrap(<Registro />);
+    await userEvent.click(screen.getByRole('button', { name: /Tienda/ }));
+    await userEvent.type(screen.getByLabelText(/^Nombre de usuario/), 'shop1');
+    await userEvent.type(screen.getByLabelText(/^Correo/), 'shop@shop.cl');
+    await userEvent.type(screen.getByLabelText(/^Contraseña/), 'secret123');
+    await userEvent.type(screen.getByLabelText(/^Confirmar contraseña/), 'secret123');
+    await userEvent.type(screen.getByLabelText(/^Nombre de la tienda/), 'Mi Tienda');
+    await userEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }));
+    await waitFor(() => expect(auth.signup).toHaveBeenCalledWith(expect.objectContaining({
+      rol: 'tienda',
+      nombre_tienda: 'Mi Tienda',
+    })));
+    expect(navigate).toHaveBeenCalledWith('/tienda', { replace: true });
   });
 });
 

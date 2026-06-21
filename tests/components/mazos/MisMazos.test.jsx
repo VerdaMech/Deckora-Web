@@ -100,6 +100,48 @@ describe('MisMazos', () => {
     await waitFor(() => expect(screen.getByText('Mazo Uno')).toBeInTheDocument());
     expect(screen.getByText('1 carta')).toBeInTheDocument();
   });
+
+  it('abre el modal de crear mazo al hacer clic en el botón', async () => {
+    mazosSvc.listarMisMazos.mockResolvedValue([]);
+    wrap(<MisMazos />);
+    await waitFor(() => expect(screen.getByText('Aún no tienes mazos')).toBeInTheDocument());
+    // Click the "Crear mazo" button in the empty state
+    const crearBtns = screen.getAllByRole('button', { name: /Crear mazo/ });
+    await userEvent.click(crearBtns[0]);
+    // The CrearMazoModal should now be visible
+    await waitFor(() => expect(screen.getByLabelText(/^Nombre/)).toBeInTheDocument());
+  });
+
+  it('muestra error cuando falla eliminarMazo', async () => {
+    mazosSvc.listarMisMazos.mockResolvedValue([{ id: 5, nombre: 'Krenko', formato: 'COMMANDER' }]);
+    mazosSvc.eliminarMazo.mockRejectedValue(new Error('No se pudo eliminar'));
+    wrap(<MisMazos />);
+    await waitFor(() => expect(screen.getByText('Krenko')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Eliminar mazo Krenko' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Eliminar' }));
+    await waitFor(() => expect(screen.getByText('No se pudo eliminar el mazo. Intenta de nuevo.')).toBeInTheDocument());
+  });
+
+  it('reintenta la carga al hacer clic en Reintentar', async () => {
+    mazosSvc.listarMisMazos.mockRejectedValueOnce(new Error('Error de red'));
+    wrap(<MisMazos />);
+    await waitFor(() => expect(screen.getByText('Error de red')).toBeInTheDocument());
+    mazosSvc.listarMisMazos.mockResolvedValueOnce([{ id: 1, nombre: 'Recuperado', formato: 'COMMANDER', total_cartas: 10 }]);
+    await userEvent.click(screen.getByRole('button', { name: 'Reintentar' }));
+    await waitFor(() => expect(screen.getByText('Recuperado')).toBeInTheDocument());
+  });
+
+  it('cancela eliminación al hacer clic en Cancelar del modal', async () => {
+    mazosSvc.listarMisMazos.mockResolvedValue([{ id: 5, nombre: 'Krenko', formato: 'COMMANDER' }]);
+    wrap(<MisMazos />);
+    await waitFor(() => expect(screen.getByText('Krenko')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Eliminar mazo Krenko' }));
+    await waitFor(() => expect(screen.getByText(/Vas a eliminar/)).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Cancelar' }));
+    // Modal should close, mazo should still be visible
+    await waitFor(() => expect(screen.queryByText(/Vas a eliminar/)).not.toBeInTheDocument());
+    expect(screen.getByText('Krenko')).toBeInTheDocument();
+  });
 });
 
 describe('CrearMazoModal', () => {

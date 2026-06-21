@@ -91,4 +91,43 @@ describe('AuthContext', () => {
     expect(() => render(<Suelto />)).toThrow(/AuthProvider/);
     spy.mockRestore();
   });
+
+  it('onAuthStateChange con sesión actualiza el usuario', async () => {
+    let authCallback = null;
+    onAuthStateChange.mockImplementation((cb) => {
+      authCallback = cb;
+      return { data: { subscription: { unsubscribe } } };
+    });
+    getSession.mockResolvedValue({ data: { session: null } });
+    authService.getMe.mockResolvedValue({ user: { correo: 'y@y.cl' }, rol: 'tienda' });
+    render(<AuthProvider><Vista /></AuthProvider>);
+    await waitFor(() => expect(screen.getByText('Sin sesión')).toBeInTheDocument());
+    // Simulate auth state change with a session
+    await authCallback('SIGNED_IN', { access_token: 'new-tok' });
+    await waitFor(() => expect(screen.getByText('y@y.cl (tienda)')).toBeInTheDocument());
+  });
+
+  it('onAuthStateChange sin sesión limpia el estado', async () => {
+    let authCallback = null;
+    onAuthStateChange.mockImplementation((cb) => {
+      authCallback = cb;
+      return { data: { subscription: { unsubscribe } } };
+    });
+    getSession.mockResolvedValue({ data: { session: { access_token: 'tok' } } });
+    authService.getMe.mockResolvedValue({ user: { correo: 'z@z.cl' }, rol: 'jugador' });
+    render(<AuthProvider><Vista /></AuthProvider>);
+    await waitFor(() => expect(screen.getByText('z@z.cl (jugador)')).toBeInTheDocument());
+    // Simulate sign out via auth state change
+    await authCallback('SIGNED_OUT', null);
+    await waitFor(() => expect(screen.getByText('Sin sesión')).toBeInTheDocument());
+  });
+
+  it('signup sin verificación de correo setea el usuario', async () => {
+    getSession.mockResolvedValue({ data: { session: null } });
+    authService.signup.mockResolvedValue({ user: { correo: 'new@new.cl' }, rol: 'jugador' });
+    render(<AuthProvider><Vista /></AuthProvider>);
+    await waitFor(() => screen.getByText('Sin sesión'));
+    await userEvent.click(screen.getByRole('button', { name: 'signup' }));
+    await waitFor(() => expect(screen.getByText('new@new.cl (jugador)')).toBeInTheDocument());
+  });
 });

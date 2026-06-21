@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -23,6 +23,7 @@ vi.mock('@/services/torneos.service', () => ({
   obtenerTorneo: (...a) => torneosSvc.obtenerTorneo(...a),
   actualizarTorneo: (...a) => torneosSvc.actualizarTorneo(...a),
 }));
+vi.mock('@/hooks/useDebounce', () => ({ useDebounce: (v) => v, default: (v) => v }));
 vi.mock('@/modules/torneos/components/FormularioTorneo', () => ({
   default: ({ onSubmit, submitLabel }) => (
     <button onClick={() => onSubmit({ nombre: 'Nuevo' })}>{submitLabel}</button>
@@ -68,6 +69,47 @@ describe('Cartelera', () => {
     await waitFor(() => expect(screen.getByText('No hay torneos que coincidan con tus filtros.')).toBeInTheDocument());
     await userEvent.click(screen.getByRole('button', { name: 'Limpiar filtros' }));
     expect(screen.getByLabelText('Buscar torneos por nombre')).toHaveValue('');
+  });
+
+  it('muestra error y botón reintentar al fallar la carga', async () => {
+    torneosSvc.listarTorneos.mockRejectedValue(new Error('Timeout'));
+    wrap(<Cartelera />);
+    await waitFor(() => expect(screen.getByText(/Timeout/)).toBeInTheDocument());
+    expect(screen.getByText('Reintentar')).toBeInTheDocument();
+  });
+
+  it('navega al detalle al hacer clic en un torneo', async () => {
+    torneosSvc.listarTorneos.mockResolvedValue([{ id: 42, nombre: 'Commander Fest', formato: 'COMMANDER', estado: 'pendiente' }]);
+    wrap(<Cartelera />);
+    await waitFor(() => expect(screen.getByText('Commander Fest')).toBeInTheDocument());
+    await userEvent.click(screen.getByText('Commander Fest'));
+    expect(navigate).toHaveBeenCalledWith('/torneos/42');
+  });
+
+  it('filtra por formato usando el select', async () => {
+    torneosSvc.listarTorneos.mockResolvedValue([]);
+    wrap(<Cartelera />);
+    await waitFor(() => expect(screen.getByText('No hay torneos disponibles')).toBeInTheDocument());
+    const selects = screen.getAllByRole('combobox');
+    fireEvent.change(selects[0], { target: { value: 'COMMANDER' } });
+    await waitFor(() => expect(torneosSvc.listarTorneos).toHaveBeenCalledWith(expect.objectContaining({ formato: 'COMMANDER' })));
+  });
+
+  it('filtra por estado usando el select', async () => {
+    torneosSvc.listarTorneos.mockResolvedValue([]);
+    wrap(<Cartelera />);
+    await waitFor(() => expect(screen.getByText('No hay torneos disponibles')).toBeInTheDocument());
+    const selects = screen.getAllByRole('combobox');
+    fireEvent.change(selects[1], { target: { value: 'pendiente' } });
+    await waitFor(() => expect(torneosSvc.listarTorneos).toHaveBeenCalledWith(expect.objectContaining({ estado: 'pendiente' })));
+  });
+
+  it('filtra por fecha usando el input date', async () => {
+    torneosSvc.listarTorneos.mockResolvedValue([]);
+    wrap(<Cartelera />);
+    await waitFor(() => expect(screen.getByText('No hay torneos disponibles')).toBeInTheDocument());
+    fireEvent.change(screen.getByLabelText('Filtrar por fecha'), { target: { value: '2026-07-01' } });
+    await waitFor(() => expect(torneosSvc.listarTorneos).toHaveBeenCalledWith(expect.objectContaining({ desde: '2026-07-01' })));
   });
 });
 
@@ -118,5 +160,33 @@ describe('MisTorneos', () => {
     torneosSvc.listarTorneos.mockResolvedValue([]);
     wrap(<MisTorneos />);
     await waitFor(() => expect(screen.getByText('Sin torneos creados')).toBeInTheDocument());
+  });
+
+  it('muestra alerta de error al fallar la carga', async () => {
+    torneosSvc.listarTorneos.mockRejectedValue(new Error('No se pudo conectar'));
+    wrap(<MisTorneos />);
+    await waitFor(() => expect(screen.getByText('No se pudo conectar')).toBeInTheDocument());
+  });
+
+  it('navega al detalle al hacer clic en un torneo', async () => {
+    torneosSvc.listarTorneos.mockResolvedValue([{ id: 3, nombre: 'Mi Liga', formato: 'COMMANDER', estado: 'pendiente' }]);
+    wrap(<MisTorneos />);
+    await waitFor(() => expect(screen.getByText('Mi Liga')).toBeInTheDocument());
+    await userEvent.click(screen.getByText('Mi Liga'));
+    expect(navigate).toHaveBeenCalledWith('/torneos/3');
+  });
+
+  it('navega a crear torneo al pulsar el botón', async () => {
+    torneosSvc.listarTorneos.mockResolvedValue([]);
+    wrap(<MisTorneos />);
+    await waitFor(() => expect(screen.getByText('Sin torneos creados')).toBeInTheDocument());
+    await userEvent.click(screen.getAllByRole('button', { name: 'Crear torneo' })[0]);
+    expect(navigate).toHaveBeenCalledWith('/organizador/torneos/nuevo');
+  });
+
+  it('maneja respuesta con estructura { torneos: [...] }', async () => {
+    torneosSvc.listarTorneos.mockResolvedValue({ torneos: [{ id: 4, nombre: 'Liga Wrapped', formato: 'STANDARD', estado: 'pendiente' }] });
+    wrap(<MisTorneos />);
+    await waitFor(() => expect(screen.getByText('Liga Wrapped')).toBeInTheDocument());
   });
 });

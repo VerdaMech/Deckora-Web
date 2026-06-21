@@ -45,6 +45,57 @@ describe('DashboardJugador', () => {
     await waitFor(() => expect(screen.getByText('Sin mazos todavía')).toBeInTheDocument());
     expect(screen.getByText('Sin torneos próximos')).toBeInTheDocument();
   });
+
+  it('maneja error de listarMisMazos sin romper la UI', async () => {
+    listarMisMazos.mockRejectedValue(new Error('Error de red'));
+    listarTorneosDelJugador.mockResolvedValue({ data: [] });
+    wrap(<DashboardJugador />);
+    await waitFor(() => expect(screen.getByText('Sin mazos todavía')).toBeInTheDocument());
+  });
+
+  it('muestra torneos con fecha formateada', async () => {
+    listarMisMazos.mockResolvedValue([]);
+    listarTorneosDelJugador.mockResolvedValue({
+      data: [{ id: 10, nombre: 'Liga Julio', fecha: '2026-07-15' }],
+    });
+    wrap(<DashboardJugador />);
+    await waitFor(() => expect(screen.getByText('Liga Julio')).toBeInTheDocument());
+  });
+
+  it('muestra torneos con fecha_inicio en vez de fecha', async () => {
+    listarMisMazos.mockResolvedValue([]);
+    listarTorneosDelJugador.mockResolvedValue({
+      data: [{ id: 11, nombre: 'Torneo Agosto', fecha_inicio: '2026-08-20' }],
+    });
+    wrap(<DashboardJugador />);
+    await waitFor(() => expect(screen.getByText('Torneo Agosto')).toBeInTheDocument());
+  });
+
+  it('usa el correo como nombre cuando nombre_usuario no existe', async () => {
+    authState.value = { user: { id: 2, correo: 'test@deckora.cl' }, perfil: {} };
+    listarMisMazos.mockResolvedValue([]);
+    listarTorneosDelJugador.mockResolvedValue({ data: [] });
+    wrap(<DashboardJugador />);
+    expect(screen.getByText('test@deckora.cl')).toBeInTheDocument();
+  });
+
+  it('maneja error de listarTorneosDelJugador sin romper la UI', async () => {
+    listarMisMazos.mockResolvedValue([]);
+    listarTorneosDelJugador.mockRejectedValue(new Error('Error torneos'));
+    wrap(<DashboardJugador />);
+    await waitFor(() => expect(screen.getByText('Sin torneos próximos')).toBeInTheDocument());
+  });
+
+  it('ordena mazos recientes por fecha de actualización', async () => {
+    listarMisMazos.mockResolvedValue([
+      { id: 1, nombre: 'Viejo', formato: 'COMMANDER', updated_at: '2025-01-01' },
+      { id: 2, nombre: 'Nuevo', formato: 'COMMANDER', updated_at: '2026-06-01' },
+      { id: 3, nombre: 'Medio', formato: 'COMMANDER', updated_at: '2025-07-01' },
+    ]);
+    listarTorneosDelJugador.mockResolvedValue({ data: [] });
+    wrap(<DashboardJugador />);
+    await waitFor(() => expect(screen.getByText('Nuevo')).toBeInTheDocument());
+  });
 });
 
 describe('DashboardOrganizador', () => {
@@ -60,6 +111,24 @@ describe('DashboardOrganizador', () => {
     wrap(<DashboardOrganizador />);
     await waitFor(() => expect(screen.getByText('Sin torneos creados')).toBeInTheDocument());
   });
+
+  it('maneja error de listarMisTorneos sin romper la UI', async () => {
+    listarMisTorneos.mockRejectedValue(new Error('Error de red'));
+    wrap(<DashboardOrganizador />);
+    await waitFor(() => expect(screen.getByText('Sin torneos creados')).toBeInTheDocument());
+  });
+
+  it('ordena torneos recientes por fecha de creación', async () => {
+    listarMisTorneos.mockResolvedValue({
+      data: [
+        { id: 1, nombre: 'Viejo', estado: 'finalizado', createdAt: '2025-01-01' },
+        { id: 2, nombre: 'Nuevo', estado: 'pendiente', createdAt: '2026-06-01' },
+      ],
+    });
+    wrap(<DashboardOrganizador />);
+    await waitFor(() => expect(screen.getByText('Nuevo')).toBeInTheDocument());
+    expect(screen.getByText('Viejo')).toBeInTheDocument();
+  });
 });
 
 describe('DashboardTienda', () => {
@@ -72,6 +141,12 @@ describe('DashboardTienda', () => {
 
   it('muestra empty state sin eventos próximos', async () => {
     listarTorneosDeTienda.mockResolvedValue({ data: [] });
+    wrap(<DashboardTienda />);
+    await waitFor(() => expect(screen.getByText('Sin eventos próximos')).toBeInTheDocument());
+  });
+
+  it('maneja error de listarTorneosDeTienda sin romper la UI', async () => {
+    listarTorneosDeTienda.mockRejectedValue(new Error('Error'));
     wrap(<DashboardTienda />);
     await waitFor(() => expect(screen.getByText('Sin eventos próximos')).toBeInTheDocument());
   });

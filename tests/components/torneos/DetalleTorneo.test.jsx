@@ -203,4 +203,146 @@ describe('DetalleTorneo', () => {
     await userEvent.click(await screen.findByRole('button', { name: 'Confirmar' }));
     await waitFor(() => expect(screen.getByText('No autorizado')).toBeInTheDocument());
   });
+
+  it('returns null when torneo is null (not loading, no error)', async () => {
+    torneosSvc.obtenerTorneo.mockResolvedValue(null);
+    const { container } = wrap(<DetalleTorneo />);
+    await waitFor(() => expect(torneosSvc.obtenerTorneo).toHaveBeenCalled());
+    // torneo is null after loading, component returns null
+    await waitFor(() => expect(container.querySelector('.detalle-torneo-page')).not.toBeInTheDocument());
+  });
+
+  it('shows torneo descripcion when present', async () => {
+    torneosSvc.obtenerTorneo.mockResolvedValue({
+      id: 1, nombre: 'Liga', estado: 'pendiente', formato: 'COMMANDER', organizador_id: 99,
+      descripcion: 'Torneo de prueba para la comunidad',
+    });
+    wrap(<DetalleTorneo />);
+    await waitFor(() => expect(screen.getByText('Torneo de prueba para la comunidad')).toBeInTheDocument());
+    expect(screen.getByText('Descripción')).toBeInTheDocument();
+  });
+
+  it('shows fecha, ubicacion and organizador in header meta', async () => {
+    torneosSvc.obtenerTorneo.mockResolvedValue({
+      id: 1, nombre: 'Liga', estado: 'pendiente', formato: 'COMMANDER', organizador_id: 99,
+      fecha: '2026-06-15T18:00:00Z',
+      ubicacion: 'Santiago Centro',
+      organizador: { nombre_usuario: 'org_user' },
+      cupo_maximo: 16,
+    });
+    wrap(<DetalleTorneo />);
+    await waitFor(() => expect(screen.getByText('Liga')).toBeInTheDocument());
+    expect(screen.getByText('Santiago Centro')).toBeInTheDocument();
+    expect(screen.getByText('org_user')).toBeInTheDocument();
+  });
+
+  it('shows tienda name when organizador not present but tienda is', async () => {
+    torneosSvc.obtenerTorneo.mockResolvedValue({
+      id: 1, nombre: 'Liga', estado: 'pendiente', formato: 'COMMANDER', organizador_id: 99,
+      tienda: { nombre_usuario: 'tienda_user', nombre: 'Mi Tienda' },
+    });
+    wrap(<DetalleTorneo />);
+    await waitFor(() => expect(screen.getByText('Liga')).toBeInTheDocument());
+    expect(screen.getByText('Mi Tienda')).toBeInTheDocument();
+  });
+
+  it('non-organizer player sees rondas when torneo is en_curso', async () => {
+    authState.value = { user: { id: 2, rol: 'jugador' } };
+    torneosSvc.obtenerTorneo.mockResolvedValue({ id: 1, nombre: 'Liga', estado: 'en_curso', formato: 'COMMANDER', organizador_id: 99 });
+    rondasSvc.listarRondas.mockResolvedValue([{ id: 1, numero: 1 }]);
+    wrap(<DetalleTorneo />);
+    await waitFor(() => expect(screen.getAllByTestId('round-view').length).toBe(1));
+    // Non-organizer should NOT see admin section
+    expect(screen.queryByText('Administración')).not.toBeInTheDocument();
+  });
+
+  it('non-organizer player sees empty rondas placeholder for en_curso', async () => {
+    authState.value = { user: { id: 2, rol: 'jugador' } };
+    torneosSvc.obtenerTorneo.mockResolvedValue({ id: 1, nombre: 'Liga', estado: 'en_curso', formato: 'COMMANDER', organizador_id: 99 });
+    rondasSvc.listarRondas.mockResolvedValue([]);
+    wrap(<DetalleTorneo />);
+    await waitFor(() => expect(screen.getByText('El torneo comenzó pero aún no hay rondas creadas.')).toBeInTheDocument());
+  });
+
+  it('organizer can cancel the confirmation modal', async () => {
+    authState.value = { user: { id: 5, rol: 'organizador' } };
+    torneosSvc.obtenerTorneo.mockResolvedValue({ id: 1, nombre: 'Liga', estado: 'pendiente', formato: 'COMMANDER', organizador_id: 5 });
+    wrap(<DetalleTorneo />);
+    await waitFor(() => expect(screen.getByText('Administración')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Publicar torneo' }));
+    expect(await screen.findByText('Confirmar acción')).toBeInTheDocument();
+    // Cancel the modal
+    const cancelButtons = screen.getAllByRole('button', { name: 'Cancelar' });
+    await userEvent.click(cancelButtons[cancelButtons.length - 1]);
+    await waitFor(() => expect(screen.queryByText('Confirmar acción')).not.toBeInTheDocument());
+  });
+
+  it('organizer cancelar torneo shows danger variant confirmation', async () => {
+    authState.value = { user: { id: 5, rol: 'organizador' } };
+    torneosSvc.obtenerTorneo.mockResolvedValue({ id: 1, nombre: 'Liga', estado: 'pendiente', formato: 'COMMANDER', organizador_id: 5 });
+    torneosSvc.cambiarEstadoTorneo.mockResolvedValue({});
+    wrap(<DetalleTorneo />);
+    await waitFor(() => expect(screen.getByText('Administración')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Cancelar torneo' }));
+    expect(await screen.findByText(/cancelar/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Confirmar' }));
+    await waitFor(() => expect(torneosSvc.cambiarEstadoTorneo).toHaveBeenCalledWith('1', 'cancelado'));
+  });
+
+  it('organizer for en_curso can finalizar and rondas are reloaded', async () => {
+    authState.value = { user: { id: 5, rol: 'organizador' } };
+    torneosSvc.obtenerTorneo.mockResolvedValue({ id: 1, nombre: 'Liga', estado: 'en_curso', formato: 'COMMANDER', organizador_id: 5 });
+    rondasSvc.listarRondas.mockResolvedValue([{ id: 1, numero: 1 }]);
+    torneosSvc.cambiarEstadoTorneo.mockResolvedValue({});
+    wrap(<DetalleTorneo />);
+    await waitFor(() => expect(screen.getByText('Liga')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Finalizar torneo' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Confirmar' }));
+    await waitFor(() => expect(torneosSvc.cambiarEstadoTorneo).toHaveBeenCalledWith('1', 'finalizado'));
+    // After finalizing (en_curso -> finalizado), listarRondas is called again
+    await waitFor(() => expect(rondasSvc.listarRondas).toHaveBeenCalledTimes(2));
+  });
+
+  it('navigate to cartelera when Volver a cartelera is clicked from footer', async () => {
+    torneosSvc.obtenerTorneo.mockResolvedValue({ id: 1, nombre: 'Liga', estado: 'pendiente', formato: 'COMMANDER', organizador_id: 99 });
+    wrap(<DetalleTorneo />);
+    await waitFor(() => expect(screen.getByText('Liga')).toBeInTheDocument());
+    // There are multiple "Volver a cartelera" buttons (header + footer)
+    const volverBtns = screen.getAllByRole('button', { name: /Cartelera/i });
+    await userEvent.click(volverBtns[volverBtns.length - 1]);
+    expect(navigate).toHaveBeenCalledWith('/torneos');
+  });
+
+  it('navigate to cartelera from error state', async () => {
+    torneosSvc.obtenerTorneo.mockRejectedValue(new Error('server error'));
+    wrap(<DetalleTorneo />);
+    await waitFor(() => expect(screen.getByText('server error')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Volver a cartelera' }));
+    expect(navigate).toHaveBeenCalledWith('/torneos');
+  });
+
+  it('organizer pendiente shows BandejaInscripciones', async () => {
+    authState.value = { user: { id: 5, rol: 'organizador' } };
+    torneosSvc.obtenerTorneo.mockResolvedValue({ id: 1, nombre: 'Liga', estado: 'pendiente', formato: 'COMMANDER', organizador_id: 5 });
+    wrap(<DetalleTorneo />);
+    await waitFor(() => expect(screen.getByText('Administración')).toBeInTheDocument());
+    expect(screen.getByTestId('bandeja')).toBeInTheDocument();
+  });
+
+  it('non-organizer finalizado sees rondas list', async () => {
+    authState.value = { user: { id: 2, rol: 'jugador' } };
+    torneosSvc.obtenerTorneo.mockResolvedValue({ id: 1, nombre: 'Liga', estado: 'finalizado', formato: 'COMMANDER', organizador_id: 99 });
+    rondasSvc.listarRondas.mockResolvedValue([{ id: 1, numero: 1 }, { id: 2, numero: 2 }]);
+    wrap(<DetalleTorneo />);
+    await waitFor(() => expect(screen.getAllByTestId('round-view').length).toBe(2));
+  });
+
+  it('unauthenticated user sees inscription panel and no admin', async () => {
+    authState.value = { user: null };
+    torneosSvc.obtenerTorneo.mockResolvedValue({ id: 1, nombre: 'Liga', estado: 'pendiente', formato: 'COMMANDER', organizador_id: 99 });
+    wrap(<DetalleTorneo />);
+    await waitFor(() => expect(screen.getByText('Liga')).toBeInTheDocument());
+    expect(screen.getByTestId('panel-inscripcion')).toBeInTheDocument();
+    expect(screen.queryByText('Administración')).not.toBeInTheDocument();
+  });
 });

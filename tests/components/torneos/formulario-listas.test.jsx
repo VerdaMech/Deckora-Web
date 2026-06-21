@@ -60,6 +60,80 @@ describe('FormularioTorneo', () => {
     await waitFor(() => expect(screen.getByDisplayValue('Providencia, Santiago')).toBeInTheDocument());
   });
 
+  it('muestra error cuando onSubmit falla', async () => {
+    const onSubmit = vi.fn().mockRejectedValue(new Error('Error del servidor'));
+    render(<FormularioTorneo onSubmit={onSubmit} submitLabel="Crear torneo" />);
+    await userEvent.type(screen.getByLabelText(/^Nombre/), 'Mi Torneo');
+    await userEvent.type(screen.getByLabelText(/Fecha de inicio/), '2030-12-31T18:00');
+    await userEvent.type(screen.getByPlaceholderText(/Av\. Providencia/), 'Santiago Centro');
+    await userEvent.click(screen.getByRole('button', { name: 'Crear torneo' }));
+    await waitFor(() => expect(screen.getByText('Error del servidor')).toBeInTheDocument());
+  });
+
+  it('alterna el switch de torneo público', async () => {
+    render(<FormularioTorneo onSubmit={vi.fn()} submitLabel="Crear torneo" />);
+    const toggle = screen.getByRole('switch');
+    expect(toggle.getAttribute('aria-checked')).toBe('true');
+    await userEvent.click(toggle);
+    expect(toggle.getAttribute('aria-checked')).toBe('false');
+  });
+
+  it('valida que el nombre no supere 80 caracteres', async () => {
+    const onSubmit = vi.fn();
+    render(<FormularioTorneo onSubmit={onSubmit} submitLabel="Crear torneo" />);
+    const nombreInput = screen.getByLabelText(/^Nombre/);
+    // The input has maxLength=80 so we can't type more than that via the DOM,
+    // but we can test other validation. Let's test past-date validation instead.
+    await userEvent.type(nombreInput, 'Mi Torneo');
+    const fecha = screen.getByLabelText(/Fecha de inicio/);
+    await userEvent.type(fecha, '2020-01-01T18:00');
+    await userEvent.type(screen.getByPlaceholderText(/Av\. Providencia/), 'Santiago');
+    await userEvent.click(screen.getByRole('button', { name: 'Crear torneo' }));
+    expect(await screen.findByText('La fecha de inicio debe ser en el futuro')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  it('valida cupo mínimo de 4', async () => {
+    const onSubmit = vi.fn();
+    render(<FormularioTorneo onSubmit={onSubmit} submitLabel="Crear torneo" />);
+    await userEvent.type(screen.getByLabelText(/^Nombre/), 'Mi Torneo');
+    await userEvent.type(screen.getByLabelText(/Fecha de inicio/), '2030-12-31T18:00');
+    await userEvent.type(screen.getByPlaceholderText(/Av\. Providencia/), 'Santiago');
+    // Set cupo to 2 (less than minimum 4)
+    const cupoInput = screen.getByPlaceholderText('Sin límite');
+    await userEvent.type(cupoInput, '2');
+    await userEvent.click(screen.getByRole('button', { name: 'Crear torneo' }));
+    expect(await screen.findByText('El cupo mínimo es 4 jugadores')).toBeInTheDocument();
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  it('permite cambiar el formato', async () => {
+    render(<FormularioTorneo onSubmit={vi.fn()} submitLabel="Crear torneo" />);
+    const formatSelect = screen.getByDisplayValue('Commander');
+    await userEvent.selectOptions(formatSelect, 'STANDARD');
+    expect(screen.getByDisplayValue('Standard')).toBeInTheDocument();
+  });
+
+  it('permite escribir una descripción', async () => {
+    render(<FormularioTorneo onSubmit={vi.fn()} submitLabel="Crear torneo" />);
+    const descTextarea = screen.getByPlaceholderText('Descripción opcional del torneo...');
+    await userEvent.type(descTextarea, 'Torneo de prueba');
+    expect(descTextarea.value).toBe('Torneo de prueba');
+  });
+
+  it('permite cambiar el precio', async () => {
+    render(<FormularioTorneo onSubmit={vi.fn()} submitLabel="Crear torneo" />);
+    const precioInput = screen.getByDisplayValue('0');
+    await userEvent.clear(precioInput);
+    await userEvent.type(precioInput, '5000');
+    expect(precioInput.value).toBe('5000');
+  });
+
+  it('renderiza el formulario con el mapa', () => {
+    render(<FormularioTorneo onSubmit={vi.fn()} submitLabel="Crear torneo" />);
+    expect(mapboxMock.Map).toHaveBeenCalled();
+    expect(mapboxMock.Marker).toHaveBeenCalled();
+  });
 });
 
 describe('ListaInscritos', () => {

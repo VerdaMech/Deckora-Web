@@ -81,8 +81,34 @@ describe('PerfilRouter', () => {
     await waitFor(() => expect(screen.getByText('ana')).toBeInTheDocument());
   });
 
+  it('renderiza el perfil de organizador', async () => {
+    usuariosSvc.obtenerPerfilPublico.mockResolvedValue({ id: 3, rol: 'organizador', nombre_usuario: 'orga' });
+    usuariosSvc.obtenerTorneosDeUsuario.mockResolvedValue([]);
+    renderRouter();
+    await waitFor(() => expect(screen.getByText('orga')).toBeInTheDocument());
+  });
+
+  it('renderiza el perfil de tienda', async () => {
+    usuariosSvc.obtenerPerfilPublico.mockResolvedValue({ id: 4, rol: 'tienda', nombre_tienda: 'Tienda Y', nombre_usuario: 'tienda_y', direccion: 'Av. Siempre Viva', latitud: -33, longitud: -70 });
+    usuariosSvc.obtenerTorneosDeUsuario.mockResolvedValue([]);
+    renderRouter();
+    await waitFor(() => expect(screen.getByText('Tienda Y')).toBeInTheDocument());
+  });
+
+  it('muestra NotFound para un rol desconocido', async () => {
+    usuariosSvc.obtenerPerfilPublico.mockResolvedValue({ id: 5, rol: 'admin', nombre_usuario: 'nobody' });
+    renderRouter();
+    await waitFor(() => expect(screen.getByText(/no está en el grimorio/i)).toBeInTheDocument());
+  });
+
   it('muestra NotFound si no existe el perfil', async () => {
     usuariosSvc.obtenerPerfilPublico.mockRejectedValue(new Error('404'));
+    renderRouter();
+    await waitFor(() => expect(screen.getByText(/no está en el grimorio/i)).toBeInTheDocument());
+  });
+
+  it('muestra NotFound si el perfil es null', async () => {
+    usuariosSvc.obtenerPerfilPublico.mockResolvedValue(null);
     renderRouter();
     await waitFor(() => expect(screen.getByText(/no está en el grimorio/i)).toBeInTheDocument());
   });

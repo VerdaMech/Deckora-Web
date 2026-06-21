@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Tooltip from '@/components/ui/Tooltip';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import ErrorChunk from '@/components/ui/ErrorChunk';
@@ -32,6 +33,23 @@ describe('ErrorBoundary', () => {
     render(<ErrorBoundary fallback={<p>Fallback custom</p>}><Bomba /></ErrorBoundary>);
     expect(screen.getByText('Fallback custom')).toBeInTheDocument();
   });
+
+  it('muestra botones Recargar y Volver al inicio al tener error', async () => {
+    render(<ErrorBoundary><Bomba /></ErrorBoundary>);
+    expect(screen.getByRole('button', { name: 'Recargar' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Volver al inicio' })).toBeInTheDocument();
+    // Clicking should invoke window.location methods
+    const reloadSpy = vi.fn();
+    Object.defineProperty(window, 'location', {
+      value: { reload: reloadSpy, href: '' },
+      writable: true,
+      configurable: true,
+    });
+    await userEvent.click(screen.getByRole('button', { name: 'Recargar' }));
+    expect(reloadSpy).toHaveBeenCalled();
+    await userEvent.click(screen.getByRole('button', { name: 'Volver al inicio' }));
+    expect(window.location.href).toBe('/');
+  });
 });
 
 describe('ErrorChunk', () => {
@@ -39,5 +57,17 @@ describe('ErrorChunk', () => {
     render(<ErrorChunk />);
     expect(screen.getByText(/no se pudo cargar este módulo/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /reintentar/i })).toBeInTheDocument();
+  });
+
+  it('recarga la página al hacer clic en Reintentar', async () => {
+    const reloadSpy = vi.fn();
+    Object.defineProperty(window, 'location', {
+      value: { reload: reloadSpy },
+      writable: true,
+      configurable: true,
+    });
+    render(<ErrorChunk />);
+    await userEvent.click(screen.getByRole('button', { name: /reintentar/i }));
+    expect(reloadSpy).toHaveBeenCalled();
   });
 });

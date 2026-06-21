@@ -53,6 +53,53 @@ describe('MisMazos', () => {
     await userEvent.click(await screen.findByRole('button', { name: 'Eliminar' }));
     await waitFor(() => expect(mazosSvc.eliminarMazo).toHaveBeenCalledWith(5));
   });
+
+  it('muestra mazo con comandante como string', async () => {
+    mazosSvc.listarMisMazos.mockResolvedValue([
+      { id: 10, nombre: 'Atraxa Superfriends', formato: 'COMMANDER', total_cartas: 100, comandante: 'Atraxa, Praetors Voice' },
+    ]);
+    wrap(<MisMazos />);
+    await waitFor(() => expect(screen.getByText('Atraxa Superfriends')).toBeInTheDocument());
+    expect(screen.getByText('Atraxa, Praetors Voice')).toBeInTheDocument();
+  });
+
+  it('muestra mazo con comandante como objeto', async () => {
+    mazosSvc.listarMisMazos.mockResolvedValue([
+      { id: 11, nombre: 'Krenko Goblins', formato: 'COMMANDER', total_cartas: 100, comandante: { name: 'Krenko, Mob Boss' } },
+    ]);
+    wrap(<MisMazos />);
+    await waitFor(() => expect(screen.getByText('Krenko Goblins')).toBeInTheDocument());
+    expect(screen.getByText('Krenko, Mob Boss')).toBeInTheDocument();
+  });
+
+  it('muestra fecha relativa cuando el mazo tiene updated_at', async () => {
+    const recentDate = new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(); // 2 hours ago
+    mazosSvc.listarMisMazos.mockResolvedValue([
+      { id: 12, nombre: 'Mazo Reciente', formato: 'STANDARD', total_cartas: 60, updated_at: recentDate },
+    ]);
+    wrap(<MisMazos />);
+    await waitFor(() => expect(screen.getByText('Mazo Reciente')).toBeInTheDocument());
+    expect(screen.getByText(/hace 2 h/)).toBeInTheDocument();
+  });
+
+  it('navega al detalle al hacer clic en una carta', async () => {
+    mazosSvc.listarMisMazos.mockResolvedValue([
+      { id: 7, nombre: 'Mazo Click', formato: 'COMMANDER', total_cartas: 99 },
+    ]);
+    wrap(<MisMazos />);
+    await waitFor(() => expect(screen.getByText('Mazo Click')).toBeInTheDocument());
+    await userEvent.click(screen.getByRole('button', { name: 'Ver mazo Mazo Click' }));
+    expect(navigate).toHaveBeenCalledWith('/mazos/7');
+  });
+
+  it('muestra singular "carta" cuando hay exactamente 1', async () => {
+    mazosSvc.listarMisMazos.mockResolvedValue([
+      { id: 13, nombre: 'Mazo Uno', formato: 'COMMANDER', total_cartas: 1 },
+    ]);
+    wrap(<MisMazos />);
+    await waitFor(() => expect(screen.getByText('Mazo Uno')).toBeInTheDocument());
+    expect(screen.getByText('1 carta')).toBeInTheDocument();
+  });
 });
 
 describe('CrearMazoModal', () => {
@@ -72,5 +119,46 @@ describe('CrearMazoModal', () => {
     await waitFor(() => expect(mazosSvc.crearMazo).toHaveBeenCalled());
     expect(navigate).toHaveBeenCalledWith('/mazos/42');
     expect(onCreado).toHaveBeenCalled();
+  });
+
+  it('permite alternar el checkbox Mazo público', async () => {
+    wrap(<CrearMazoModal show onHide={vi.fn()} onCreado={vi.fn()} />);
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox.checked).toBe(false);
+    await userEvent.click(checkbox);
+    expect(checkbox.checked).toBe(true);
+    await userEvent.click(checkbox);
+    expect(checkbox.checked).toBe(false);
+  });
+
+  it('permite escribir una descripción', async () => {
+    wrap(<CrearMazoModal show onHide={vi.fn()} onCreado={vi.fn()} />);
+    const textarea = screen.getByPlaceholderText('Descripción opcional del mazo...');
+    await userEvent.type(textarea, 'Mi descripcion de mazo');
+    expect(textarea.value).toBe('Mi descripcion de mazo');
+  });
+
+  it('llama a onHide al cancelar', async () => {
+    const onHide = vi.fn();
+    wrap(<CrearMazoModal show onHide={onHide} onCreado={vi.fn()} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Cancelar' }));
+    expect(onHide).toHaveBeenCalled();
+  });
+
+  it('envía descripción y público al crear', async () => {
+    mazosSvc.crearMazo.mockResolvedValue({ id: 99 });
+    const onCreado = vi.fn();
+    wrap(<CrearMazoModal show onHide={vi.fn()} onCreado={onCreado} />);
+
+    await userEvent.type(screen.getByLabelText(/^Nombre/), 'Mazo Publico');
+    await userEvent.type(screen.getByPlaceholderText('Descripción opcional del mazo...'), 'Una desc');
+    await userEvent.click(screen.getByRole('checkbox'));
+    await userEvent.click(screen.getByRole('button', { name: 'Crear mazo' }));
+
+    await waitFor(() => expect(mazosSvc.crearMazo).toHaveBeenCalledWith(expect.objectContaining({
+      nombre: 'Mazo Publico',
+      descripcion: 'Una desc',
+      publico: true,
+    })));
   });
 });

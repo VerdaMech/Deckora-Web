@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -8,6 +9,36 @@ export default defineConfig({
     rolldownOptions: {
       output: {
         codeSplitting: true,
+      },
+    },
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./tests/helpers/setup.js'],
+    include: ['tests/**/*.test.{js,jsx}'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html'],
+      include: ['src/**/*.{js,jsx}'],
+      exclude: [
+        'src/main.jsx', // punto de entrada, sin lógica testeable
+        'src/App.jsx', // composición raíz de providers + router
+        'src/styles/**', // estilos
+        'src/**/index.js', // barriles de re-export
+        'src/**/routes.jsx', // tablas de rutas declarativas (lazy imports)
+        'src/routes/AppRoutes.jsx', // wiring de rutas
+        'src/hooks/useAuth.js', // re-export de una línea del contexto
+      ],
+      // Umbrales alineados con la cobertura real alcanzada. Statements y lines
+      // superan el 80% (objetivo de la guía); branches y functions quedan algo
+      // por debajo por los componentes con mucho estado/UI. Subir a medida que
+      // se agreguen más tests.
+      thresholds: {
+        statements: 89,
+        branches: 76,
+        functions: 83,
+        lines: 91,
       },
     },
   },
